@@ -1,0 +1,2 @@
+#!/bin/sh
+php /var/www/onPHP/meta/bin/build.php --no-schema --no-schema-check /var/www/credit/config.inc.php /var/www/credit/meta/config.xml

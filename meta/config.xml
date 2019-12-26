@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE metaconfiguration SYSTEM "meta.dtd">
+
+<metaconfiguration>
+
+    <include file="spooked.xml" generate="true" />
+    
+    <classes>
+        
+        <class name="ImageBase" type="abstract">
+            <implement interface="Created"/>
+            <implement interface="Sortable" />
+            <properties>
+                <identifier />
+                <property name="user" type="User" required="false" relation="OneToOne" fetch="lazy" />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="type" type="ImageType" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="text" type="String" required="false" />
+                <property name="sort" type="Integer" required="false" />
+            </properties>
+            <pattern name="AbstractClass" />
+        </class>
+        
+        <class name="User" extends="NamedObject">
+            <properties>
+                <identifier />
+                <property name="name" type="String" size="255" required="true" />
+                <property name="email" type="String" size="255" required="true" />
+                <property name="password" type="String" size="255" required="true" />
+            </properties>
+            <pattern name="StraightMapping" />
+        </class>
+        
+    </classes>
+    
+    <sources><source name="credit" /></sources>
+
+</metaconfiguration>
