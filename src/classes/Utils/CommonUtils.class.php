@@ -6,6 +6,18 @@ class CommonUtils
     {
         switch($moduleName) {
             
+            case 'userRegister':
+                $link = PATH_WEB . "user/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+            
+            case 'main':
+                $link = PATH_WEB . ($arrayParams ? "?".http_build_query($arrayParams) : '');
+                break;
+            
             default:
                 $link = PATH_WEB . "index.php?area={$moduleName}" .self::getQueryStringByParametrs($arrayParams, '&', array(), '&', $encType);
                 

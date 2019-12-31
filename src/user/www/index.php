@@ -19,6 +19,8 @@ try {
         setServer($_SERVER)->
         setFiles($_FILES)->
         setSession($_SESSION);
+    
+    SecurityManager::auth($request);
 
     $controllerName = 'main';
 
@@ -29,15 +31,15 @@ try {
         exit;
     }
     
-    if (!SecurityManager::isAuth() && $controllerName != 'auth') {
-        $view = RedirectToView::create('auth');
-        $model = Model::create()->set('return', base64_encode(defined('PATH_WEB') ? PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1) : $request->getServerVar('REQUEST_URI')));
-    } else {
+    //if (!SecurityManager::isAuth() && $controllerName != 'auth') {
+    //    $view = RedirectToView::create('auth');
+    //    $model = Model::create()->set('return', base64_encode(defined('PATH_WEB') ? PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1) : $request->getServerVar('REQUEST_URI')));
+    //} else {
         $controller = new $controllerName;
         $modelAndView = $controller->handleRequest($request);
         $view = $modelAndView->getView();
         $model = $modelAndView->getModel();
-    }
+    //}
 
     $prefix = PATH_WEB.'?area=';
 

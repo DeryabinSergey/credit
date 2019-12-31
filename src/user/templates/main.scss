@@ -1,5 +1,8 @@
 @import "/var/www/bootstrap-4.4.1/scss/bootstrap.scss";
 
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance:textfield; }
+
 html { 
 
 }

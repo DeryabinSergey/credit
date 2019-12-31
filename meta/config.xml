@@ -22,14 +22,36 @@
         </class>
         
         <class name="User" extends="NamedObject">
+            <implement interface="Created"/>
             <properties>
                 <identifier />
-                <property name="name" type="String" size="255" required="true" />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="name" type="String" size="255" required="false" />
                 <property name="email" type="String" size="255" required="true" />
                 <property name="password" type="String" size="255" required="true" />
+                <property name="phone" type="BigInteger" required="true" />
+                <property name="active" type="Boolean" required="true" default="false" />
+                <property name="ban" type="Boolean" required="true" default="false" />
+                <property name="banExpire" type="Timestamp" required="false" />
+                <property name="banComment" type="String" size="255" required="false" />
             </properties>
             <pattern name="StraightMapping" />
         </class>
+        
+        <class name="Confirm" type="final">
+            <implement interface="Created"/>
+            <properties>
+                <identifier />
+                <property name="type" type="ConfirmType" relation="OneToOne" required="true" />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="expiredTime" type="Timestamp" required="true" />
+                <property name="user" type="User" relation="OneToOne" required="false" fetch="lazy" />
+                <property name="phone" type="BigInteger" required="false" />
+                <property name="code" type="String" size="255" required="true" />
+                <property name="try" type="Integer" required="true" default="0" />
+            </properties>           
+            <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>       
         
     </classes>
     

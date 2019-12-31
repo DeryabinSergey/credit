@@ -25,13 +25,14 @@ if (defined('PATH_SOURCE_DIR')) {
         $baseDomain = PATH_SOURCE_DIR . '.' . $baseDomain;
     }
 }
-$pathWeb = 'http://'.$pathWeb.DIRECTORY_SEPARATOR;
+$pathWeb = 'https://'.$pathWeb.DIRECTORY_SEPARATOR;
 define('PATH_WEB', $pathWeb);
 define('BASE_DOMAIN', $baseDomain);
 
 
-define('DEFAULT_EMAIL', 'info@domodedovo.travel');
-define('DEFAULT_MAILER', 'CoralTravel Домодедово');
+define('DEFAULT_EMAIL', 'info@d.svdev.ru');
+define('DEFAULT_MAILER', 'Агрегатор Залогов');
+define('DEFAULT_FROM', DEFAULT_MAILER.' <'.DEFAULT_EMAIL.'>');
 
 if (!defined('PATH_SOURCE_DIR')) { // defaults to front mode
     define('PATH_SOURCE_DIR', 'user');
@@ -47,7 +48,7 @@ define('PATH_TEMPLATES', PATH_SOURCE.'templates'.DIRECTORY_SEPARATOR);
 define('PATH_MAIL_TEMPLATES', PATH_TEMPLATES.'mail'.DIRECTORY_SEPARATOR);
 
 define('UPLOAD_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'user'.DIRECTORY_SEPARATOR.'www'.DIRECTORY_SEPARATOR.'u'.DIRECTORY_SEPARATOR);
-define('UPLOAD_URL', 'http://' . $basePathWeb . DIRECTORY_SEPARATOR . 'u' . DIRECTORY_SEPARATOR);
+define('UPLOAD_URL', 'https://' . $basePathWeb . DIRECTORY_SEPARATOR . 'u' . DIRECTORY_SEPARATOR);
 
 define('IMAGE_PATH_TEMP', 'temp'.DIRECTORY_SEPARATOR);
 define('IMAGE_PATH_TEMP_ORIGINAL', 'temp'.DIRECTORY_SEPARATOR.'o-');
@@ -62,6 +63,9 @@ define('PREVIEW_PATH_HOTEL', 'preview-hotel'.DIRECTORY_SEPARATOR);
 define('KEYS_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'misc'.DIRECTORY_SEPARATOR.'keys'.DIRECTORY_SEPARATOR);
 define('FONT_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'misc'.DIRECTORY_SEPARATOR.'fonts'.DIRECTORY_SEPARATOR);
         
+define('GOOGLE_RECAPTCHA_OPEN', '6LduXMoUAAAAAFoYraxpvGeUdI_g-Uc5unE9Bq0k');
+define('GOOGLE_RECAPTCHA_CLOSED', '6LduXMoUAAAAADH7RjF8_2yJHbT5JTd8wgOOle8m');
+
 // onPHP init
 require '/var/www/onPHP/global.inc.php';
 
@@ -79,8 +83,9 @@ $autoloader->addPaths(array(
     PATH_CLASSES.'ViewHelpers',
     PATH_CLASSES.'Interfaces',
     PATH_CLASSES.'Exceptions',
+    PATH_CLASSES.'Flow',
     
-    //PATH_CONTROLLER_COMMANDS.'City',
+    PATH_CONTROLLER_COMMANDS.'User',
 
     PATH_CLASSES.'DAOs',
     PATH_CLASSES.'Business',

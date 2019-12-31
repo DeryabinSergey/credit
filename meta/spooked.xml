@@ -2,6 +2,14 @@
 <!DOCTYPE metaconfiguration SYSTEM "meta.dtd">
 <metaconfiguration>
 <classes>
+    
+    <class name="ConfirmType" type="final">
+        <properties>
+            <identifier />
+        </properties>
+        <pattern name="SpookedEnumeration" />
+    </class>    
+    
     <class name="ImageType" type="final">
         <properties><identifier /></properties>
         <pattern name="SpookedEnumeration" />

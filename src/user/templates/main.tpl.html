@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-100">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,12 +8,17 @@
     
     <link href="/i/main.min.css" rel="stylesheet">
   </head>
-  <body class="d-flex flex-column h-100">
+  <body class="d-flex flex-column justify-content-center" style="height: 100%;">
     <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
-  <div class="container">
-    <h1 class="mt-5 text-center">Hello Main!</h1>
-  </div>
+    <h1 class="text-center">Hello Main!</h1>
+    <? if (SecurityManager::isAuth()) { ?>
+        <p>Авторизован как <?=SecurityManager::getUser()->getEmail()?> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+    <? } else { ?>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY, 'return' => $curl))?>">восстановить пароль</a>
+    <? } ?>
 </main>
 
 </body>

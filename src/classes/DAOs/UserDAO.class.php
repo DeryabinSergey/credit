@@ -7,6 +7,15 @@
 
 	class UserDAO extends AutoUserDAO
 	{
-		// your brilliant stuff goes here
+            //const UQ_CONFIRM_CODE = 'uq_confirm_code';
+
+            public function add(Identifiable $user)
+            {
+                if (!$user->getCreatedTime() instanceof Timestamp) {
+                    $user->setCreatedTime(Timestamp::makeNow());
+                }
+
+                return parent::add($user);
+            }
 	}
 ?>
