@@ -62,7 +62,10 @@ class userRegister extends CommandContainer
 
         if ($this->isDisplayView($mav)) {
 
-            Singleton::getInstance('HTMLMetaManager')->setTitle('Регистрация');
+            Singleton::getInstance('HTMLMetaManager')->
+                appendJavaScript('/i/jquery.mask.min.js')->                        
+                appendJavaScript('/i/user-register.js')->
+                setTitle('Регистрация');
             
             if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_CONFIRM, self::ACTION_RECOVERY))) {
                 Singleton::getInstance('HTMLMetaManager')->setTitle('Восстановление пароля');
@@ -70,24 +73,10 @@ class userRegister extends CommandContainer
                 Singleton::getInstance('HTMLMetaManager')->setTitle('Авторизация');
             }
             
-            if (
-                in_array(
-                    $this->getForm()->{$this->getActionMethod()}('action'),
-                    array(self::ACTION_START)
-                )
-            ) {
-            }
-            
             if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_START, self::ACTION_RECOVERY, self::ACTION_LOGIN))) {
                 Singleton::getInstance('HTMLMetaManager')->
                     appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
-            } elseif ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_PHONE) {
-                Singleton::getInstance('HTMLMetaManager');
             }
-            
-                Singleton::getInstance('HTMLMetaManager')->
-                    appendJavaScript('/i/jquery.mask.min.js')->                        
-                    appendJavaScript('/i/user-register.js');
         }
 
         return $mav;
@@ -98,12 +87,7 @@ class userRegister extends CommandContainer
      * или контроллер на добавление, импорт - или id Identifialable
      * @return boolean
      */
-    protected function checkDefaultActionAndObject()
-    {
-        return true;
-        
-    }
-
+    protected function checkDefaultActionAndObject() { return true; }
     protected function getDefaultReturnUrl() { return CommonUtils::makeUrl('main'); }
     protected function isDefaultAction() { return false; }
 }
