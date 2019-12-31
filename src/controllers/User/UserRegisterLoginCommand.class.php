@@ -25,11 +25,31 @@ class UserRegisterLoginCommand implements EditorCommand
             if (!$response['success']) {
                 $form->markWrong('response');
             } else {
-                try {
-                    $user = User::dao()->getByLogic(Expression::andBlock(Expression::eq('email', $form->getValue('email')), Expression::eq('password', hash('sha256', $form->getValue('password')))));
-                    if ($user->isBan()) { $form->markCustom('email', self::ERROR_BAN); }
-                } catch(ObjectNotFoundException $e) {
-                    $form->markCustom('email', self::ERROR_MISMATCH);
+                
+                if (preg_match(PrimitiveString::MAIL_PATTERN, $form->getValue('credentials'))) {
+                    try {
+                        $user = User::dao()->getByLogic(Expression::andBlock(Expression::eq('email', $form->getValue('credentials')), Expression::eq('password', hash('sha256', $form->getValue('password')))));
+                    } catch(ObjectNotFoundException $e) { 
+                        $form->markCustom('credentials', self::ERROR_MISMATCH);
+                    }
+                } else {
+                    $phone = preg_replace("/[^\d]/isu", "", $form->getValue('credentials'));
+                    $phoneLen = mb_strlen($phone);
+                    $phone = mb_substr($phone, $phoneLen > 10 ? $phoneLen - 10 : 0, 10);
+
+                    if (mb_strlen($phone) < 10) {
+                        $form->markWrong('credentials');
+                    } else {
+                        try {
+                            $user = User::dao()->getByLogic(Expression::andBlock(Expression::eq('phone', $phone)), Expression::eq('password', hash('sha256', $form->getValue('password'))));
+                        } catch(ObjectNotFoundException $e) { 
+                            $form->markCustom('credentials', self::ERROR_MISMATCH);
+                        }
+                    }
+                }
+
+                if ($user instanceof User && $user->isBan()) {
+                    $form->markCustom('credentials', self::ERROR_BAN);
                 }
             }
             
@@ -53,17 +73,17 @@ class UserRegisterLoginCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'email', 'password', 'pact', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'password', 'pact', 'action', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
             }
         }
         
-        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN)->addDisplayFilter(Filter::htmlSpecialChars())->addImportFilter(Filter::textImport());
-        $form->add(Primitive::string('response')->required());
+        $form->
+            add(Primitive::string('credentials')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars())->required())->
+            add(Primitive::string('response')->required());
         
         return $this;
     }
-
 }
