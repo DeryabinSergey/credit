@@ -32,12 +32,14 @@ class userRegister extends CommandContainer
         $this->
             getForm()->
                 add(Primitive::string('uuid')->addImportFilter(Filter::textImport())->optional())->
-                add(Primitive::integer('pact')->optional());
+                add(Primitive::integer('pact')->optional())->
+                add(Primitive::boolean('needAuth')->optional());
         
         $this->
             map->
                 addSource('uuid', RequestType::get())->
-                addSource('pact', RequestType::get());
+                addSource('pact', RequestType::get())->
+                addSource('needAuth', RequestType::get());
     }
 
     public function postHandleRequest(ModelAndView $mav, HttpRequest $request)

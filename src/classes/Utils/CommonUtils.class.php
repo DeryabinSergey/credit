@@ -13,6 +13,66 @@ class CommonUtils
                     $link .= "?".http_build_query($arrayParams);
                 }
                 break;
+                
+            case 'aclActionList':
+                $link = PATH_WEB . "control-panel/admin/acl-action/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclActionEditor':
+                $link = PATH_WEB . "control-panel/admin/acl-action/{$arrayParams['action']}.html";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclContextList':
+                $link = PATH_WEB . "control-panel/admin/acl-context/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclContextEditor':
+                $link = PATH_WEB . "control-panel/admin/acl-context/{$arrayParams['action']}.html";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclRightList':
+                $link = PATH_WEB . "control-panel/admin/acl-right/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclRightEditor':
+                $link = PATH_WEB . "control-panel/admin/acl-right/{$arrayParams['action']}.html";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclGroupList':
+                $link = PATH_WEB . "control-panel/admin/acl-group/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'aclGroupEditor':
+                $link = PATH_WEB . "control-panel/admin/acl-group/{$arrayParams['action']}.html";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
             
             case 'main':
                 $link = PATH_WEB . ($arrayParams ? "?".http_build_query($arrayParams) : '');

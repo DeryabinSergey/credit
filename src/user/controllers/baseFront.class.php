@@ -78,9 +78,11 @@ abstract class baseFront implements Controller
             checkRedirect($request);
         
         if ($this->isDisplayView()) {                
-            $mav->setModel($this->getModel($request));
-        } else {
-            $this->errorView(HttpStatus::CODE_403);
+            if (!method_exists($this, 'checkPermissions') || $this->checkPermissions()) {                
+                $mav->setModel($this->getModel($request));
+            } else {
+                $this->errorView(HttpStatus::CODE_403);
+            }
         }
 
         return $mav->setView($this->view);

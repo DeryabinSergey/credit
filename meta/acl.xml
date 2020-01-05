@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE metaconfiguration SYSTEM "meta.dtd">
+<metaconfiguration>
+<classes>
+    <class name="AclAction" type="final">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="32" required="true" />
+            <property name="action" type="String" size="32" required="true" />
+        </properties>
+        <pattern name="DictionaryClass" fetch="lazy" />
+    </class>    
+
+    <class name="AclActionEdited" table="acl_action">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="32" required="true" />
+            <property name="aclAction" type="String" size="32" required="true" column="action" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>
+
+    <class name="AclContext" type="final">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="64" required="true" />
+        </properties>
+        <pattern name="DictionaryClass" fetch="lazy" />
+    </class>
+
+    <class name="AclRight" type="final">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="64" required="true" />
+            <property name="action" type="AclAction" required="true" relation="OneToOne" fetch="lazy" />
+            <property name="context" type="AclContext" required="true" relation="OneToOne" fetch="lazy" />
+
+            <property name="sectionId" type="BigInteger" required="false" />
+            <property name="sectionType" type="String" required="false" />
+        </properties>
+        <pattern name="DictionaryClass" fetch="lazy" />
+    </class>
+
+    <class name="AclRightEdited" table="acl_right">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="64" required="true" />
+            <property name="aclAction" type="AclAction" required="true" relation="OneToOne" fetch="lazy" column="action_id" />
+            <property name="context" type="AclContext" required="true" relation="OneToOne" fetch="lazy" />
+
+            <property name="sectionId" type="BigInteger" required="false" />
+            <property name="sectionType" type="String" required="false" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>
+
+    <class name="AclGroup" type="final">
+        <properties>
+            <identifier />
+            <property name="name" type="String" size="64" required="true" />
+            <property name="rights" type="AclGroupRight" required="true" relation="OneToMany" />
+        </properties>
+        <pattern name="DictionaryClass" fetch="lazy" />
+    </class>
+
+    <class name="AclGroupRight" type="final">
+        <properties>
+            <identifier />
+            <property name="right" type="AclRight" required="true" relation="OneToOne" fetch="lazy" />
+            <property name="group" type="AclGroup" required="true" relation="OneToOne" fetch="lazy" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>
+</classes>
+
+</metaconfiguration>

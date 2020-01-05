@@ -29,6 +29,7 @@ $pathWeb = 'https://'.$pathWeb.DIRECTORY_SEPARATOR;
 define('PATH_WEB', $pathWeb);
 define('BASE_DOMAIN', $baseDomain);
 
+define('COOKIE_DOMAIN', '.' . BASE_DOMAIN);
 
 define('DEFAULT_EMAIL', 'info@d.svdev.ru');
 define('DEFAULT_MAILER', 'Агрегатор Залогов');
@@ -85,6 +86,10 @@ $autoloader->addPaths(array(
     PATH_CLASSES.'Exceptions',
     PATH_CLASSES.'Flow',
     
+    PATH_CONTROLLER_COMMANDS.'AclAction',
+    PATH_CONTROLLER_COMMANDS.'AclContext',
+    PATH_CONTROLLER_COMMANDS.'AclGroup',
+    PATH_CONTROLLER_COMMANDS.'AclRight',
     PATH_CONTROLLER_COMMANDS.'User',
 
     PATH_CLASSES.'DAOs',

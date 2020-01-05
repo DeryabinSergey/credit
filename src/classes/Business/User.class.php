@@ -30,7 +30,15 @@
 		{
 			return Singleton::getInstance('ProtoUser');
 		}
-		
-		// your brilliant stuff goes here
+
+                public function getRealIp()
+                {
+                    return long2ip($this->getIp());
+                }
+
+                public function setRealIp($ip)
+                {
+                    return $this->setIp(ip2long($ip));
+                }
 	}
 ?>

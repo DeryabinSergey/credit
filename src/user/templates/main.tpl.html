@@ -14,6 +14,15 @@
     <h1 class="text-center">Hello Main!</h1>
     <? if (SecurityManager::isAuth()) { ?>
         <p>Авторизован как <?=SecurityManager::getUser()->getEmail()?> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+        
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
+            <p>
+                <a href="<?=CommonUtils::makeUrl('aclActionList')?>">действия прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclContextList')?>">контексты прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclRightList')?>">список прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclGroupList')?>">группы пользователей</a>
+            </p>
+        <? } ?>
     <? } else { ?>
         <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
         <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>

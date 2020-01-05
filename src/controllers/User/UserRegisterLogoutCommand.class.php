@@ -12,7 +12,7 @@ class UserRegisterLogoutCommand implements EditorCommand
         $process = $request->getServerVar('REQUEST_METHOD') == 'POST';
         $mav = ModelAndView::create();
         
-        SecurityManager::logout();
+        SecurityManager::logout($request);
         $mav->setView(EditorController::COMMAND_SUCCEEDED);
         
         return $mav;

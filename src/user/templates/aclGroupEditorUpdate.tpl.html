@@ -1,0 +1,89 @@
+<? 
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addWrongLabel('name', 'имя указано неверно')->
+            addMissingLabel('name', 'имя не указано')->
+            addCustomLabel('name', AclGroupUpdateCommand::ERROR_DUPLICATE, 'такое имя уже используется')->
+            addCustomLabel('name', AclGroupUpdateCommand::ERROR_INTERNAL, 'ошибка сервера');
+    }
+?>
+<script type="text/javascript">
+    var selectList = new Array();
+    var childList = [];
+    <? foreach($rightList as $groupRight) {
+        $listString = array();
+        foreach($groupRight as $right) {
+            $listString[] = $right->getId();
+    ?>
+            childList[<?=$right->getId()?>] = <?=$right->getContext()->getId()?>;
+        <? } ?>
+        selectList[<?=$groupRight[0]->getContext()->getId()?>] = [<?=implode(", ", $listString)?>];
+    <? } ?>
+</script>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор групп пользователей</h1>
+    
+    <? if ($process && $form->getTextualErrors()) { ?>
+        <div id="alert-block" class="alert alert-danger" role="alert">
+            <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+        </div>
+    <? } ?>
+    
+    <form action="" method="POST">
+        <div class="form-group row align-items-center">
+            <label for="name" class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
+            <div class="col-12 col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-top">
+            <label for="aclAction" class="col-12 col-sm-2 col-form-label col-form-label-lg">Права</label>
+            <div class="col-12 col-sm-10">
+                <? foreach($rightList as $i => $groupRight) { ?>
+                    <div<?=$i-1==count($rightList)?'':' class="mb-3"'?>>   
+                    <? if (isset($groupRight[0]) && $groupRight[0] instanceof AclRight) { ?>
+                        <div class="form-check mb-1">
+                            <input type="checkbox" class="form-check-input" id="checkbox-group-<?=$groupRight[0]->getContext()->getId()?>" />
+                            <label class="form-check-label" for="checkbox-group-<?=$groupRight[0]->getContext()->getId()?>"><span class="ajax-href" title="Отметить / снять отметку со всей группы"><?=htmlspecialchars($groupRight[0]->getContext()->getName())?></span></label>
+                        </div>
+                    <? } ?>
+                    <? foreach($groupRight as $j => $right) {
+                        $checked = false;
+                        foreach($form->getValue('right') as $r) {
+                            if ($r->getId() == $right->getId()) {
+                                $checked = true;
+                                break;
+                            }
+                        }
+                    ?>
+                        <div class="form-check ml-5 mb-1">
+                            <input type="checkbox" class="form-check-input"<?=$checked?' checked="checked"':''?> name="right[]" value="<?=$right->getId()?>" id="checkbox-right-<?=$right->getId()?>" />
+                            <label class="form-check-label" for="checkbox-right-<?=$right->getId()?>"><?=htmlspecialchars($right->getName())?></label>
+                        </div>
+                    <? } ?>
+                    </div>
+                <? } ?>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">сохранить</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

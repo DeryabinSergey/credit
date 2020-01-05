@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE metaconfiguration SYSTEM "meta.dtd">
+<metaconfiguration>
+<classes>
+    <class name="ActionLog">
+        <properties>
+            <identifier />
+            <property name="createdTime" type="Timestamp" required="true" />
+            <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
+            <property name="ip" type="Integer" required="true" />
+            <property name="sid" type="String" size="64" required="false" />
+            <property name="action" type="String" size="64" required="true" />
+            <property name="objectName" type="String" size="255" required="true" />
+            <property name="objectId" type="Integer" required="true" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>
+
+    <class name="AuthLog" type="final">
+        <implement interface="Created"/>
+        <properties>
+            <identifier />
+            <property name="createdTime" type="Timestamp" required="true" />
+            <property name="user" type="User" relation="OneToOne" required="false" fetch="lazy" />
+            <property name="login" type="String" size="128" required="false" />
+            <property name="sid" type="String" size="64" required="false" />
+            <property name="ip" type="BigInteger" required="true" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>    
+
+    <class name="SecurityLog" type="final">
+        <implement interface="Created"/>
+        <properties>
+            <identifier />
+            <property name="createdTime" type="Timestamp" required="true" />
+            <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
+            <property name="sid" type="String" size="64" required="true" />
+            <property name="ip" type="BigInteger" required="true" />
+        </properties>
+        <pattern name="StraightMapping" fetch="lazy" />
+    </class>
+</classes>
+
+</metaconfiguration>

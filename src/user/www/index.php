@@ -20,7 +20,11 @@ try {
         setFiles($_FILES)->
         setSession($_SESSION);
     
-    SecurityManager::auth($request);
+    SecurityManager::setCodeCookieName(SecurityManager::COOKIE_CODE_NAME);
+    SecurityManager::setCookieName(SecurityManager::COOKIE_USER_NAME);
+    SecurityManager::initCode($request);
+    if (SecurityManager::isAuthEnabled())
+        SecurityManager::authUser($request);
 
     $controllerName = 'main';
 
@@ -30,16 +34,28 @@ try {
         HeaderUtils::sendHttpStatus(new HttpStatus(HttpStatus::CODE_404));
         exit;
     }
+
+    $controller = new $controllerName;
     
-    //if (!SecurityManager::isAuth() && $controllerName != 'auth') {
-    //    $view = RedirectToView::create('auth');
-    //    $model = Model::create()->set('return', base64_encode(defined('PATH_WEB') ? PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1) : $request->getServerVar('REQUEST_URI')));
-    //} else {
-        $controller = new $controllerName;
-        $modelAndView = $controller->handleRequest($request);
-        $view = $modelAndView->getView();
-        $model = $modelAndView->getModel();
-    //}
+    if ($controller instanceof GuestController && SecurityManager::isAuth()) {
+        $model = Model::create();
+        $view = RedirectView::create(PATH_WEB);
+    } elseif ($controller instanceof UserController && !$controller instanceof baseAjax && !SecurityManager::isAuth()) {
+        if ($request->hasGetVar('return')) {
+            $curl = $request->getGetVar('return');
+        } elseif ($request->hasServerVar('REQUEST_URI')) {
+            $curl = base64_encode(PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1));
+        } else {
+            $curl = base64_encode(PATH_WEB);
+        }
+        $model = Model::create();
+        $view = RedirectView::create(CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl, 'needAuth' => 1)));
+    } else {
+	$modelAndView = $controller->handleRequest($request);
+
+	$view = $modelAndView->getView();
+	$model = $modelAndView->getModel();
+    }
 
     $prefix = PATH_WEB.'?area=';
 

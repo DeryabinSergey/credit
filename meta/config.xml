@@ -3,7 +3,9 @@
 
 <metaconfiguration>
 
+    <include file="acl.xml" generate="true" />
     <include file="spooked.xml" generate="true" />
+    <include file="security.xml" generate="true" />
     
     <classes>
         
@@ -34,6 +36,13 @@
                 <property name="ban" type="Boolean" required="true" default="false" />
                 <property name="banExpire" type="Timestamp" required="false" />
                 <property name="banComment" type="String" size="255" required="false" />
+                <property name="lastLog" type="Timestamp" required="false" />
+                <property name="lastVisit" type="Timestamp" required="false" />
+                <property name="ip" type="Integer" required="false" />
+                <property name="sid" type="String" size="64" required="false" />
+                <property name="securityType" type="SecurityType" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="group" type="AclGroup" relation="OneToOne" required="false" fetch="lazy" />
+                <property name="clones" type="User" relation="ManyToMany" />
             </properties>
             <pattern name="StraightMapping" />
         </class>
@@ -51,7 +60,23 @@
                 <property name="try" type="Integer" required="true" default="0" />
             </properties>           
             <pattern name="StraightMapping" fetch="lazy" /> 
-        </class>       
+        </class>
+        
+        <class name="InvestorOffer" type="final">
+            <implement interface="Created"/>
+            <properties>
+                <identifier />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="active" type="Boolean" required="true" default="false" />
+                <property name="minPeriod" type="Integer" required="false" />
+                <property name="maxPeriod" type="Integer" required="false" />
+                <property name="minSumm" type="BigInteger" required="false" />
+                <property name="maxSumm" type="BigInteger" required="false" />
+                <property name="percents" type="Float" required="true" />
+            </properties>           
+            <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>           
         
     </classes>
     

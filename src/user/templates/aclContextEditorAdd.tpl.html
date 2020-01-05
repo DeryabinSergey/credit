@@ -1,0 +1,57 @@
+<?php
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addWrongLabel('newId', 'идентификатор указан неверно')->
+            addMissingLabel('newId', 'идентификатор не указан')->
+            addCustomLabel('newId', AclContextAddCommand::ERROR_DUPLICATE, 'такой идентификатор уже существует')->
+            addWrongLabel('name', 'имя указано неверно')->
+            addMissingLabel('name', 'имя не указано')->
+            addCustomLabel('name', AclContextAddCommand::ERROR_DUPLICATE, 'такое имя уже используется');
+    }
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор контекстов прав</h1>
+    
+    <div id="warning-block" class="alert alert-warning" role="alert">
+        <p class="mb-0" id="warning-block-content">Действия прав проверяются через константы класса <code>AclContext</code>, после создания действия необходимо создать в классе константу с соответствующим идентификатором!</p>
+    </div>
+    
+    <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors())?' style="display: none;"':''?>>
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    
+    <form action="" method="POST">
+        <div class="form-group row align-items-center">
+            <label for="newId" class="col-12 col-sm-2 col-form-label col-form-label-lg">Идентификатор</label>
+            <div class="col-12 col-sm-10">
+                <input id="newId" class="form-control form-control-lg" name="newId" value="<?=$form->getDisplayValue('newId')?>" type="number">
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+            <label for="name" class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
+            <div class="col-12 col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">создать</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>
