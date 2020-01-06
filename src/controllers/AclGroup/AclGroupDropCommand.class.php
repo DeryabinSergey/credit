@@ -15,17 +15,19 @@ class AclGroupDropCommand extends DropCommand implements SecurityCommand
         $mav = ModelAndView::create();
         $process = $request->getServerVar('REQUEST_METHOD') == 'POST';
         
-        try {
-            $tr = InnerTransaction::begin($subject->dao());                  
-            if ($form->getValue('id') instanceof AclGroup) {
-                $form->getValue('id')->getRights()->dropList();
-            }
-            $mav = parent::run($subject, $form, $request);
-            $tr->commit();
-        } catch(DatabaseException $e) {
-            $tr->rollback();
-            $form->markCustom('id', self::ERROR_EXTERNAL);
-        } 
+        if ($form->getValue('ok')) {
+            try {
+                $tr = InnerTransaction::begin($subject->dao());                  
+                if ($form->getValue('id') instanceof AclGroup) {
+                    $form->getValue('id')->getRights()->dropList();
+                }
+                $mav = parent::run($subject, $form, $request);
+                $tr->commit();
+            } catch(DatabaseException $e) {
+                $tr->rollback();
+                $form->markCustom('id', self::ERROR_EXTERNAL);
+            } 
+        }
         
         if ($mav->getView() != BaseEditor::COMMAND_SUCCEEDED) {
             
@@ -44,6 +46,13 @@ class AclGroupDropCommand extends DropCommand implements SecurityCommand
         }
 
         return $mav;
+    }
+
+    public function setForm(Form $form)
+    {
+        $form->add(Primitive::boolean('ok'));
+        
+        return $this;
     }
 
     public function checkPermissions(Form $form)

@@ -12,6 +12,17 @@
     
     <h1 class="mb-5">Редактор прав</h1>
     
+    <? if ($groupList) { ?>
+        <div class="alert alert-warning" role="alert">
+            <p>Данное право используется в группах пользователей:</p>
+                <ul>
+                    <? foreach($groupList as $group) { ?>
+                        <li><?=htmlspecialchars($group->getName())?></li>
+                    <? } ?>
+                </ul>
+        </div>
+    <? } ?>    
+    
     <? if ($form->getTextualErrors()) { ?>
         <div id="alert-block" class="alert alert-warning" role="alert">
             <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
@@ -25,10 +36,16 @@
         </div>
     <? } ?>
     
-    <form action="" method="POST">        
+    <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getName())?></label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Право</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getAclAction()->getName())?> <?=htmlspecialchars($form->getValue('id')->getContext()->getName())?></label>
         </div>
         
         <div class="form-group row">

@@ -26,6 +26,8 @@ class userRegister extends CommandContainer
         $this->insertCommand(self::ACTION_LOGOUT, UserRegisterLogoutCommand::create());
 
         $this->defaultAction = self::ACTION_START;
+        
+        $this->secureController = false;
 
         parent::__construct(User::create());
         

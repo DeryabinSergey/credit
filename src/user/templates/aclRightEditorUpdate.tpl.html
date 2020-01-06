@@ -26,6 +26,7 @@
     </div>
     
     <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <div class="form-group row align-items-center">
             <label for="name" class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
             <div class="col-12 col-sm-10">

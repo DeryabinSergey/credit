@@ -30,6 +30,7 @@
     </div>
     
     <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">ID</label>
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getId())?></label>

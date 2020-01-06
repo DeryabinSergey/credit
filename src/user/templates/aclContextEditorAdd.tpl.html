@@ -28,6 +28,7 @@
     </div>
     
     <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <div class="form-group row align-items-center">
             <label for="newId" class="col-12 col-sm-2 col-form-label col-form-label-lg">Идентификатор</label>
             <div class="col-12 col-sm-10">

@@ -18,7 +18,17 @@ abstract class CommandContainer extends BaseEditor
 
     const COMMAND_CANCELED  = 'cancel';
     
+    const SESSION_SECURITY_VAR  = 'security-code';
+    
     protected $process = false;
+    
+    protected $mapUnsecureCommands = array();
+    /**
+     * Безопасный контроллер - по умолчанию включена csfr защита
+     * @var Boolean
+     */
+    protected $secureController = true;
+    protected $securityCode = null;
     
     protected $mapExtraPreImport = array();
     
@@ -28,6 +38,7 @@ abstract class CommandContainer extends BaseEditor
         
         $this->
             getForm()->
+                add(Primitive::string('securityCode'))->
                 add(Primitive::string('return'))->
                 add(Primitive::boolean('cancel'));
         
@@ -113,6 +124,22 @@ abstract class CommandContainer extends BaseEditor
             $commandName = $this->getForm()->{$this->getActionMethod()}('action');
             
             if ($mav->getView() == self::COMMAND_SUCCEEDED) {
+                
+                if ($this->secureController && !isset($this->mapUnsecureCommands[$commandName])) {
+                    $controller = get_class($this);
+                    if ( 
+                        $this->getForm()->getValue('securityCode') &&
+                        $request->hasSessionVar(self::SESSION_SECURITY_VAR) &&
+                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller]) &&
+                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName]) &&
+                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName][$this->getForm()->getValue('securityCode')])
+                    ) {
+                        $security = $request->getSessionVar(self::SESSION_SECURITY_VAR);
+                        unset($security[$controller][$commandName][$this->getForm()->getValue('securityCode')]);
+                        Session::assign(self::SESSION_SECURITY_VAR, $security);
+                    }
+                }
+                
                 $mav->
                     setView(RedirectView::create($this->getCurrentUrl($request, true)))->
                     getModel()->
@@ -123,6 +150,7 @@ abstract class CommandContainer extends BaseEditor
                     getModel()->
                         set('process', $this->process)->
                         set('curl', $this->getEncodedCurrentUrl($request))->
+                        set('securityCode', $this->securityCode)->
                         set('form', $this->getForm());
             }
         }
@@ -140,8 +168,21 @@ abstract class CommandContainer extends BaseEditor
     protected function checkPermissions(HttpRequest $request)
     {
         $command = $this->getForm()->{$this->getActionChoiseMethod()}('action');
+        $commandName = $this->getForm()->{$this->getActionMethod()}('action');
         
-        return !$command instanceof SecurityCommand || $command->checkPermissions($this->getForm());
+        if ($this->process && $this->secureController && !isset($this->mapUnsecureCommands[$commandName])) {
+            $controller = get_class($this);
+            $csfr = 
+                $this->getForm()->getValue('securityCode') &&
+                $request->hasSessionVar(self::SESSION_SECURITY_VAR) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller]) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName]) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName][$this->getForm()->getValue('securityCode')]);
+        } else {
+            $csfr = true;
+        }
+        
+        return $csfr && (!$command instanceof SecurityCommand || $command->checkPermissions($this->getForm()));
     }
 
     /**
@@ -201,6 +242,13 @@ abstract class CommandContainer extends BaseEditor
         
     }
     
+    protected function addUnsecureCommandToMap($action)
+    {
+        $this->mapUnsecureCommands[$action] = $action;
+        
+        return $this;
+    }
+    
     /**
      * Добавить к предварительному импорту примитивы, в зависимости от выбранного действия
      * @param type $action - метка действия
@@ -224,7 +272,35 @@ abstract class CommandContainer extends BaseEditor
      * @param HttpRequest $request
      * @return \CommandContainer
      */
-    protected function initVars(HttpRequest $request) { return $this; }
+    protected function initVars(HttpRequest $request)
+    { 
+        /**
+         * Если данные не отправляются, а команда только подготавливается к работе - 
+         * генерируем код для защиты от CSRF и кладем в сессию
+         */
+        if (!$this->process && $this->secureController) {
+            $commandName = $this->getForm()->{$this->getActionMethod()}('action');
+            if (!isset($this->mapUnsecureCommands[$commandName])) {
+                $commandEditor = get_class($this);
+
+                $codes = 
+                    $request->hasSessionVar(self::SESSION_SECURITY_VAR) ? 
+                    $request->getSessionVar(self::SESSION_SECURITY_VAR) : 
+                    array($commandEditor => array($commandName => array()));
+
+                if (!isset($codes[$commandEditor])) { $codes[$commandEditor] = array(); }
+                if (!isset($codes[$commandEditor][$commandName])) { $codes[$commandEditor][$commandName] = array(); }
+
+                $code = CommonUtils::genUuid();
+                $this->securityCode = $codes[$commandEditor][$commandName][$code] = $code;
+
+                Session::assign(self::SESSION_SECURITY_VAR, $codes);
+            }
+        }
+        
+        return $this;
+        
+    }
     
     /**
      * Получение метода класса Form для получения комманды в зависимости от настроек контроллера.

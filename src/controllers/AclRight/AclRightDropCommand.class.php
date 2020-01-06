@@ -25,7 +25,9 @@ class AclRightDropCommand extends DropCommand implements SecurityCommand
                 $tr = InnerTransaction::begin($subject->dao());
 
                 $ids = ArrayUtils::convertToPlainList($criteria->getCustomList(), 'id');
-                $criteria->getDao()->dropByIds($ids);
+                if ($ids) {
+                    $criteria->getDao()->dropByIds($ids);
+                }
                 $mav = parent::run($subject, $form, $request);
                 
                 $tr->commit();
@@ -36,12 +38,6 @@ class AclRightDropCommand extends DropCommand implements SecurityCommand
             }                
 
 
-        } else {
-            try {
-                $mav = parent::run($subject, $form, $request);
-            } catch(DatabaseException $e) {
-                $form->markCustom('id', self::ERROR_EXTERNAL);
-            }
         }
         
         if ($mav->getView() != BaseEditor::COMMAND_SUCCEEDED) {
@@ -66,8 +62,7 @@ class AclRightDropCommand extends DropCommand implements SecurityCommand
 
     public function setForm(Form $form)
     {
-        $form->
-            add(Primitive::boolean('ok'));
+        $form->add(Primitive::boolean('ok'));
         
         return $this;
     }

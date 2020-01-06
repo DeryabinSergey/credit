@@ -32,6 +32,7 @@
     <? } ?>
     
     <form action="" method="POST" class="">        
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getName())?></label>
@@ -39,6 +40,7 @@
         
         <div class="form-group row">
             <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" name="ok" class="btn btn-lg btn-success mr-2 mb-2">удалить</button>
                 <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
             </div>
         </div>
