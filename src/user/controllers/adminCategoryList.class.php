@@ -1,6 +1,6 @@
 <?php
 
-class AdminInvestorOfferList extends baseFront implements UserController, SecurityController
+class AdminInvestorOfferList extends baseFront implements UserController
 {
     public function getModel(\HttpRequest $request)
     {
@@ -16,10 +16,5 @@ class AdminInvestorOfferList extends baseFront implements UserController, Securi
         }
         
         return $model;
-    }
-    
-    public function checkPermissions()
-    {
-        return SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID);
     }
 }
