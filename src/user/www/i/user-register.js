@@ -8,6 +8,7 @@ $(document).ready(function(){
                 if (result.userExists) {
                     $("#warning-block").show("swing");
                 } else if (result.success) {
+                    $("#warning-block").hide("swing");
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                 } else {
                     let errors = [];

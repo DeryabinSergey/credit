@@ -53,14 +53,14 @@ class UserRegisterStartCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'email', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'name', 'email', 'action', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
             }
         }
         
-        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN);
+        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN)->addDisplayFilter(Filter::htmlSpecialChars());
         $form->add(Primitive::string('response')->required());
         
         return $this;

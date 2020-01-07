@@ -55,6 +55,7 @@ class UserRegisterPhoneCommand implements EditorCommand
                         User::dao()->
                             add(
                                 User::create()->
+                                    setName($form->getValue('name'))->
                                     setEmail($userEmail)->
                                     setPassword(hash('sha256', $password))->
                                     setPhone($form->getValue('phone'))
@@ -90,13 +91,14 @@ class UserRegisterPhoneCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'name', 'action', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
             }
         }
         
+        $form->get('name')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars())->required();
         $form->add(Primitive::string('phone')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/", ""))->setAllowedPattern("/\d{10}/is")->required());
         $form->add(Primitive::integer('code')->setMax(9999)->setMin(1)->required());
         
