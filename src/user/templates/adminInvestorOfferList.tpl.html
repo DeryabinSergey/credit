@@ -12,11 +12,12 @@
     </nav>
     
     <? if ($list) { ?>
+    <div class="table-responsive">
         <table class="table table-hover table-striped">
         <thead>
             <tr>
                 <th scope="col">Пользователь</th>
-                <th scope="col">Сумма</th>
+                <th scope="col">Статус и Сумма</th>
                 <th scope="col">Срок</th>
                 <th scope="col">Условия</th>
                 <th scope="col">&nbsp;</th>
@@ -25,8 +26,8 @@
         <tbody>
         <? foreach($list as $item) { ?>
         <tr<?=$item->isActive()?'':' class="table-warning"'?>>
-            <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><?=$item->getUser()->getName()? htmlspecialchars($item->getUser()->getName()).' / ' : ''?><?=htmlspecialchars($item->getUser()->getEmail())?><?=$item->isDeleted()?'</del>':''?></td>
-            <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><?=$item->getMinSumm()? number_format($item->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($item->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?><?=$item->isDeleted()?'</del>':''?></td>
+            <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><?=$item->getUser()->getName()? htmlspecialchars($item->getUser()->getName()) : htmlspecialchars($item->getUser()->getEmail())?><?=$item->isDeleted()?'</del>':''?></td>
+            <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><abbr title="<?=$item->getType()->getName()?>"><?=$item->getType()->getShortName()?></abbr> <?=$item->getMinSumm()? number_format($item->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($item->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?><?=$item->isDeleted()?'</del>':''?></td>
             <td class="align-middle"><?=$item->isDeleted()?'<del>':''?>
                 <?=$item->getMinPeriod() ? ($item->getMaxPeriod() ? "{$item->getMinPeriod()}-{$item->getMaxPeriod()} мес" : "от {$item->getMinPeriod()} мес") : ($item->getMaxPeriod() ? "до {$item->getMaxPeriod()} мес" : "любой") ?>
                 <?=$item->isDeleted()?'</del>':''?>
@@ -41,6 +42,7 @@
         <? } ?>
         </tbody>
         </table>
+    </div>
     <? } else { ?>
         <div class="card">
           <div class="card-body">

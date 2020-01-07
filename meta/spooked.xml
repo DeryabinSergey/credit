@@ -28,6 +28,13 @@
         </properties>
         <pattern name="SpookedEnumeration" />
     </class>
+    
+    <class name="InvestorOfferType" type="final">
+        <properties>
+            <identifier />
+        </properties>
+        <pattern name="SpookedEnumeration" />
+    </class>
 
     <!--class name="ImageOwner" type="abstract">
         <properties>

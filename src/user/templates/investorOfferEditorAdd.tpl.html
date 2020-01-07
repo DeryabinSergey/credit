@@ -3,6 +3,8 @@
 
     if ($process) {
         $form->
+            addWrongLabel('type', 'статус инвестора указан неверно')->
+            addMissingLabel('type', 'статус инвестора не указан')->
             addWrongLabel('minSumm', 'минимальная сумма указана неверно')->
             addWrongLabel('maxSumm', 'максимальная сумма указана неверно')->
             addWrongLabel('minPeriod', 'минимальный период указан неверно')->
@@ -64,6 +66,19 @@
                     <div class="input-group-append"><span class="input-group-text" id="percentsPrepend">% в мес</span></div>
                 </div>
                 <small class="form-text text-muted">Укажите условия, на которых вы хотите инвестировать указанную сумму на указанный срок</small>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="type" class="col-12 col-sm-2 col-form-label col-form-label-lg">Статус</label>
+            <div class="col-12 col-sm-10">
+                <select name="type" id="type" class="form-control form-control-lg">
+                    <option <?=$form->exportValue('type')?'':' selected="selected"'?>></option>
+                    <? foreach(InvestorOfferType::getList(InvestorOfferType::create(InvestorOfferType::getAnyId())) as $type) { ?>
+                        <option value="<?=$type->getId()?>"<?=$form->exportValue('type') && $form->exportValue('type') == $type->getId()?' selected="selected"':''?>><?=htmlspecialchars($type->getName())?></option>
+                    <? } ?>
+                </select>
+                <small class="form-text text-muted">В каком статусе Вы собираетесь делать инвестиции</small>
             </div>
         </div>
         

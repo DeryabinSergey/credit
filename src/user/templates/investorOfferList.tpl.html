@@ -40,7 +40,7 @@
         <table class="table table-hover table-striped">
         <thead>
             <tr>
-                <th scope="col">Сумма</th>
+                <th scope="col">Статус и Сумма</th>
                 <th scope="col">Срок</th>
                 <th scope="col">Условия</th>
                 <th scope="col">&nbsp;</th>
@@ -49,7 +49,8 @@
         <tbody>
         <? foreach($list as $item) { ?>
         <tr<?=$item->isActive()?'':' class="table-warning"'?>>
-            <td class="align-middle"><?=$item->getMinSumm()? number_format($item->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($item->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?></td>
+            <td class="align-middle">
+                <abbr title="<?=$item->getType()->getName()?>"><?=$item->getType()->getShortName()?></abbr> <?=$item->getMinSumm()? number_format($item->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($item->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?></td>
             <td class="align-middle">
                 <?=$item->getMinPeriod() ? ($item->getMaxPeriod() ? "{$item->getMinPeriod()}-{$item->getMaxPeriod()} мес" : "от {$item->getMinPeriod()} мес") : ($item->getMaxPeriod() ? "до {$item->getMaxPeriod()} мес" : "любой") ?>
             </td>

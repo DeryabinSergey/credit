@@ -70,7 +70,8 @@ class InvestorOfferPublishCommand extends SaveCommand implements SecurityCommand
             $form->
                 drop('minPeriod')->
                 drop('maxPeriod')->
-                drop('percents');
+                drop('percents')->
+                drop('type');
         }
         
         $form->add(Primitive::string('comment')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars()));
