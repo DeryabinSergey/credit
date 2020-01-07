@@ -1,0 +1,61 @@
+<? 
+    $partViewer->view('parts/header');
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор предложений инвестирования</h1>
+    
+    <? if ($form->getTextualErrors()) { ?>
+    <div id="alert-block" class="alert alert-danger" role="alert">
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    <? } ?>
+    
+    <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Период</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=$form->getValue('id')->getMinPeriod() ? ($form->getValue('id')->getMaxPeriod() ? "{$form->getValue('id')->getMinPeriod()}-{$form->getValue('id')->getMaxPeriod()} мес" : "от {$form->getValue('id')->getMinPeriod()} мес") : ($form->getValue('id')->getMaxPeriod() ? "до {$form->getValue('id')->getMaxPeriod()} мес" : "любой") ?>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=$form->getValue('id')->getMinSumm()? number_format($form->getValue('id')->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($form->getValue('id')->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Условия</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=sprintf("%0.2f", $form->getValue('id')->getPercents())?>% в мес</label>
+        </div>
+        
+        <? if ($form->exists('comment')) { ?>
+            <div class="form-group row align-items-center">
+                <label for="comment" class="col-12 col-sm-2 col-form-label col-form-label-lg">Комментарий</label>
+                <div class="col-12 col-sm-10">
+                    <input id="comment" class="form-control form-control-lg" name="comment" value="<?=$form->getDisplayValue('comment')?>" type="text">
+                    <small class="form-text text-muted">Можно указать комментарий, который автор предложения получит вместе с уведомление о восстановлении</small>
+                </div>
+            </div>
+        <? } ?>
+        
+        <div class="form-group row">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" name="ok" class="btn btn-lg btn-success mr-2 mb-2">восстановить</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

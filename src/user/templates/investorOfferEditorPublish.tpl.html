@@ -1,0 +1,113 @@
+<? 
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addWrongLabel('minSumm', 'минимальная сумма указана неверно')->
+            addWrongLabel('maxSumm', 'максимальная сумма указана неверно')->
+            addWrongLabel('minPeriod', 'минимальный период указан неверно')->
+            addWrongLabel('maxPeriod', 'максимальный период указан неверно')->
+            addWrongLabel('percents', 'процентная ставка указана неверно')->
+            addMissingLabel('maxSumm', 'максимальная сумма не указана')->
+            addMissingLabel('percents', 'процентная ставка не указана');
+    }
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор предложений инвестирования</h1>
+    
+    <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors())?' style="display: none;"':''?>>
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    
+    <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Разместил</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=$form->getValue('id')->getUser()->getName() ? htmlspecialchars($form->getValue('id')->getUser()->getName()).' / ' : ""?><?=htmlspecialchars($form->getValue('id')->getUser()->getEmail())?>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="minPeriod" class="col-12 col-sm-2 col-form-label col-form-label-lg">Период</label>
+            <? if ($form->exists('minPeriod') && $form->exists('maxPeriod')) { ?>
+                <div class="col-12 col-sm-10 form-inline justify-content-between">
+                    <div class="input-group">
+                        <input id="minPeriod" size="4" class="form-control form-control-lg" name="minPeriod" value="<?=$form->getDisplayValue('minPeriod')?>" type="number" placeholder="миним.">
+                        <div class="input-group-append"><span class="input-group-text" id="minPeriodPrepend">мес.</span></div>
+                    </div> &mdash; 
+                    <div class="input-group">
+                        <input id="maxPeriod" size="4" class="form-control form-control-lg" name="maxPeriod" value="<?=$form->getDisplayValue('maxPeriod')?>" type="number" placeholder="макс.">
+                        <div class="input-group-append"><span class="input-group-text" id="maxPeriodPrepend">мес.</span></div>
+                    </div>
+                    <small class="form-text text-muted">Укажите минимальный и(или) максимальный срок, на который Вы готовы делать инвестиции</small>
+                </div>
+            <? } else { ?>
+                <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                    <?=$form->getValue('id')->getMinPeriod() ? ($form->getValue('id')->getMaxPeriod() ? "{$form->getValue('id')->getMinPeriod()}-{$form->getValue('id')->getMaxPeriod()} мес" : "от {$form->getValue('id')->getMinPeriod()} мес") : ($form->getValue('id')->getMaxPeriod() ? "до {$form->getValue('id')->getMaxPeriod()} мес" : "любой") ?>
+                </label>
+            <? } ?>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="minSumm" class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <? if ($form->exists('minSumm') && $form->exists('maxSumm')) { ?>
+                <div class="col-12 col-sm-10 form-inline justify-content-between">
+                    <div class="input-group">
+                        <input id="minSumm" class="form-control form-control-lg" name="minSumm" value="<?=$form->getDisplayValue('minSumm')?>" type="text" placeholder="миним.">
+                        <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
+                    </div> &mdash; 
+                    <div class="input-group">
+                        <input id="maxSumm" class="form-control form-control-lg" name="maxSumm" value="<?=$form->getDisplayValue('maxSumm')?>" type="text" placeholder="макс.">
+                        <div class="input-group-append"><span class="input-group-text" id="maxSummPrepend">&#8381;</span></div>
+                    </div>
+                    <small class="form-text text-muted">Укажите минимальную и максимальную сумму, которую Вы готовы инвестировать на указанный период</small>
+                </div>
+            <? } else { ?>
+                <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                    <?=$form->getValue('id')->getMinSumm()? number_format($form->getValue('id')->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($form->getValue('id')->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?>
+                </label>
+            <? } ?>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="percents" class="col-12 col-sm-2 col-form-label col-form-label-lg">Условия</label>
+            <? if ($form->exists('percents')) { ?>
+                <div class="col-12 col-sm-10 form-inline justify-content-between">
+                    <div class="input-group">
+                        <input id="percents" size="4" class="form-control form-control-lg" name="percents" value="<?=$form->getDisplayValue('percents')?>" type="number" step="0.01">
+                        <div class="input-group-append"><span class="input-group-text" id="percentsPrepend">% в мес</span></div>
+                    </div>
+                    <small class="form-text text-muted">Укажите условия, на которых вы хотите инвестировать указанную сумму на указанный срок</small>
+                </div>
+            <? } else { ?>
+                <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=sprintf("%0.2f", $form->getValue('id')->getPercents())?>% в мес</label>
+            <? } ?>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="comment" class="col-12 col-sm-2 col-form-label col-form-label-lg">Комментарий</label>
+            <div class="col-12 col-sm-10">
+                <input id="comment" class="form-control form-control-lg" name="comment" value="<?=$form->getDisplayValue('comment')?>" type="text">
+                <small class="form-text text-muted">Можно указать комментарий, который автор предложения получит вместе с уведомление о публикации</small>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">опубликовать</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

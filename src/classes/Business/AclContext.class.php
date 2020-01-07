@@ -8,6 +8,9 @@
 	final class AclContext extends AutoAclContext implements Prototyped, DAOConnected
 	{
             const ACL_ID                            = 1; // права на сайте    
+            const CONTROL_PANEL_ID                  = 2; // панель управления
+            const USER_ID                           = 3; // пользователи сайта
+            const INVESTOR_OFFER_ID                 = 4; // предложения пользователей
             
             /**
              * @return AclContext

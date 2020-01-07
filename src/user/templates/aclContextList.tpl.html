@@ -3,6 +3,14 @@
 <!-- Begin page content -->
 <main role="main" class="container flex-shrink-0">
     
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('adminPanel')?>">Панель администратора</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Контексты прав</li>
+        </ol>
+    </nav>
+    
     <div class="row flex-row mb-4">
         <div class="col-12 col-sm-9 col-md-10"><h1 class="">Список контекстов прав</h1></div>    
         <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">

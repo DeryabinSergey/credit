@@ -73,6 +73,37 @@ class CommonUtils
                     $link .= "?".http_build_query($arrayParams);
                 }
                 break;
+                
+            case 'investorOfferList':
+                $link = PATH_WEB . "control-panel/invest-offer/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'investorOfferEditor':
+                $link = PATH_WEB . "control-panel/invest-offer/{$arrayParams['action']}.html";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'adminInvestorOfferList':
+                $link = PATH_WEB . "control-panel/admin/invest-offer/";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+            
+            case 'adminPanel':
+                $link = PATH_WEB . "control-panel/admin/".($arrayParams ? "?".http_build_query($arrayParams) : '');
+                break;
+            
+            case 'controlPanel':
+                $link = PATH_WEB . "control-panel/".($arrayParams ? "?".http_build_query($arrayParams) : '');
+                break;
             
             case 'main':
                 $link = PATH_WEB . ($arrayParams ? "?".http_build_query($arrayParams) : '');

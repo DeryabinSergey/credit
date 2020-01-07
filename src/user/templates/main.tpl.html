@@ -1,28 +1,19 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <title>Hello world</title>
-    
-    <link href="/i/main.min.css" rel="stylesheet">
-  </head>
-  <body class="d-flex flex-column justify-content-center" style="height: 100%;">
-    <!-- Begin page content -->
-<main role="main" class="flex-shrink-0">
-    <h1 class="text-center">Hello Main!</h1>
+<? $partViewer->view('parts/header'); ?>
+
+<main role="main" class="container flex-shrink-0">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Главная</li>
+        </ol>
+    </nav>
     <? if (SecurityManager::isAuth()) { ?>
         <p>Авторизован как <?=SecurityManager::getUser()->getEmail()?> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
         
-        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
-            <p>
-                <a href="<?=CommonUtils::makeUrl('aclActionList')?>">действия прав</a>
-                <a href="<?=CommonUtils::makeUrl('aclContextList')?>">контексты прав</a>
-                <a href="<?=CommonUtils::makeUrl('aclRightList')?>">список прав</a>
-                <a href="<?=CommonUtils::makeUrl('aclGroupList')?>">группы пользователей</a>
-            </p>
+        <p><a href="<?=CommonUtils::makeUrl('controlPanel')?>">панель управления</a></p>
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CONTROL_PANEL_ID)) { ?>
+            <p><a href="<?=CommonUtils::makeUrl('adminPanel')?>">панель администрирования</a></p>
         <? } ?>
+        
     <? } else { ?>
         <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
         <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>
@@ -30,5 +21,4 @@
     <? } ?>
 </main>
 
-</body>
-</html>
+<? $partViewer->view('parts/header'); ?>
