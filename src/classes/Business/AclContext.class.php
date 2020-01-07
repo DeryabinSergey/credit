@@ -11,6 +11,7 @@
             const CONTROL_PANEL_ID                  = 2; // панель управления
             const USER_ID                           = 3; // пользователи сайта
             const INVESTOR_OFFER_ID                 = 4; // предложения пользователей
+            const CATEGORY_ID                       = 5; // категории объявлений
             
             /**
              * @return AclContext

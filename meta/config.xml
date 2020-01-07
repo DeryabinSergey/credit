@@ -81,9 +81,11 @@
         </class> 
         
         <class name="Category" extends="NamedObject">
+            <implement interface="Sortable"/>
             <properties>
                 <identifier />
-                <property name="name" type="String" size="128" required="false" />
+                <property name="name" type="String" size="128" required="true" />
+                <property name="sort" type="Integer" required="true" />
             </properties>
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>          

@@ -16,7 +16,6 @@ class CommonUtils
                 
             case 'aclActionList':
                 $link = PATH_WEB . "control-panel/admin/acl-action/";
-                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -24,6 +23,7 @@ class CommonUtils
                 
             case 'aclActionEditor':
                 $link = PATH_WEB . "control-panel/admin/acl-action/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -31,7 +31,6 @@ class CommonUtils
                 
             case 'aclContextList':
                 $link = PATH_WEB . "control-panel/admin/acl-context/";
-                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -39,6 +38,7 @@ class CommonUtils
                 
             case 'aclContextEditor':
                 $link = PATH_WEB . "control-panel/admin/acl-context/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -46,7 +46,6 @@ class CommonUtils
                 
             case 'aclRightList':
                 $link = PATH_WEB . "control-panel/admin/acl-right/";
-                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -54,6 +53,7 @@ class CommonUtils
                 
             case 'aclRightEditor':
                 $link = PATH_WEB . "control-panel/admin/acl-right/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -61,7 +61,6 @@ class CommonUtils
                 
             case 'aclGroupList':
                 $link = PATH_WEB . "control-panel/admin/acl-group/";
-                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -69,6 +68,7 @@ class CommonUtils
                 
             case 'aclGroupEditor':
                 $link = PATH_WEB . "control-panel/admin/acl-group/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -76,7 +76,6 @@ class CommonUtils
                 
             case 'investorOfferList':
                 $link = PATH_WEB . "control-panel/invest-offer/";
-                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -84,6 +83,7 @@ class CommonUtils
                 
             case 'investorOfferEditor':
                 $link = PATH_WEB . "control-panel/invest-offer/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }
@@ -91,7 +91,21 @@ class CommonUtils
                 
             case 'adminInvestorOfferList':
                 $link = PATH_WEB . "control-panel/admin/invest-offer/";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'categoryEditor':
+                $link = PATH_WEB . "control-panel/admin/category/{$arrayParams['action']}.html";
                 unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'adminCategoryList':
+                $link = PATH_WEB . "control-panel/admin/category/";
                 if ($arrayParams) {
                     $link .= "?".http_build_query($arrayParams);
                 }

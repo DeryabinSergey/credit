@@ -10,5 +10,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 input[type=number] { -moz-appearance:textfield; }
 
 html { 
-
+    .ui-sortable-helper { background-color: white; }
+    .ui-state-highlight { background-color: whitesmoke; }
 }

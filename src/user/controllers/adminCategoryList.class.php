@@ -1,6 +1,6 @@
 <?php
 
-class AdminInvestorOfferList extends baseFront implements UserController
+class AdminCategoryList extends baseFront implements UserController
 {
     public function getModel(\HttpRequest $request)
     {
@@ -8,13 +8,20 @@ class AdminInvestorOfferList extends baseFront implements UserController
         
         if ($this->isDisplayView()) {
             
-            Singleton::getInstance('HTMLMetaManager')->setTitle('Предложения инвестирования - Администрирование');
+            Singleton::getInstance('HTMLMetaManager')->
+                setTitle('Категории - Администрирование')->
+                appendJavaScript('/i/admin-category-list.js');
             
-            $list = Criteria::create(InvestorOffer::dao())->addOrder(OrderBy::create('id')->desc())->getList();
+            $list = Criteria::create(Category::dao())->addOrder(OrderBy::create('sort')->asc())->getList();
             
             $model->set('list', $list);
         }
         
         return $model;
+    }
+    
+    public function checkPermissions()
+    {
+        return SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID);
     }
 }

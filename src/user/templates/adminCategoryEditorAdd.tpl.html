@@ -1,0 +1,46 @@
+<? 
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addWrongLabel('name', 'название указано неверно')->
+            addMissingLabel('name', 'название не указано')->
+            addCustomLabel('name', CategoryAddCommand::ERROR_DUPLICATE, 'такая категория уже существует');
+    }
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор категорий</h1>
+    
+    <? if ($form->getTextualErrors()) { ?>
+        <div id="alert-block" class="alert alert-danger" role="alert">
+            <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+        </div>
+    <? } ?>
+    
+    <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <div class="form-group row align-items-center">
+            <label for="name" class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
+            <div class="col-12 col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">создать</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

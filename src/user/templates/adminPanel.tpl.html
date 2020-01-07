@@ -15,6 +15,11 @@
         <p><a href="<?=CommonUtils::makeUrl('adminInvestorOfferList')?>">предложения инвестирования</a></p>
     <? } ?>
     
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID)) { ?>
+        <h3>Категории объектов</h3>
+        <p><a href="<?=CommonUtils::makeUrl('adminCategoryList')?>">список категорий объектов</a></p>
+    <? } ?>
+    
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
         <h3>Права пользователей</h3>
         <p>
