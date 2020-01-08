@@ -91,6 +91,7 @@ $autoloader->addPaths(array(
     PATH_CONTROLLER_COMMANDS.'AclGroup',
     PATH_CONTROLLER_COMMANDS.'AclRight',
     PATH_CONTROLLER_COMMANDS.'Category',
+    PATH_CONTROLLER_COMMANDS.'Creditor',
     PATH_CONTROLLER_COMMANDS.'InvestorOffer',
     PATH_CONTROLLER_COMMANDS.'User',
 

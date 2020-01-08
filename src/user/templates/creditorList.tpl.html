@@ -1,0 +1,80 @@
+<? 
+    $partViewer->view('parts/header'); 
+    
+    $hasPremoderation = false;
+    foreach($list as $item) { 
+        if (!$item->isActive()) { 
+            $hasPremoderation = true;
+            break;
+        }
+    }
+?>
+
+<!-- Begin page content -->
+<main role="main" class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('controlPanel')?>">Панель управления</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Мои компании</li>
+        </ol>
+    </nav>
+    
+    <div class="row flex-row mb-4">
+        <div class="col-12 col-sm-9 col-md-10"><h1 class="">Мои кредитные компании</h1></div>    
+        <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
+            <a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" class="btn btn-primary">добавить</a>
+        </div>
+    </div>    
+    
+    <? if ($hasPremoderation) { ?>
+        <div class="alert alert-warning" role="alert">
+            <h4>У Вас есть компании ожидающие проверки</h4>
+            <hr />
+            <p class='mb-0'>Согласно условиям портала все кредитные организации проходят процедуру проверки перед размещением. Компании ожидающие проверки выделены желтым фоном.</p>
+        </div>
+    <? } ?>
+    
+    <? if ($list) { ?>
+        <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Название</th>
+                <th scope="col">Категории</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+        <? foreach($list as $item) { ?>
+        <tr<?=$item->isActive()?'':' class="table-warning"'?>>
+            <td class="align-middle">
+                <abbr title="<?=$item->getType()->getName()?>"><?=$item->getType()->getShortName()?></abbr> <?=htmlspecialchars($item->getName())?></td>
+            <td class="align-middle">
+                <? if ($item->getCategories()->getCount() > 0) { ?>
+                <ul class='mb-0'>
+                    <? foreach($item->getCategories()->getList() as $itemCategory) { ?>
+                        <li><?=htmlspecialchars($itemCategory->getCategory()->getName())?></li>
+                    <? } ?>
+                </ul>
+                <? } else { ?>&mdash;<? } ?>
+            </td>
+            <td class="align-middle">
+                <? if ($item->checkPermissions(AclAction::EDIT_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_UPDATE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="far fa-edit"></i></a><? } ?>
+                <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="far fa-trash-alt"></i></a><? } ?>
+            </td>
+        </tr>
+        <? } ?>
+        </tbody>
+        </table>
+    <? } else { ?>
+        <div class="card">
+          <div class="card-body">
+            <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+          </div>
+        </div>    
+    <? } ?>
+    
+</main>
+
+<? $partViewer->view('parts/footer'); ?>

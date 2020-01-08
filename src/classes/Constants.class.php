@@ -7,6 +7,11 @@ class Constants
      */
     const INVESTOR_PREMODERATION        = true;
     
+    /**
+     * Премодерация компаний кредиторов
+     */
+    const CREDITOR_PREMODERATION         = true;
+    
     /*********************************************
      * 
      * Авторизация

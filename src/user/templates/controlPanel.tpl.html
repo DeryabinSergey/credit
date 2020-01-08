@@ -11,6 +11,8 @@
     <p>Авторизован как <strong><?=SecurityManager::getUser()->getEmail()?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
     
     <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">мои предложения инвестирования</a></p>
+    
+    <p><a href="<?=CommonUtils::makeUrl('creditorList')?>">мои кредитные компании</a></p>
 </main>
 
 <? $partViewer->view('parts/header'); ?>

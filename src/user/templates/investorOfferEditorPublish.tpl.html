@@ -1,14 +1,17 @@
 <? 
     $partViewer->view('parts/header');
 
-    if ($process) {
+    if ($form->exists('minSumm')) { $form->addWrongLabel('minSumm', 'минимальная сумма указана неверно'); }
+    if ($form->exists('maxSumm')) { 
         $form->
-            addWrongLabel('minSumm', 'минимальная сумма указана неверно')->
             addWrongLabel('maxSumm', 'максимальная сумма указана неверно')->
-            addWrongLabel('minPeriod', 'минимальный период указан неверно')->
-            addWrongLabel('maxPeriod', 'максимальный период указан неверно')->
+            addMissingLabel('maxSumm', 'максимальная сумма не указана');
+    }
+    if ($form->exists('minPeriod')) { $form->addWrongLabel('minPeriod', 'минимальный период указан неверно'); }
+    if ($form->exists('maxPeriod')) { $form->addWrongLabel('maxPeriod', 'максимальный период указан неверно'); }
+    if ($form->exists('percents')) { 
+        $form->
             addWrongLabel('percents', 'процентная ставка указана неверно')->
-            addMissingLabel('maxSumm', 'максимальная сумма не указана')->
             addMissingLabel('percents', 'процентная ставка не указана');
     }
 ?>

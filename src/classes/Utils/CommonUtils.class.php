@@ -74,6 +74,28 @@ class CommonUtils
                 }
                 break;
                 
+            case 'creditorList':
+                $link = PATH_WEB . "control-panel/creditor/";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'creditorEditor':
+                $link = PATH_WEB . "control-panel/creditor/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'adminCreditorList':
+                $link = PATH_WEB . "control-panel/admin/creditor/";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
             case 'investorOfferList':
                 $link = PATH_WEB . "control-panel/invest-offer/";
                 if ($arrayParams) {

@@ -37,12 +37,12 @@
                         dropUserClones($user)->
                         dropUserAuthLog($user);
                     
-                    /*$previewFiles = PictureUtils::getPreviewFiles($user);
+                    $previewFiles = PictureUtils::getPreviewFiles($user);
 
                     if ($count = parent::dropById($id)) {
                         foreach($previewFiles as $preview)
                             if ($preview && is_file($preview) && file_exists($preview)) unlink($preview);
-                    }*/
+                    }
 
                     $tr->commit();
                 } catch (Exception $e) {
@@ -71,7 +71,7 @@
                             dropUserClones($user)->
                             dropUserAuthLog($user);
                         
-                        //$previewFiles = array_merge($previewFiles, PictureUtils::getPreviewFiles($user));
+                        $previewFiles = array_merge($previewFiles, PictureUtils::getPreviewFiles($user));
                     }                
 
                     if ($count = parent::dropByIds($ids)) {

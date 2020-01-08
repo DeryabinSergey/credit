@@ -79,7 +79,32 @@
                 <property name="percents" type="Float" required="true" />
             </properties>           
             <pattern name="StraightMapping" fetch="lazy" /> 
-        </class> 
+        </class>
+        
+        <class name="Creditor" extends="NamedObject" type="final">
+            <implement interface="Created"/>
+            <implement interface="SecurityObject"/>
+            <properties>
+                <identifier />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="type" type="SubjectType" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="active" type="Boolean" required="true" default="false" />
+                <property name="deleted" type="Boolean" required="true" default="false" />
+                <property name="name" type="String" size="128" required="true" />
+                <property name="categories" type="CreditorCategory" required="true" relation="OneToMany" />
+            </properties>           
+            <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>  
+
+        <class name="CreditorCategory" type="final">
+            <properties>
+                <identifier />
+                <property name="creditor" type="Creditor" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="category" type="Category" required="true" relation="OneToOne" fetch="lazy" />
+            </properties>
+            <pattern name="StraightMapping" fetch="lazy" />
+        </class>
         
         <class name="Category" extends="NamedObject">
             <implement interface="Sortable"/>

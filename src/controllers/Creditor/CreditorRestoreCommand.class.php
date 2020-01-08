@@ -1,11 +1,11 @@
 <?
 
-class InvestorOfferRestoreCommand implements SecurityCommand, EditorCommand
+class CreditorRestoreCommand implements SecurityCommand, EditorCommand
 {
     const ERROR_INTERNAL = 0x0004;
     
     /**
-     * @return InvestorOfferRestoreCommand
+     * @return CreditorRestoreCommand
      */
     public static function create() { return new self; }
 
@@ -21,8 +21,8 @@ class InvestorOfferRestoreCommand implements SecurityCommand, EditorCommand
                     Mail::create()->
                         setTo($form->getValue('id')->getUser()->getEmail())->
                         setFrom(DEFAULT_FROM)->
-                        setSubject('Уведомление о восстановлении на портале '.DEFAULT_MAILER)->
-                        setText('Предложение инвестирования было восстановлено.'.($form->getValue('comment')?"\r\n\r\nКомментарий администрации: {$form->getDisplayValue('comment')}":''))->
+                        setSubject('Уведомление о восстановлении компании')->
+                        setText('Ваша компания кредитор была восстановлена.'.($form->getValue('comment')?"\r\n\r\nКомментарий администрации: {$form->getDisplayValue('comment')}":''))->
                         send();
                 }
 			
@@ -43,7 +43,7 @@ class InvestorOfferRestoreCommand implements SecurityCommand, EditorCommand
         $form->add(Primitive::boolean('ok'));
         
         if (
-            $form->getValue('id') instanceof InvestorOffer &&
+            $form->getValue('id') instanceof Creditor &&
             $form->getValue('id')->getUser()->getId() != SecurityManager::getUser()->getId()
         ) {
             $form->add(Primitive::string('comment')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars()));
@@ -55,7 +55,7 @@ class InvestorOfferRestoreCommand implements SecurityCommand, EditorCommand
     public function checkPermissions(Form $form)
     {
         return 
-            $form->getValue('id') instanceof InvestorOffer &&
+            $form->getValue('id') instanceof Creditor &&
             $form->getValue('id')->checkPermissions(AclAction::RESTORE_ACTION);
     }
 }

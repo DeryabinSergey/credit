@@ -12,6 +12,7 @@
             const USER_ID                           = 3; // пользователи сайта
             const INVESTOR_OFFER_ID                 = 4; // предложения пользователей
             const CATEGORY_ID                       = 5; // категории объявлений
+            const CREDITOR_ID                       = 6; // кредиторы
             
             /**
              * @return AclContext
