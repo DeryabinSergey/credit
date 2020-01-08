@@ -12,4 +12,5 @@ input[type=number] { -moz-appearance:textfield; }
 html { 
     .ui-sortable-helper { background-color: white; }
     .ui-state-highlight { background-color: whitesmoke; }
+    .ui-sortable .handle { cursor: move; }
 }

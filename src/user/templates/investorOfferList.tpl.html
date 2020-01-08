@@ -1,12 +1,21 @@
 <? 
     $partViewer->view('parts/header'); 
     
+    $offerSummByType = array();
     $hasPremoderation = false;
     foreach($list as $item) { 
         if (!$item->isActive()) { 
             $hasPremoderation = true;
-            break;
         }
+        if (isset($offerSummByType[$item->getType()->getId()])) {
+            $offerSummByType[$item->getType()->getId()] = $offerSummByType[$item->getType()->getId()] < $item->getMaxSumm() ? $item->getMaxSumm() : $offerSummByType[$item->getType()->getId()];
+        } else {
+            $offerSummByType[$item->getType()->getId()] = $item->getMaxSumm();
+        }
+    }
+    $offerSummList = array();
+    foreach($offerSummByType as $typeId => $summ) {
+        $offerSummList[] = "как ".SubjectType::create($typeId)->getName(). " суммой <strong>".number_format($offerSummByType[$typeId], 0, '.', '&nbsp;')."&#8381;</strong>";
     }
 ?>
 
@@ -62,6 +71,9 @@
         <? } ?>
         </tbody>
         </table>
+        <? if ($offerSummList) { ?>
+            <p>Согласно добавленным предложениям Вы должны располагать <?=implode("; ", $offerSummList)?>.</p>
+        <? } ?>
     <? } else { ?>
         <div class="card">
           <div class="card-body">
@@ -70,6 +82,6 @@
         </div>    
     <? } ?>
     
-</main>  
+</main>
 
 <? $partViewer->view('parts/footer'); ?>

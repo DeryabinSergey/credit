@@ -29,7 +29,7 @@
         <pattern name="SpookedEnumeration" />
     </class>
     
-    <class name="InvestorOfferType" type="final">
+    <class name="SubjectType" type="final">
         <properties>
             <identifier />
         </properties>

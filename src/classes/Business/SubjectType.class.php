@@ -1,6 +1,6 @@
 <?php
 
-final class InvestorOfferType extends Enumeration
+final class SubjectType extends Enumeration
 {
     const TYPE_FIZ          = 1;
     const TYPE_IP           = 2;
@@ -42,7 +42,7 @@ final class InvestorOfferType extends Enumeration
     }
 
     /**
-     * @return InvestorOfferType
+     * @return SubjectType
     **/
     public function setId($id)
     {

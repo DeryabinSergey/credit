@@ -4,6 +4,7 @@ $(document).ready(function(){
         alertTimer = null;
         
     $('#sortable-table tbody').sortable({
+        axis: 'y',
         placeholder: "ui-state-highlight",
         handle: '.handle',
         start: function(event, ui) {

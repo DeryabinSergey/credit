@@ -93,7 +93,7 @@
                 <div class="col-12 col-sm-10">
                     <select name="type" id="type" class="form-control form-control-lg">
                         <option <?=$form->exportValue('type')?'':' selected="selected"'?>></option>
-                        <? foreach(InvestorOfferType::getList(InvestorOfferType::create(InvestorOfferType::getAnyId())) as $type) { ?>
+                        <? foreach(SubjectType::getList(SubjectType::create(SubjectType::getAnyId())) as $type) { ?>
                             <option value="<?=$type->getId()?>"<?=$form->exportValue('type') && $form->exportValue('type') == $type->getId()?' selected="selected"':''?>><?=htmlspecialchars($type->getName())?></option>
                         <? } ?>
                     </select>
