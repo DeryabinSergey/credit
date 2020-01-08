@@ -20,14 +20,21 @@
         <p><a href="<?=CommonUtils::makeUrl('adminCategoryList')?>">список категорий объектов</a></p>
     <? } ?>
     
-    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
-        <h3>Права пользователей</h3>
-        <p>
-            <a href="<?=CommonUtils::makeUrl('aclActionList')?>">действия прав</a>
-            <a href="<?=CommonUtils::makeUrl('aclContextList')?>">контексты прав</a>
-            <a href="<?=CommonUtils::makeUrl('aclRightList')?>">список прав</a>
-            <a href="<?=CommonUtils::makeUrl('aclGroupList')?>">группы пользователей</a>
-        </p>
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID) || SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::USER_ID)) { ?>
+        <h3>Права и пользователи</h3>
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::USER_ID)) { ?>
+            <p>
+                <a href="<?=CommonUtils::makeUrl('adminUserList')?>">пользователи</a>
+            </p>
+        <? } ?>
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
+            <p>
+                <a href="<?=CommonUtils::makeUrl('aclActionList')?>">действия прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclContextList')?>">контексты прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclRightList')?>">список прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclGroupList')?>">группы пользователей</a>
+            </p>
+        <? } ?>
     <? } ?>
 </main>
 

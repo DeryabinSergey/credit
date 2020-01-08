@@ -110,6 +110,21 @@ class CommonUtils
                     $link .= "?".http_build_query($arrayParams);
                 }
                 break;
+                
+            case 'adminUserEditor':
+                $link = PATH_WEB . "control-panel/admin/user/{$arrayParams['action']}.html";
+                unset($arrayParams['action']);
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
+                
+            case 'adminUserList':
+                $link = PATH_WEB . "control-panel/admin/user/";
+                if ($arrayParams) {
+                    $link .= "?".http_build_query($arrayParams);
+                }
+                break;
             
             case 'adminPanel':
                 $link = PATH_WEB . "control-panel/admin/".($arrayParams ? "?".http_build_query($arrayParams) : '');

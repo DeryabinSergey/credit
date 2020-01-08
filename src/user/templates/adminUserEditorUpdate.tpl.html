@@ -1,0 +1,110 @@
+<? 
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addWrongLabel('name', 'имя указано неверно')->
+            addMissingLabel('name', 'имя не указано')->
+            addWrongLabel('securityType', 'уровень безопасности указан неверно')->
+            addMissingLabel('securityType', 'уровень безопасности не указан')->
+            addWrongLabel('group', 'группа администраторов указана неверно')->
+            addWrongLabel('banList', 'период установки блокировки указан неверно')->
+            addCustomLabel('id', UserUpdateCommand::ERROR_INTERNAL, 'ошибка на сервере');
+    }
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор пользователей</h1>
+    
+    <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors())?' style="display: none;"':''?>>
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    
+    <form method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <input id="forceBan" type="hidden" name="forceBan" value="0" />
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $form->getValue('id')->getPhone())?></label>
+        </div>
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Email</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg"><?=htmlspecialchars($form->getValue('id')->getEmail())?></label>
+        </div>
+        <div class="form-group row align-items-center">
+            <label for="name" class="col-12 col-sm-2 col-form-label col-form-label-lg">Имя Отчество</label>
+            <div class="col-12 col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text">
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+            <label for="securityType" class="col-12 col-sm-2 col-form-label col-form-label-lg">Уровень безопасности</label>
+            <div class="col-12 col-sm-10">
+                <select name="securityType" id="securityType" class="form-control form-control-lg">
+                    <option <?=$form->exportValue('securityType')?'':' selected="selected"'?>></option>
+                    <? foreach(SecurityType::getList(SecurityType::create(SecurityType::getAnyId())) as $type) { ?>
+                        <option value="<?=$type->getId()?>"<?=$form->exportValue('securityType') && $form->exportValue('securityType') == $type->getId()?' selected="selected"':''?>><?=htmlspecialchars($type->getName())?></option>
+                    <? } ?>
+                </select>   
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+            <label for="group" class="col-12 col-sm-2 col-form-label col-form-label-lg">Группа админ.</label>
+            <div class="col-12 col-sm-10">
+                <select name="group" id="group" class="form-control form-control-lg">
+                    <option <?=$form->exportValue('group')?'':' selected="selected"'?>></option>
+                    <? foreach($groupList as $group) { ?>
+                        <option value="<?=$group->getId()?>"<?=$form->exportValue('group') && $form->exportValue('group') == $group->getId()?' selected="selected"':''?>><?=htmlspecialchars($group->getName())?></option>
+                    <? } ?>
+                </select>   
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+            <div class="col-12 col-sm-10 offset-sm-2">
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="ban" name="ban"<?=$form->getValue('ban')?' checked="checked"':''?> />
+                           <label class="form-check-label" for="ban">пользователь заблокирован<span id="ban-expire-text"<?=$process?' style="display:none;"':''?>><?=$form->getValue('id')->getBanExpire() instanceof Timestamp?" до ".intval($form->getValue('id')->getBanExpire()->getDay())." ".RussianTextUtils::getMonthInGenitiveCase($form->getValue('id')->getBanExpire()->getMonth())." {$form->getValue('id')->getBanExpire()->getHour()}:{$form->getValue('id')->getBanExpire()->getMinute()}":($form->getValue('id')->isBan()?' навсегда':'')?></span></label>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ban-context"<?=!$process || !$form->getValue('ban')?' style="display: none;"':''?>>
+            <div class="form-group row align-items-center">
+                <label for="banList" class="col-12 col-sm-2 col-form-label col-form-label-lg">Период блокировки</label>
+                <div class="col-12 col-sm-10">
+                    <select name="banList" id="banList" class="form-control form-control-lg">
+                        <? foreach($banList as $period => $name) { ?>
+                            <option value="<?=$period?>"<?=$form->getValueOrDefault('banList') === 0 || $form->getValueOrDefault('banList') == $period?' selected="selected"':''?>><?=htmlspecialchars($name)?></option>
+                        <? } ?>
+                    </select>   
+                </div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <label for="banComment" class="col-12 col-sm-2 col-form-label col-form-label-lg">Комментарий блокировки</label>
+                <div class="col-12 col-sm-10">
+                    <input id="banComment" class="form-control form-control-lg" name="banComment" value="<?=$form->getDisplayValue('banComment')?>" type="text">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">сохранить</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>   
+
+<? $partViewer->view('parts/footer'); ?>
