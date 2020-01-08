@@ -82,9 +82,11 @@ class UserUpdateCommand extends SaveCommand implements SecurityCommand
                 
                 $mav->
                     getModel()->
-                        set('banList', $this->banList)->
                         set('groupList', $list);
             }
+            $mav->
+                getModel()->
+                    set('banList', $this->banList);
         }
 
         return $mav;
