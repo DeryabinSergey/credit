@@ -8,16 +8,18 @@
             <li class="breadcrumb-item active" aria-current="page">Панель администратора</li>
         </ol>
     </nav>
-    <p>Авторизован как <strong><?=SecurityManager::getUser()->getEmail()?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
         
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) { ?>
         <h3>Предложения инвестирования</h3>
         <p><a href="<?=CommonUtils::makeUrl('adminInvestorOfferList')?>">предложения инвестирования</a></p>
+        <p>Всего на сайте <?=$investorOfferNum?> <?=RussianTextUtils::selectCaseForNumber($investorOfferNum, array('предложение', 'предложения', 'предложений'))?> инвестирования<?=isset($investorOfferModerate) && $investorOfferModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$investorOfferModerate}</strong>":''?>.</p>
     <? } ?>
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDITOR_ID)) { ?>
         <h3>Компании кредиторов</h3>
         <p><a href="<?=CommonUtils::makeUrl('adminCreditorList')?>">компании кредиторов</a></p>
+        <p>Всего на сайте <?=$creditorNum?> <?=RussianTextUtils::selectCaseForNumber($creditorNum, array('кредитная организаця', 'кредитные организации', 'кредитных организаций'))?><?=isset($creditorModerate) && $creditorModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$creditorModerate}</strong>":''?>.</p>
     <? } ?>
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID)) { ?>

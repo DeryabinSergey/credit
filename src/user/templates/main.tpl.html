@@ -7,7 +7,7 @@
         </ol>
     </nav>
     <? if (SecurityManager::isAuth()) { ?>
-        <p>Авторизован как <?=SecurityManager::getUser()->getEmail()?> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
         
         <p><a href="<?=CommonUtils::makeUrl('controlPanel')?>">панель управления</a></p>
         <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CONTROL_PANEL_ID)) { ?>
