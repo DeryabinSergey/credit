@@ -1,0 +1,50 @@
+<? $partViewer->view('parts/header'); ?>
+
+<!-- Begin page content -->
+<main role="main" class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Админ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Пользователи</li>
+        </ol>
+    </nav>
+    
+    <? if ($list) { ?>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Email</th>
+                <th scope="col">Телефон</th>
+                <? if (SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::USER_ID)) { ?><th scope="col">&nbsp;</th><? } ?>
+            </tr>
+        </thead>
+        <tbody>
+        <? foreach($list as $item) { ?>
+        <tr>
+            <td class="align-middle"><?=$item->isBan()?'<del>':''?><?=htmlspecialchars($item->getName())?><?=$item->isBan()?'</del>':''?></td>
+            <td class="align-middle"><?=$item->isBan()?'<del>':''?><?=htmlspecialchars($item->getEmail())?><?=$item->isBan()?'</del>':''?></td>
+            <td class="align-middle"><?=$item->isBan()?'<del>':''?><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $item->getPhone())?><?=$item->isBan()?'</del>':''?></td>
+            <? if (SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::USER_ID)) { ?>
+                <td class="align-middle">
+                    <? if (SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::USER_ID)) { ?><a href="<?=CommonUtils::makeUrl('userEditor', array('action' => CommandContainer::ACTION_UPDATE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="far fa-edit"></i></a><? } ?>
+                </td>
+            <? } ?>
+        </tr>
+        <? } ?>
+        </tbody>
+        </table>
+    </div>
+    <? } else { ?>
+        <div class="card">
+          <div class="card-body">
+            <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+          </div>
+        </div>    
+    <? } ?>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

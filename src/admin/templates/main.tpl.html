@@ -1,0 +1,47 @@
+<? $partViewer->view('parts/header'); ?>
+
+<main role="main" class="container flex-shrink-0">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Админ</li>
+        </ol>
+    </nav>
+    
+    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) { ?>
+        <h3>Предложения инвестирования</h3>
+        <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">предложения инвестирования</a></p>
+        <p>Всего на сайте <?=$investorOfferNum?> <?=RussianTextUtils::selectCaseForNumber($investorOfferNum, array('предложение', 'предложения', 'предложений'))?> инвестирования<?=isset($investorOfferModerate) && $investorOfferModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$investorOfferModerate}</strong>":''?>.</p>
+    <? } ?>
+    
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDITOR_ID)) { ?>
+        <h3>Компании кредиторов</h3>
+        <p><a href="<?=CommonUtils::makeUrl('creditorList')?>">компании кредиторов</a></p>
+        <p>Всего на сайте <?=$creditorNum?> <?=RussianTextUtils::selectCaseForNumber($creditorNum, array('кредитная организация', 'кредитные организации', 'кредитных организаций'))?><?=isset($creditorModerate) && $creditorModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$creditorModerate}</strong>":''?>.</p>
+    <? } ?>
+    
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID)) { ?>
+        <h3>Категории объектов</h3>
+        <p><a href="<?=CommonUtils::makeUrl('categoryList')?>">список категорий объектов</a></p>
+    <? } ?>
+    
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID) || SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::USER_ID)) { ?>
+        <h3>Права и пользователи</h3>
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::USER_ID)) { ?>
+            <p>
+                <a href="<?=CommonUtils::makeUrl('userList')?>">пользователи</a>
+            </p>
+        <? } ?>
+        <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID)) { ?>
+            <p>
+                <a href="<?=CommonUtils::makeUrl('aclActionList')?>">действия прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclContextList')?>">контексты прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclRightList')?>">список прав</a>
+                <a href="<?=CommonUtils::makeUrl('aclGroupList')?>">группы пользователей</a>
+            </p>
+        <? } ?>
+    <? } ?>    
+</main>
+
+<? $partViewer->view('parts/header'); ?>

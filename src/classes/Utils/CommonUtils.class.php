@@ -1,169 +1,91 @@
 <?php
 
+/**
+
+
+
+                case 'investorOfferList':
+                    $link = $domain . "control-panel/invest-offer/";
+                    if ($arrayParams) {
+                        $link .= "?".http_build_query($arrayParams);
+                    }
+                    break;
+
+                case 'investorOfferEditor':
+                    $link = $domain . "control-panel/invest-offer/{$arrayParams['action']}.html";
+                    unset($arrayParams['action']);
+                    if ($arrayParams) {
+                        $link .= "?".http_build_query($arrayParams);
+                    }
+                    break;
+ */
+
 class CommonUtils
 {    
-    public static function makeUrl($moduleName, $arrayParams = array(), $encType = PHP_QUERY_RFC3986)
+    private static $urlMapping = 
+        array(
+            'userRegister'              => 'user/',
+            
+            'aclActionList'             => 'acl-action/',
+            'aclContextList'            => 'acl-context/',
+            'aclRightList'              => 'acl-right/',
+            'aclGroupList'              => 'acl-group/',
+            'categoryList'              => 'category/',
+            'userList'                  => 'users/',
+            'creditorList'              => array(PATH_WEB_CREDITOR => 'cabinet/my/', PATH_WEB_ADMIN => 'creditor/'),
+            'investorOfferList'         => array(PATH_WEB_INVESTOR => 'cabinet/my/', PATH_WEB_ADMIN => 'invest-offer/'),
+            'controlPanel'              => 'cabinet/',
+            
+            'main'                      => ''
+        );
+    
+    /**
+     * Массив контроллеров, которые не определятся как редакторы, но являются таковыми
+     * @var array
+     */
+    private static $controllerEditors = 
+        array(
+            'userRegister'      => 'userRegister'
+        );
+    
+    public static function makeUrl($moduleName, $arrayParams = array(), $domain = PATH_WEB, $encType = PHP_QUERY_RFC3986)
     {
-        switch($moduleName) {
-            
-            case 'userRegister':
-                $link = PATH_WEB . "user/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclActionList':
-                $link = PATH_WEB . "control-panel/admin/acl-action/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclActionEditor':
-                $link = PATH_WEB . "control-panel/admin/acl-action/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclContextList':
-                $link = PATH_WEB . "control-panel/admin/acl-context/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclContextEditor':
-                $link = PATH_WEB . "control-panel/admin/acl-context/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclRightList':
-                $link = PATH_WEB . "control-panel/admin/acl-right/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclRightEditor':
-                $link = PATH_WEB . "control-panel/admin/acl-right/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclGroupList':
-                $link = PATH_WEB . "control-panel/admin/acl-group/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'aclGroupEditor':
-                $link = PATH_WEB . "control-panel/admin/acl-group/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'creditorList':
-                $link = PATH_WEB . "control-panel/creditor/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'creditorEditor':
-                $link = PATH_WEB . "control-panel/creditor/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'adminCreditorList':
-                $link = PATH_WEB . "control-panel/admin/creditor/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'investorOfferList':
-                $link = PATH_WEB . "control-panel/invest-offer/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'investorOfferEditor':
-                $link = PATH_WEB . "control-panel/invest-offer/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'adminInvestorOfferList':
-                $link = PATH_WEB . "control-panel/admin/invest-offer/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'categoryEditor':
-                $link = PATH_WEB . "control-panel/admin/category/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'adminCategoryList':
-                $link = PATH_WEB . "control-panel/admin/category/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'adminUserEditor':
-                $link = PATH_WEB . "control-panel/admin/user/{$arrayParams['action']}.html";
-                unset($arrayParams['action']);
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-                
-            case 'adminUserList':
-                $link = PATH_WEB . "control-panel/admin/user/";
-                if ($arrayParams) {
-                    $link .= "?".http_build_query($arrayParams);
-                }
-                break;
-            
-            case 'adminPanel':
-                $link = PATH_WEB . "control-panel/admin/".($arrayParams ? "?".http_build_query($arrayParams) : '');
-                break;
-            
-            case 'controlPanel':
-                $link = PATH_WEB . "control-panel/".($arrayParams ? "?".http_build_query($arrayParams) : '');
-                break;
-            
-            case 'main':
-                $link = PATH_WEB . ($arrayParams ? "?".http_build_query($arrayParams) : '');
-                break;
-            
-            default:
-                $link = PATH_WEB . "index.php?area={$moduleName}" .self::getQueryStringByParametrs($arrayParams, '&', array(), '&', $encType);
-                
+        $isEditor = mb_substr($moduleName, mb_strlen($moduleName) - 6) == 'Editor';
+        if ($isEditor) { // Если контроллер определился как редактор, мы же будем подставлять ссылку от списка - значит её и используем
+            $mapped = mb_substr($moduleName, 0, mb_strlen($moduleName) - 6) . 'List';
+            if (isset(self::$urlMapping[$mapped])) {
+                $moduleName = $mapped;
+            }
         }
+        
+        if (isset(self::$urlMapping[$moduleName])) {
+            if (is_array(self::$urlMapping[$moduleName])) {
+                foreach(self::$urlMapping[$moduleName] as $key => $value) {
+                    if (mb_stripos($domain, $key) === 0) {
+                        $link = $domain.self::$urlMapping[$moduleName][$key];
+                        break;
+                    }
+                }
+            } else {
+                $link = $domain.self::$urlMapping[$moduleName];
+            }
+            
+            if ((isset(self::$controllerEditors[$moduleName]) || $isEditor) && isset($arrayParams['action'])) {
+                $link .= "{$arrayParams['action']}.html";
+                unset($arrayParams['action']);            
+            }
+            if ($arrayParams) {
+                $link .= "?".http_build_query($arrayParams);
+            }
+        } else {
+            switch($moduleName) {
+
+                default:
+                    $link = $domain . "index.php?area={$moduleName}" .self::getQueryStringByParametrs($arrayParams, '&', array(), '&', $encType);
+
+            }
+        }
+        
         return $link;
     }
 

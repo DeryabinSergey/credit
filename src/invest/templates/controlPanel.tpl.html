@@ -1,0 +1,26 @@
+<? $partViewer->view('parts/header'); ?>
+
+<main role="main" class="container flex-shrink-0">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Личный Кабинет</li>
+        </ol>
+    </nav>
+        
+    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+    
+    <hr />
+    <h1>Инвестор</h1>
+    <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">мои предложения инвестирования</a></p>
+    <p>Информация для тех, у кого есть опубликованные ивест. предложения:</p>
+    <ul>
+        <li>текущие сделки (активные) с планируемой доходностью</li>
+        <li>запросы денег (с перепиской)</li>
+        <li>рейтинг как инвестора и отзывы</li>
+        <li>история запросов и история сделок с фактической доходностью</li>
+    </ul>
+    <hr />
+</main>
+
+<? $partViewer->view('parts/header'); ?>

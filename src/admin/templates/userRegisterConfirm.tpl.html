@@ -1,0 +1,82 @@
+<? 
+    $partViewer->view('parts/header');
+
+    $form->
+        addWrongLabel('code', 'код подтверждения телефона указан неверно')->
+        addMissingLabel('code', 'код подтверждения из SMS не указан')->
+        addCustomLabel('code', UserRegisterConfirmCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия');
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Сброс пароля</h1>
+    
+    <? if ($userExists instanceof User) { ?>
+    
+        <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors())?' style="display: none;"':''?>>
+            <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+        </div>
+
+        <form action="" method="POST" class="">
+            <input id="uuid" type="hidden" name="uuid" value="<?=$form->getValue('uuid')?>" />
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label col-form-label-lg">Email</label>
+                <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                    <?=mb_substr($userExists->getEmail(), 0, 2).mb_substr(preg_replace("/([^@])/isu", "*", $userExists->getEmail()), 2, mb_strlen($userExists->getEmail())-4).mb_substr($userExists->getEmail(), mb_strlen($userExists->getEmail())-2, 2)?>
+                </label>
+            </div>
+
+            <div class="form-group row">
+                <label for="phone" class="col-12 col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+                <div class="col-12 col-sm-10 row align-items-center">
+                    <div class="col-auto">
+                        <label class="col-form-label col-form-label-lg font-weight-bold">
+                            +7 (<?=mb_substr($userExists->getPhone(), 0, 2)?>*) ***-**-*<?=mb_substr($userExists->getPhone(), 9, 1)?>
+                        </label>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" id="code-confirm-button" class="btn btn-info btn-sm">отправить код</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
+                <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
+                <div class="col-12 col-sm-auto">
+                    <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="" type="number">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">продолжить</button>
+                    <button type="submit" name="cancel" class="btn btn-lg btn-link mb-2">отменить</button>
+                </div>
+            </div>
+        </form>
+    
+    <? } else { ?>
+        <div id="warning-block" class="alert alert-danger" role="alert">
+            <h4>Ссылка недействительна</h4>
+            <hr />
+            <p>К сожалению, мы не смогли идентифицировать Вас по ссылке, возможно истек срок её действия.</p>
+            <p class="mb-0">Вы можете вернуться на <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY))?>" class="alert-link">форму восстановления</a> и отправить новый запрос.</p>
+        </div>
+        
+        <form action="" method="POST" class="">
+            <div class="form-group row">
+                <div class="col-12">
+                    <button type="submit" name="cancel" class="btn btn-lg btn-info btn-block">вернуться</button>
+                </div>
+            </div>
+        </form> 
+    <? } ?>
+    
+    </div>
+    
+</main>   
+
+<? $partViewer->view('parts/footer'); ?>

@@ -1,0 +1,79 @@
+<? 
+    $partViewer->view('parts/header');
+
+    $form->
+        addWrongLabel('name', 'имя указано неверно')->
+        addMissingLabel('name', 'имя не указано')->
+        addWrongLabel('phone', 'номер телефона указан неверно')->
+        addWrongLabel('code', 'код подтверждения телефона указан неверно')->
+        addMissingLabel('phone', 'номер телефона не указан')->
+        addMissingLabel('code', 'код подтверждения телефона не указан')->
+        addCustomLabel('code', UserRegisterPhoneCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия');
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Регистрация</h1>
+    
+    <div id="warning-block" class="alert alert-warning" role="alert"<?=(!$process || !$userExists instanceof User)?' style="display: none;"':''?>>
+        <h4>Вы уже зарегистрированы!</h4>
+        <hr />
+        <p>Пользователь с таким номером телефона уже зарегистрирован у нас на портале</p>
+        <p class="mb-0">Вы можете переходить на <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>" class="alert-link">страницу авторизации</a>, пароль для входа мы отправляли Вам на почту, указанную при регистрации. Если не можете найти письмо или не помните какой email указывали - воспользуйтесь <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY, 'return' => $curl))?>" class="alert-link">восстановлением пароля</a>.</p>
+    </div>
+    
+    <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors() || $userExists instanceof User)?' style="display: none;"':''?>>
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    
+    <form action="" method="POST" class="">
+        <input type="hidden" name="response" value="" id="google-response" />
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Email</label>
+            <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=$userEmail?></label>
+        </div>
+        
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label col-form-label-lg">Имя Отчество</label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="name">
+                <small class="form-text text-muted">Ваше имя будет отображаться у Ваших предложений и в переписке с партнерами</small>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label for="phone" class="col-12 col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+            <div class="col-12 col-sm-10 form-row align-items-center">
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text">+7</span></div>
+                    <input id="phone" class="form-control form-control-lg " name="phone" value="<?=$form->getSafeValue('phone')?>" type="phone">
+                    <div class="input-group-append">
+                        <button type="button" id="code-button" class="btn btn-info btn-sm">отправить код</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
+            <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
+            <div class="col-12 col-sm-auto">
+                <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="" type="number">
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">продолжить</button>
+                <button type="submit" name="cancel" class="btn btn-lg btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>
+
+<? $partViewer->view('parts/footer'); ?>

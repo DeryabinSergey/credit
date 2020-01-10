@@ -1,0 +1,21 @@
+<? $partViewer->view('parts/header'); ?>
+
+<main role="main" class="container flex-shrink-0">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Главная</li>
+        </ol>
+    </nav>
+    <? if (SecurityManager::isAuth()) { ?>
+        <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+        
+        <p><a href="<?=CommonUtils::makeUrl('controlPanel')?>">личный кабинет</a></p>
+        
+    <? } else { ?>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>
+        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY, 'return' => $curl))?>">восстановить пароль</a>
+    <? } ?>
+</main>
+
+<? $partViewer->view('parts/header'); ?>

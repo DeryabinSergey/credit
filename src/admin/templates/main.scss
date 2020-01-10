@@ -1,0 +1,16 @@
+@import "/var/www/bootstrap-4.4.1/scss/bootstrap.scss";
+
+@import "/var/www/fontawesome-free-5.12.0-web/scss/fontawesome.scss";
+@import "/var/www/fontawesome-free-5.12.0-web/scss/brands.scss";
+@import "/var/www/fontawesome-free-5.12.0-web/scss/solid.scss";
+@import "/var/www/fontawesome-free-5.12.0-web/scss/regular.scss";
+@import "/var/www/fontawesome-free-5.12.0-web/scss/v4-shims.scss";
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance:textfield; }
+
+html { 
+    .ui-sortable-helper { background-color: white; }
+    .ui-state-highlight { background-color: whitesmoke; }
+    .ui-sortable .handle { cursor: move; }
+}

@@ -1,5 +1,7 @@
 <?php
 
+
+
 require '../../../config.inc.php';
 
 if (isset($_GET['area']) && (stripos($_GET['area'], ".") !== false || stripos($_GET['area'], "/") !== false)) {
@@ -8,10 +10,6 @@ if (isset($_GET['area']) && (stripos($_GET['area'], ".") !== false || stripos($_
 }
 
 try {
-
-    session_name('credit');
-    Session::start();
-    
     $request = HttpRequest::create()->
         setGet($_GET)->
         setPost($_POST)->
