@@ -7,10 +7,9 @@ class main extends baseFront
         $model = parent::getModel($request);
         
         if ($this->isDisplayView()) {
+            Singleton::getInstance('HTMLMetaManager')->setTitle('Кредитным организациям');
         }
-        //mail('deryabinsergey@gmail.com', 'test', 'message');
-        //Mail::create()->setFrom(DEFAULT_MAILER.' <'.DEFAULT_EMAIL.'>')->setTo('deryabinsergey@gmail.com')->setSubject('Регистрация')->setText('Текст о регистрации')->send();
-        //var_dump(SmsUtils::send('79636223355', 'Код подтверждения 1234'));
+        
         return $model;
     }
 }

@@ -1,29 +1,94 @@
-<? $partViewer->view('parts/header'); ?>
+<? 
+    $partViewer->view('parts/header'); 
+    
+    $hasPremoderation = false;
+    foreach($list as $item) { 
+        if (!$item->isActive()) { 
+            $hasPremoderation = true;
+            break;
+        }
+    }
+?>
 
-<main role="main" class="container flex-shrink-0">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Личный Кабинет</li>
-        </ol>
-    </nav>
+    <? if ($hasCompany) { ?>
+    <main role="main" class="container flex-shrink-0">
+        <p>Информация для тех, у кого есть или были размещенные кредитные организации:</p>
+        <ul>
+            <li>текущие сделки (активные) с планируемой доходностью</li>
+            <li>запросы в работе (с перепиской слева и справа отдельно)</li>
+            <li>рейтинг как кредитора и заемщика и отзывы</li>
+            <li>история запросов и история сделок с фактической доходностью</li>
+            <li>просмотр текущих активных предложений от инвесторов</li>
+            <li>просмотр запросов от заемщиков</li>
+        </ul>  
+        <hr />    
+    
+        <div class="row flex-row mb-4">
+            <div class="col-12 col-sm-9 col-md-10"><h1 class="">Мои компании</h1></div>    
+            <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
+                <a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" class="btn btn-primary">добавить</a>
+            </div>
+        </div>    
+
+        <? if ($hasPremoderation) { ?>
+            <div class="alert alert-warning" role="alert">
+                <h4>У Вас есть компании ожидающие проверки</h4>
+                <hr />
+                <p class='mb-0'>Согласно условиям портала все кредитные организации проходят процедуру проверки перед размещением. Компании ожидающие проверки выделены желтым фоном.</p>
+            </div>
+        <? } ?>
         
-    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
-    
-    <hr />
-    <h1>Кредитор</h1>
-    <p><a href="<?=CommonUtils::makeUrl('creditorList')?>">мои кредитные компании</a></p>
-    <p>Информация для тех, у кого есть размещенные кредитные организации</p>
-    <ul>
-        <li>текущие сделки (активные) с планируемой доходностью</li>
-        <li>запросы в работе (с перепиской слева и справа отдельно)</li>
-        <li>рейтинг как кредитора и заемщика и отзывы</li>
-        <li>история запросов и история сделок с фактической доходностью</li>
-        <li>просмотр текущих активных предложений от инвесторов</li>
-        <li>просмотр запросов от заемщиков</li>
-    </ul>  
-    
-    <hr />
-</main>
+        <? if ($list) { ?>
+            <div class="row">
+            <? foreach($list as $item) { ?>
+                <div class='<?=(count($list) == 1 ? 'col-12' : (count($list) % 3 == 0 ? 'col-12 col-md-4' : 'col-12 col-md-6') )?> mb-3'>
+                <div class="card<?=$item->isActive()?' border-success':' border-warning'?> h-100">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <?=$item->getType()->getShortName()?> <strong><?=htmlspecialchars($item->getName())?></strong>
+                            <? if ($item->getCategories()->getCount() > 0) { ?>
+                            работает в категориях:
+                            <ul class='mb-0'>
+                                <? foreach($item->getCategories()->getList() as $itemCategory) { ?>
+                                    <li><?=htmlspecialchars($itemCategory->getCategory()->getName())?></li>
+                                <? } ?>
+                            </ul>
+                            <? } else { ?><em> категории не выбраны</em><? } ?>
+                        </p>
+                    </div>
+                        <div class='card-footer'>
+                        
+                        <p class='text-center mb-0'>
+                            <? if ($item->checkPermissions(AclAction::EDIT_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_UPDATE, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link"><i class="far fa-edit"></i>редактировать</a><? } ?>
+                            <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link"><i class="far fa-trash-alt mr-2"></i>удалить</a><? } ?>
+                        </p>
+                        
+                        </div>
+                </div>
+                </div>
+            <? } ?>
+            </div>
+        <? } else { ?>
+            <div class="card">
+              <div class="card-body">
+                <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+              </div>
+            </div>    
+        <? } ?>        
+        
+        
+    </main>
+    <? } else { ?>
+    <main role="main" class="container d-flex flex-shrink-0 h-100 align-items-center">
+        <div class="jumbotron mb-0">
+            <div class="container">
+                <h1>Добро пожаловать в команду!</h1>
+                <p>Здесь будет отображаться информация по Вашим компаниям, запросы от заемщиков, инвестиций и статистика.</p>
+                <p>Что бы начать получитать прибыль - добавьте компанию и дождитесь проверки данных</p>
+                <p class="mb-0 text-center"><a class="btn btn-info btn-lg mt-4" href="<?=CommonUtils::makeUrl('creditorEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" role="button">добавить компанию</a></p>
+            </div>
+        </div>        
+    </main>
+    <? } ?>
 
-<? $partViewer->view('parts/header'); ?>
+<? $partViewer->view('parts/footer'); ?>

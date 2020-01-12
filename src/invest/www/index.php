@@ -47,7 +47,7 @@ try {
             $curl = base64_encode(PATH_WEB);
         }
         $model = Model::create();
-        $view = RedirectView::create(CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl, 'needAuth' => 1)));
+        $view = RedirectView::create(CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'go' => $curl, 'needAuth' => 1)));
     } else {
 	$modelAndView = $controller->handleRequest($request);
 

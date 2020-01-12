@@ -40,11 +40,13 @@ abstract class CommandContainer extends BaseEditor
             getForm()->
                 add(Primitive::string('securityCode'))->
                 add(Primitive::string('return'))->
+                add(Primitive::string('go'))->
                 add(Primitive::boolean('cancel'));
         
         $this->
             map->
-                addSource('return', RequestType::get());
+                addSource('return', RequestType::get())->
+                addSource('go', RequestType::get());
     }
 
     /**
@@ -125,23 +127,18 @@ abstract class CommandContainer extends BaseEditor
             
             if ($mav->getView() == self::COMMAND_SUCCEEDED) {
                 
-                if ($this->secureController && !isset($this->mapUnsecureCommands[$commandName])) {
-                    $controller = get_class($this);
-                    if ( 
-                        $this->getForm()->getValue('securityCode') &&
-                        $request->hasSessionVar(self::SESSION_SECURITY_VAR) &&
-                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller]) &&
-                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName]) &&
-                        isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName][$this->getForm()->getValue('securityCode')])
-                    ) {
-                        $security = $request->getSessionVar(self::SESSION_SECURITY_VAR);
-                        unset($security[$controller][$commandName][$this->getForm()->getValue('securityCode')]);
-                        Session::assign(self::SESSION_SECURITY_VAR, $security);
+                $this->dropSecuritySessionVar($request);
+                
+                $redirect = $this->getCurrentUrl($request, true);
+                if ($this->getForm()->getValue('go')) {
+                    $go = base64_decode($this->getForm()->getValue('go'));
+                    if ($go !== false) {
+                        $redirect = $go;
                     }
                 }
                 
                 $mav->
-                    setView(RedirectView::create($this->getCurrentUrl($request, true)))->
+                    setView(RedirectView::create($redirect))->
                     getModel()->
                         drop('id');
             } else {                
@@ -151,11 +148,34 @@ abstract class CommandContainer extends BaseEditor
                         set('process', $this->process)->
                         set('curl', $this->getEncodedCurrentUrl($request))->
                         set('securityCode', $this->securityCode)->
-                        set('form', $this->getForm());
+                        set('form', $this->getForm())->
+                        set('go', $this->getForm()->getValue('go'));
             }
         }
 
         return $mav;
+    }
+    
+    protected function dropSecuritySessionVar(HttpRequest $request)
+    {
+        $commandName = $this->getForm()->{$this->getActionMethod()}('action');
+                
+        if ($this->secureController && !isset($this->mapUnsecureCommands[$commandName])) {
+            $controller = get_class($this);
+            if ( 
+                $this->getForm()->getValue('securityCode') &&
+                $request->hasSessionVar(self::SESSION_SECURITY_VAR) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller]) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName]) &&
+                isset($request->getSessionVar(self::SESSION_SECURITY_VAR)[$controller][$commandName][$this->getForm()->getValue('securityCode')])
+            ) {
+                $security = $request->getSessionVar(self::SESSION_SECURITY_VAR);
+                unset($security[$controller][$commandName][$this->getForm()->getValue('securityCode')]);
+                Session::assign(self::SESSION_SECURITY_VAR, $security);
+            }
+        }
+        
+        return $this;
     }
 
     /**

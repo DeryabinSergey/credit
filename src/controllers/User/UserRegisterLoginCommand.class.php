@@ -84,6 +84,7 @@ class UserRegisterLoginCommand implements EditorCommand
             if (!$form->getErrors()) {
                 if (!$user->isActive()) {
                     $user = $user->dao()->save($user->setActive(true));
+                    $form->setValue('go', base64_encode(CommonUtils::makeUrl('controlPanel')));
                 }
                 SecurityManager::setUser($user, $form->getValue('remember'), $request);
                 $mav->setView(EditorController::COMMAND_SUCCEEDED);
@@ -101,7 +102,7 @@ class UserRegisterLoginCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'securityCode', 'password', 'pact', 'needAuth', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'securityCode', 'password', 'pact', 'needAuth', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);

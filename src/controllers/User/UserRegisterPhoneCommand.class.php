@@ -91,7 +91,7 @@ class UserRegisterPhoneCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'name', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'name', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);

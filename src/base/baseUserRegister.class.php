@@ -60,6 +60,30 @@ class baseUserRegister extends CommandContainer
                     setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_LOGIN, 'pact' => 2, 'return' => $this->getEncodedCurrentUrl($request)))))->
                     getModel()->drop('id');
             }
+            
+            if ($mav->getView() instanceof RedirectView) {
+                $this->dropSecuritySessionVar($request);
+            }
+        }
+        
+        if ($this->isDisplayView($mav) && $mav->getView() != self::COMMAND_SUCCEEDED) {
+            if (
+                SecurityManager::isAuth() && 
+                in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_START, self::ACTION_LOGIN))
+            ) {
+                
+                $redirect = $this->getCurrentUrl($request, true);
+                if ($this->getForm()->getValue('go')) {
+                    $go = base64_decode($this->getForm()->getValue('go'));
+                    if ($go !== false) {
+                        $redirect = $go;
+                    }
+                }
+                
+                $mav->
+                    setView(RedirectView::create($redirect))->
+                    getModel()->drop('id');                
+            }
         }
         
         $mav = parent::postHandleRequest($mav, $request);

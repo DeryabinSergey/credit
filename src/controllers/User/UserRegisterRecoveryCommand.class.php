@@ -95,7 +95,7 @@ class UserRegisterRecoveryCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'securityCode', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'securityCode', 'go', 'action', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);

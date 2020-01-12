@@ -8,7 +8,7 @@ class investorOfferList extends baseFront implements UserController
         
         if ($this->isDisplayView()) {
             
-            Singleton::getInstance('HTMLMetaManager')->setTitle('Мои Компании - Кабинет');
+            Singleton::getInstance('HTMLMetaManager')->setTitle('Мои Инвестиции - Кабинет');
             
             $list = 
                 Criteria::create(InvestorOffer::dao())->

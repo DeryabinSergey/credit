@@ -94,7 +94,7 @@ class UserUpdateCommand extends SaveCommand implements SecurityCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'name', 'ban', 'banComment', 'action', 'return', 'cancel', 'securityCode', 'securityType');
+        $neededPrimitives = array('id', 'name', 'ban', 'banComment', 'action', 'go', 'return', 'cancel', 'securityCode', 'securityType');
         if (SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::ACL_ID)) { $neededPrimitives[] = 'group'; }
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {

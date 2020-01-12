@@ -53,7 +53,7 @@ class UserRegisterStartCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'name', 'email', 'action', 'return', 'cancel');
+        $neededPrimitives = array('id', 'name', 'email', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);

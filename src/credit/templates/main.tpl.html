@@ -1,21 +1,58 @@
 <? $partViewer->view('parts/header'); ?>
 
 <main role="main" class="container flex-shrink-0">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Главная</li>
-        </ol>
-    </nav>
-    <? if (SecurityManager::isAuth()) { ?>
-        <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+    
+<div class="jumbotron">
+    <div class="container">
+        <h1>Кредитным организациям</h1>
+        <h4>Мы предлагаем получать заявки от заемщиков, с возможностью привлечения средств под сделку от инвесторов.</h4>
+        <p>Увеличьте свой поток клиентов и уменьшите расходы с нами</p>
+    </div>
+</div>    
+    
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-lg-3">
+            <h2>Выгодно</h2>
+            <p>Вы сами выбираете предложение от инвесторов под сделку</p>
+            <hr class="d-sm-none" />
+        </div>
         
-        <p><a href="<?=CommonUtils::makeUrl('controlPanel')?>">личный кабинет</a></p>
+        <div class="col-sm-6 col-lg-3">
+            <h2>Практично</h2>
+            <p>Средства привлекаются под сделку и вы не переплачиваете</p>
+            <hr class="d-sm-none" />
+        </div>
         
-    <? } else { ?>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY, 'return' => $curl))?>">восстановить пароль</a>
-    <? } ?>
+        <div class="col-sm-6 col-lg-3">
+            <h2>Просто</h2>
+            <p>Вы получаете запросы на кредитование и выбираете под них инвестиции</p>
+            <hr class="d-sm-none" />
+        </div>
+        
+        <div class="col-sm-6 col-lg-3">
+            <h2>Безопасно</h2>
+            <p>Привлеченные средства от инвестора обеспечены залогами</p>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col-12 text-center">
+            <a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl, 'go' => base64_encode( CommonUtils::makeUrl('controlPanel') )))?>" role="button">присоединиться</a>
+            <hr class="mb-4" />
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container">
+    <h2>Как это работает</h2>
+    <p>На нашем портале Заемщики оставляют запрос на займ под залог. Если залог из категории, с которой работает Ваша организация он приходит к Вам.</p>
+    <p>Проверив и уточнив данные у заемщика, предварительно одобрив ему кредит Вы выбираете у кого привлечете средства для этого займа из инвесторов.</p>
+    <p>Вам необходимо зарегистрироваться на портале, добавить организацию и указать с какими категориями залога работаете.</p>
+    <p>После проверки компании Вы сможете уже получать запросы от заемщиков, привлекать под них инвестиции и смотреть как преумножается Ваш капитал.</p>
+    
+    <p class="my-6 text-center"><a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl, 'go' => base64_encode( CommonUtils::makeUrl('controlPanel') )))?>" role="button">присоединиться</a></p>
+</div>
+    
 </main>
 
-<? $partViewer->view('parts/header'); ?>
+<? $partViewer->view('parts/footer'); ?>

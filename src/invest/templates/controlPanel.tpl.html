@@ -1,26 +1,97 @@
-<? $partViewer->view('parts/header'); ?>
-
-<main role="main" class="container flex-shrink-0">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Личный Кабинет</li>
-        </ol>
-    </nav>
-        
-    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
+<? 
+    $partViewer->view('parts/header');
     
-    <hr />
-    <h1>Инвестор</h1>
-    <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">мои предложения инвестирования</a></p>
-    <p>Информация для тех, у кого есть опубликованные ивест. предложения:</p>
-    <ul>
-        <li>текущие сделки (активные) с планируемой доходностью</li>
-        <li>запросы денег (с перепиской)</li>
-        <li>рейтинг как инвестора и отзывы</li>
-        <li>история запросов и история сделок с фактической доходностью</li>
-    </ul>
-    <hr />
-</main>
+    $offerSummByType = array();
+    $hasPremoderation = false;
+    foreach($list as $item) { 
+        if (!$item->isActive()) { 
+            $hasPremoderation = true;
+        }
+        if (isset($offerSummByType[$item->getType()->getId()])) {
+            $offerSummByType[$item->getType()->getId()] = $offerSummByType[$item->getType()->getId()] < $item->getMaxSumm() ? $item->getMaxSumm() : $offerSummByType[$item->getType()->getId()];
+        } else {
+            $offerSummByType[$item->getType()->getId()] = $item->getMaxSumm();
+        }
+    }
+    $offerSummList = array();
+    foreach($offerSummByType as $typeId => $summ) {
+        $offerSummList[] = "как ".SubjectType::create($typeId)->getName(). " суммой <strong>".number_format($offerSummByType[$typeId], 0, '.', '&nbsp;')."&#8381;</strong>";
+    }
+?>
 
-<? $partViewer->view('parts/header'); ?>
+    <? if ($hasInvest) { ?>
+    <main role="main" class="container flex-shrink-0">
+        <p>Информация для тех, у кого есть или были опубликованные ивест. предложения:</p>
+        <ul>
+            <li>текущие сделки (активные) с планируемой доходностью</li>
+            <li>запросы денег (с перепиской)</li>
+            <li>рейтинг как инвестора и отзывы</li>
+            <li>история запросов и история сделок с фактической доходностью</li>
+        </ul>
+        <hr />    
+        <div class="row flex-row mb-4">
+            <div class="col-12 col-sm-9 col-md-10"><h1 class="">Мои предложения</h1></div>    
+            <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
+                <a href="<?=CommonUtils::makeUrl('investorOfferEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" class="btn btn-primary">добавить</a>
+            </div>
+        </div>
+        <? if ($hasPremoderation) { ?>
+            <div class="alert alert-warning" role="alert">
+                <h4>У Вас есть предложения ожидающие проверки</h4>
+                <hr />
+                <p class='mb-0'>Согласно условиям портала все предложения инвестирования проходят процедуру проверки перед размещением. Предложения ожидающие проверки выделены желтым.</p>
+            </div>
+        <? } ?>
+        
+        <? if ($list) { ?>
+            <div class="row">
+            <? foreach($list as $item) { ?>
+                <div class='<?=count($list) == 3 || count($list) % 3 == 0 && count($list) < 12 ? ('col-12 col-md-4') : (count($list) == 2 ? ('col-12 col-md-6') : (count($list) == 1 ? 'col-12' : (count($list) == 4 ? ('col-12  col-sm-6 col-lg-3') : 'col-12 col-lg-3 col-md-4 col-sm-6') ) ) ?> mb-3'>
+                <div class="card<?=$item->isActive()?' border-success':' border-warning'?> h-100">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Как <?=$item->getType()->getName()?> <strong><?=$item->getMinSumm()? number_format($item->getMinSumm(), 0, '.', '&nbsp;').'&#8381; &ndash; ' : 'до '?><?=number_format($item->getMaxSumm(), 0, '.', '&nbsp;').'&#8381;'?></strong> на 
+                            <?=$item->getMinPeriod() || $item->getMaxPeriod()?' срок ':''?><strong><?=$item->getMinPeriod() ? ($item->getMaxPeriod() ? "{$item->getMinPeriod()} - {$item->getMaxPeriod()} мес" : "от {$item->getMinPeriod()} мес") : ($item->getMaxPeriod() ? "до {$item->getMaxPeriod()} мес" : "любой") ?><?=!$item->getMinPeriod() && !$item->getMaxPeriod()?' срок ':''?></strong>
+                            на условиях <strong><?=sprintf("%0.2f", $item->getPercents())?>% в мес</strong>
+                        </p>
+                    </div>
+                        <div class='card-footer'>
+                        <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?>
+                        <p class='text-center mb-0'><a href="<?=CommonUtils::makeUrl('investorOfferEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link"><i class="far fa-trash-alt mr-2"></i>удалить</a></p>
+                        <? } ?>
+                        </div>
+                </div>
+                </div>
+            <? } ?>
+            </div>
+            <? if ($offerSummList) { ?>
+                <p>Согласно добавленным предложениям Вы должны располагать <?=implode("; ", $offerSummList)?>.</p>
+            <? } ?>
+        <? } else { ?>
+            <div class="card">
+              <div class="card-body">
+                <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+              </div>
+            </div>    
+        <? } ?>        
+        
+        
+    </main>
+    <? } else { ?>
+    <main role="main" class="container d-flex flex-shrink-0 h-100 align-items-center">
+        <div class="jumbotron mb-0">
+            <div class="container">
+                <h1>Добро пожаловать в команду!</h1>
+                <p>Здесь будет отображаться информация по Вашим инвестициям, текущие предложения, запросы от кредитных организаций и статистика.</p>
+                <p>Что бы начать получитать прибыль - добавьте инвестиционные предложения и дождитесь проверки данных</p>
+                <p class="mb-0 text-center"><a class="btn btn-info btn-lg mt-4" href="<?=CommonUtils::makeUrl('investorOfferEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" role="button">создать инвестицию</a></p>
+            </div>
+        </div>        
+    </main>
+    <? } ?>
+    
+
+    
+
+
+<? $partViewer->view('parts/footer'); ?>

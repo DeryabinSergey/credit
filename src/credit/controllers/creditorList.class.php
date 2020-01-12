@@ -1,6 +1,6 @@
 <?php
 
-class investorOfferList extends baseFront implements UserController
+class creditorList extends baseFront implements UserController
 {
     public function getModel(\HttpRequest $request)
     {

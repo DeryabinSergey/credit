@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,5 +48,29 @@
         <? } ?>
     <? } ?> 
 </head>
-<body class="d-flex flex-column">
+<body class="d-flex flex-column h-100">
     
+<nav class="navbar navbar-light fixed-top bg-light navbar-expand-md">
+    <a class="navbar-brand" href="/"><?=DEFAULT_MAILER?></a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+            <li class="nav-item">
+                <a class="nav-link" href="<?=CommonUtils::makeUrl('controlPanel')?>">Личный Кабинет</a>
+            </li>
+        </ul>
+        <div class="form-inline">
+        <? if (SecurityManager::isAuth()) { ?>
+            <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong>
+            <a class="btn btn-link my-2 my-md-0" href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT))?>" role="button">выйти</a>
+        <? } else { ?>
+            <a class="btn btn-link my-2 my-md-0" href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>" role="button">войти на сайт</a>
+            <a class="btn btn-link my-2 my-md-0" href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>" role="button">регистрация</a>
+        <? } ?>
+        </div>
+    </div>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>    
+</nav>    
