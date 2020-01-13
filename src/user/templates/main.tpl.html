@@ -1,33 +1,64 @@
 <? $partViewer->view('parts/header'); ?>
 
 <main role="main" class="container flex-shrink-0">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Главная</li>
-        </ol>
-    </nav>
-    <? if (SecurityManager::isAuth()) { ?>
-    <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
-        
-        <p><a href="<?=CommonUtils::makeUrl('controlPanel')?>">личный кабинет</a></p>
-        
-    <? } else { ?>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl))?>">авторизация</a>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_START, 'return' => $curl))?>">регистрация</a>
-        <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_RECOVERY, 'return' => $curl))?>">восстановить пароль</a>
-    <? } ?>
     
-    <h1 class="display-4">Уникальное предложение для заемщиков</h1>
-        
-    <ul>
-        <li>быстрое получение займа</li>
-        <li>минимальный пакет документов (полный комплект документов необходим только на предмет залога)</li>
-        <li>выгодные условия, т. к. можно выбрать наиболее комфортное предложение от различных кредитных организаций</li>
-        <li>удобно получить сразу несколько различных предложений в одном месте и выбрать наиболее подходящее</li>
-        <li>доступно для заемщиков с плохой кредитной историей или без кредитной истории</li>
-        <li>не требуется подтверждение работы и дохода, подходит для людей официально не устроенных или не имеющих официального дохода, для индивидуальных предпринимателей и самозанятых</li>
-    </ul>
-        
+<div class="jumbotron">
+    <div class="container">
+        <h1>Заемщикам</h1>
+        <h4>Быстрые займы под залог с минимальным пакетом документов</h4>
+        <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
+    </div>
+</div>    
+    
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Быстро</h2>
+            <p>Как правило одобрение и получение денег происходит в течении дня</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Удобно</h2>
+            <p>Минимальный пакет документов и лояльные требования к заемщику</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Выгодно</h2>
+            <p>Вы сами выбираете предложение, которое больше подходит</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Доступно</h2>
+            <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Лояльно</h2>
+            <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Комфортно</h2>
+            <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col-12 text-center">
+            <a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
+            <hr class="mb-4" />
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container">
+    <h2>Как это работает</h2>
+    <p>Вы размещаете заявку на кредит, указав информацию о себе, необходимую сумму и срок, а так же указываете какой залог предоставляете.</p>
+    <p>Ваша заявка попадает к нашим проверенным партнерам, таким образом Ваша одна заявка имеет высокие шансы на одобрение.</p>
+    <p>Партнеры проверив Ваши данные, возможно дополнительно уточнив недостающие данные принимают предварительное решение.</p>
+    <p>В случае предварительного решения и подходящего предложения Вы направляетесь в офис кредитной организации и если все указанные данные соответствуют - получаете деньги.</p>
+    
+    <p class="my-6 text-center"><a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a></p>
+</div>
+    
 </main>
 
 <? $partViewer->view('parts/footer'); ?>

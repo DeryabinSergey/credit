@@ -29,7 +29,7 @@
                 <identifier />
                 <property name="createdTime" type="Timestamp" required="true" />
                 <property name="name" type="String" size="255" required="false" />
-                <property name="email" type="String" size="255" required="true" />
+                <property name="email" type="String" size="255" required="false" />
                 <property name="password" type="String" size="255" required="true" />
                 <property name="phone" type="BigInteger" required="true" />
                 <property name="active" type="Boolean" required="true" default="false" />
@@ -77,6 +77,26 @@
                 <property name="minSumm" type="BigInteger" required="false" />
                 <property name="maxSumm" type="BigInteger" required="true" />
                 <property name="percents" type="Float" required="true" />
+            </properties>           
+            <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>
+        
+        <class name="CreditRequest" extends="NamedObject" type="final">
+            <implement interface="Created"/>
+            <implement interface="SecurityObject"/>
+            <properties>
+                <identifier />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="type" type="SubjectType" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="category" type="Category" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="name" type="String" size="255" required="false" />
+                <property name="summ" type="BigInteger" required="true" />
+                <property name="birthDate" type="Timestamp" required="false" />
+                <property name="profit" type="BigInteger" required="true" />
+                <property name="text" type="String" required="true" />
+                <property name="passport" type="BigInteger" required="false" />
+                <property name="ogrn" type="BigInteger" required="false" />
             </properties>           
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>

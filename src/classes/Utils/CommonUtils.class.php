@@ -1,25 +1,5 @@
 <?php
 
-/**
-
-
-
-                case 'investorOfferList':
-                    $link = $domain . "control-panel/invest-offer/";
-                    if ($arrayParams) {
-                        $link .= "?".http_build_query($arrayParams);
-                    }
-                    break;
-
-                case 'investorOfferEditor':
-                    $link = $domain . "control-panel/invest-offer/{$arrayParams['action']}.html";
-                    unset($arrayParams['action']);
-                    if ($arrayParams) {
-                        $link .= "?".http_build_query($arrayParams);
-                    }
-                    break;
- */
-
 class CommonUtils
 {    
     private static $urlMapping = 

@@ -27,6 +27,7 @@ class controlPanel extends baseFront implements UserController
                 set('list', $list)->
                 set('hasInvest', $hasInvest);
         }
+        
         return $model;
     }
 }

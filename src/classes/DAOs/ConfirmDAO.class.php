@@ -23,6 +23,8 @@
                         $confirm->setExpiredTime(Timestamp::makeNow()->modify("+40 minute"));
                     } elseif ($confirm->getType()->getId() == ConfirmType::TYPE_RECOVERY_PHONE) {
                         $confirm->setExpiredTime(Timestamp::makeNow()->modify("+20 minute"));
+                    } elseif ($confirm->getType()->getId() == ConfirmType::TYPE_CREDIT_REQUEST) {
+                        $confirm->setExpiredTime(Timestamp::create("+20 minute"));
                     }
                 }
 

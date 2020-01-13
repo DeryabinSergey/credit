@@ -1,0 +1,145 @@
+<? 
+    $partViewer->view('parts/header');
+
+    $form->
+        addWrongLabel('type', 'статус заемщика указан неверно')->
+        addMissingLabel('type', 'статус заемщика не указан')->
+        addWrongLabel('category', 'вид залога указан неверно')->
+        addMissingLabel('category', 'вид залога не указан')->
+        addWrongLabel('summ', 'необходимая сумма указана неверно')->
+        addMissingLabel('summ', 'необходимая сумма не указана')->
+        addWrongLabel('profit', 'суммарный доход указан неверно')->
+        addMissingLabel('profit', 'суммарный доход не указан')->
+        addMissingLabel('name', 'ФИО не указаны')->
+        addWrongLabel('birthDate', 'дата рождения указана неверно')->
+        addMissingLabel('birthDate', 'дата рождения не указана')->
+        addWrongLabel('passport', 'данные паспорта указаны неверно')->
+        addMissingLabel('passport', 'данные паспорта не указаны')->
+        addWrongLabel('ogrn', 'ОГРН указан неверно')->
+        addMissingLabel('ogrn', 'ОГРН не указан указан')->        
+        addMissingLabel('text', 'информация о залоге не указана')
+        ;
+
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Заявка на кредит</h1>
+    
+    <div id="alert-block" class="alert alert-danger" role="alert"<?=(!$process || !$form->getTextualErrors())?' style="display: none;"':''?>>
+        <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+    </div>
+    
+    <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+            <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $userPhone)?></label>
+        </div>
+        <? if ($userExists instanceof User && $userExists->getEmail()) { ?>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label col-form-label-lg">Email</label>
+                <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($userExists->getEmail())?></label>
+            </div>
+        <? } ?>
+        <div class="form-group row align-items-center">
+            <label for="type" class="col-12 col-sm-2 col-form-label col-form-label-lg">Статус</label>
+            <div class="col-12 col-sm-10">
+                <select name="type" id="type" class="form-control form-control-lg">
+                    <option <?=$form->exportValue('type')?'':' selected="selected"'?>></option>
+                    <? foreach(SubjectType::getList(SubjectType::create(SubjectType::getAnyId())) as $type) { ?>
+                        <option value="<?=$type->getId()?>"<?=$form->exportValue('type') && $form->exportValue('type') == $type->getId()?' selected="selected"':''?>><?=htmlspecialchars($type->getName())?></option>
+                    <? } ?>
+                </select>
+                <small class="form-text text-muted">В каком статусе Вы хотите оформить кредит</small>
+            </div>
+        </div>    
+        <div class="form-group row align-items-center">
+            <label for="category" class="col-12 col-sm-2 col-form-label col-form-label-lg">Вид залога</label>
+            <div class="col-12 col-sm-10">
+                <select name="category" id="category" class="form-control form-control-lg">
+                    <option <?=$form->exportValue('category')?'':' selected="selected"'?>></option>
+                    <? foreach($categoryList as $category) { ?>
+                        <option value="<?=$category->getId()?>"<?=$form->exportValue('category') && $form->exportValue('category') == $category->getId()?' selected="selected"':''?>><?=htmlspecialchars($category->getName())?></option>
+                    <? } ?>
+                </select>
+                <small class="form-text text-muted">К какой категории относится Ваш залог</small>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="summ" class="col-12 col-sm-2 col-form-label col-form-label-lg">Необходимая сумма</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <div class="input-group">
+                    <input id="summ" class="form-control form-control-lg" name="summ" value="<?=$form->getDisplayValue('summ')?>" type="text">
+                    <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="profit" class="col-12 col-sm-2 col-form-label col-form-label-lg">Месячный доход</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <div class="input-group">
+                    <input id="profit" class="form-control form-control-lg" name="profit" value="<?=$form->getDisplayValue('profit')?>" type="text">
+                    <div class="input-group-append"><span class="input-group-text">&#8381;</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ogrn-row" class="form-group row align-items-center" style="<?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() == SubjectType::TYPE_FIZ ? 'display: none;' : ''?>">
+            <label for="ogrn" class="col-12 col-sm-2 col-form-label col-form-label-lg">ОГРН</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <input id="ogrn" class="form-control form-control-lg" name="ogrn" value="<?=$form->getDisplayValue('ogrn')?>" type="number">
+            </div>
+        </div>
+        
+        <div id="name-row" class="form-group row align-items-center" style="<?=!$process || !$form->getValue('type') instanceof SubjectType?'display: none;':''?>">
+            <label id="name-title" for="name" class="col-sm-2 col-form-label col-form-label-lg"><?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() == SubjectType::TYPE_FIZ ? 'ФИО' : 'Название'?></label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text" <?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() == SubjectType::TYPE_FIZ ? '' : ' readonly="readonly"'?>>
+                <small class="form-text text-muted" id="name-description"><?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() != SubjectType::TYPE_YUR ? 'Укажите ФИО полностью как в паспорте' : 'Полное название организации'?></small>
+            </div>
+        </div>
+        
+        <div id="birthDate-row" class="form-group row align-items-center" style="<?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() != SubjectType::TYPE_FIZ ? 'display: none;' : ''?>">
+            <label for="birthDate" class="col-12 col-sm-2 col-form-label col-form-label-lg">Дата рождения</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <div class="input-group">
+                    <input id="birthDate" class="form-control form-control-lg" name="birthDate" value="<?=$form->getDisplayValue('birthDate') instanceof Timestamp ? $form->getDisplayValue('birthDate')->toFormatString('d.m.Y') : ''?>" type="text">
+                    <div class="input-group-append"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="passport-row" class="form-group row align-items-center" style="<?=!$process || !$form->getValue('type') instanceof SubjectType || $form->getValue('type')->getId() == SubjectType::TYPE_YUR ? 'display: none;' : ''?>">
+            <label for="passport" class="col-12 col-sm-2 col-form-label col-form-label-lg">Серия и номер паспорта</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <input id="passport" class="form-control form-control-lg" name="passport" value="<?=$form->getDisplayValue('passport')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-start">
+            <label for="text" class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getDisplayValue('text')?></textarea>
+                <small class="form-text text-muted">Опишите подробнее Ваш предмет залога</small>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">продолжить</button>
+                <button type="submit" name="cancel" class="btn btn-lg btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    </div>    
+    
+</main>
+
+<? $partViewer->view('parts/footer'); ?>

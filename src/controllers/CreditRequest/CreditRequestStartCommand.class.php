@@ -1,13 +1,15 @@
 <?php
 
-class UserRegisterStartCommand implements EditorCommand
+class CreditRequestStartCommand implements EditorCommand
 {
     const ERROR_INTERNAL    = 0x0003;
     const ERROR_DUPLICATE   = 0x0004;
     const ERROR_BAN         = 0x0005;
+    
+    const ERROR_EXPIRED     = 0x0003;
 
     /**
-     * @return UserRegisterStartCommand
+     * @return CreditRequestStartCommand
      */
     public static function create() { return new self; }
 
@@ -20,7 +22,7 @@ class UserRegisterStartCommand implements EditorCommand
         $subject = $form->getValue('id');
         $userExists = null;
         
-        if (Session::exist(userRegister::SESSION_REGISTRATION)) { Session::drop(userRegister::SESSION_REGISTRATION); }
+        if (Session::exist(creditRequestEditor::SESSION_PHONE)) { Session::drop(creditRequestEditor::SESSION_PHONE); }
         
         if ($process && !$form->getErrors()) {
 
@@ -29,14 +31,28 @@ class UserRegisterStartCommand implements EditorCommand
                 $form->markWrong('response');
             } else {
                 try {
-                    $userExists = User::dao()->getByLogic(Expression::eq('email', $form->getValue('email')));
-                    $form->markCustom('email', self::ERROR_DUPLICATE);
+                    $userExists = User::dao()->getByLogic(Expression::eq('phone', $form->getValue('phone')));
                 } catch(ObjectNotFoundException $e) { /* nothin here */ }
+                
+                try {
+                    $confirm = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_CREDIT_REQUEST), Expression::eq('phone', $form->getValue('phone'))));
+                    if (
+                        Timestamp::compare($confirm->getExpiredTime(), Timestamp::makeNow()) == -1 ||
+                        $confirm->getTry() >= 3
+                    ) throw new ObjectNotFoundException();
+                    if ($confirm->getCode() != $form->getValue('code')) {
+                        $form->markWrong('code');
+                        $confirm->dao()->save($confirm->setTry($confirm->getTry() + 1));
+                    }
+                        
+                } catch (ObjectNotFoundException $e) {
+                    $form->markCustom('code', self::ERROR_EXPIRED);
+                }
             }
             
             if (!$form->getErrors()) {
                 
-                Session::assign(userRegister::SESSION_REGISTRATION, $form->getValue('email'));
+                Session::assign(creditRequestEditor::SESSION_PHONE, $form->getValue('phone'));
                 
                 $mav->setView(EditorController::COMMAND_SUCCEEDED);
             }
@@ -53,14 +69,15 @@ class UserRegisterStartCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'email', 'action', 'go', 'return', 'cancel');
+        $neededPrimitives = array('id', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
             }
         }
         
-        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN)->addDisplayFilter(Filter::htmlSpecialChars());
+        $form->add(Primitive::string('phone')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/", ""))->setAllowedPattern("/\d{10}/is")->required());
+        $form->add(Primitive::integer('code')->setMax(9999)->setMin(1)->required());
         $form->add(Primitive::string('response')->required());
         
         return $this;

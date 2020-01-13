@@ -8,6 +8,5 @@ $(document).ready(function(){
             $("#ban-expire-text").hide();
             $("#ban-context").hide("blind", {}, 500);
         }
-        console.log($("#ban").prop('checked'));
     });
 });
