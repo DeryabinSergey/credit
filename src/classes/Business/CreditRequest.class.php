@@ -34,9 +34,11 @@
 		public function checkPermissions($label)
                 {                    
                     return 
+                        ($label == AclAction::VIEW_ACTION && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId() && !$this->isDeleted()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
                         ($label == AclAction::DELETE_ACTION && !$this->isDeleted() && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
                         ($label == AclAction::RESTORE_ACTION && $this->isDeleted() && SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID)) ||
                         (
+                            $label != AclAction::VIEW_ACTION &&
                             $label != AclAction::DELETE_ACTION &&
                             $label != AclAction::RESTORE_ACTION
                         );

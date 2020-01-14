@@ -8,6 +8,14 @@ class main extends baseFront implements SecurityController, UserController
         
         if ($this->isDisplayView()) {
             
+            
+            if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) {
+                $model->set('creditRequestNum', Criteria::create(CreditRequest::dao())->addProjection(Projection::count('id', 'num'))->add(Expression::isFalse('deleted'))->getCustom('num'));
+            }
+            if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) {
+                $model->set('creditRequestNew', Criteria::create(CreditRequest::dao())->addProjection(Projection::count('id', 'num'))->add(Expression::isFalse('deleted'))->add(Expression::eq('status', CreditRequestStatus::TYPE_INCOME))->getCustom('num'));
+            }
+            
             if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) {
                 $model->set('investorOfferNum', Criteria::create(InvestorOffer::dao())->addProjection(Projection::count('id', 'num'))->add(Expression::isFalse('deleted'))->getCustom('num'));
             }

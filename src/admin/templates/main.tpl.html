@@ -9,6 +9,12 @@
     
     <p>Авторизован как <strong><?=htmlspecialchars(SecurityManager::getUser()->getName())?></strong> <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGOUT, 'return' => $curl))?>">выход</a></p>
 
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
+        <h3>Запросы на кредит</h3>
+        <p><a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список запросов</a></p>
+        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование<?=isset($creditRequestNew) && $creditRequestNew > 0 ? ", из них <strong class='text-danger'>ожидающих обработки: {$creditRequestNew}</strong>":''?>.</p>
+    <? } ?>    
+    
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) { ?>
         <h3>Предложения инвестирования</h3>
         <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">предложения инвестирования</a></p>
