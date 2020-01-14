@@ -11,13 +11,27 @@
              * @param Identifiable $user
              * @return CreditRequest
              */
-            public function add(Identifiable $creditor)
+            public function add(Identifiable $creditRequest)
             {
-                if (!$creditor->getCreatedTime() instanceof Timestamp) {
-                    $creditor->setCreatedTime(Timestamp::makeNow());
+                if (!$creditRequest->getCreatedTime() instanceof Timestamp) {
+                    $creditRequest->setCreatedTime(Timestamp::makeNow());
+                }
+                
+                if (!$creditRequest->getStatus() instanceof CreditRequestStatus) {
+                    $creditRequest->setStatus(CreditRequestStatus::create(CreditRequestStatus::TYPE_INCOME));
                 }
 
-                return parent::add($creditor);
+                return parent::add($creditRequest);
+            }
+            
+            public function markAsDeleted(CreditRequest $creditRequest)
+            {
+                return $this->save($creditRequest->setDeleted(true));
+            }
+            
+            public function restore(CreditRequest $creditRequest)
+            {
+                return $this->save($creditRequest->setDeleted(false));
             }
 	}
 ?>

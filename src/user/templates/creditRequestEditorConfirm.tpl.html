@@ -13,12 +13,13 @@
         addMissingLabel('name', 'ФИО не указаны')->
         addWrongLabel('birthDate', 'дата рождения указана неверно')->
         addMissingLabel('birthDate', 'дата рождения не указана')->
+        addCustomLabel('birthDate', CreditRequestConfirmCommand::ERROR_YONG, 'мы не рассматриваем заявки от лиц моложе 18 лет')->
         addWrongLabel('passport', 'данные паспорта указаны неверно')->
         addMissingLabel('passport', 'данные паспорта не указаны')->
+        addCustomLabel('passport', CreditRequestConfirmCommand::ERROR_INVALID, 'данные паспорта не корректны или паспорт недействительный')->
         addWrongLabel('ogrn', 'ОГРН указан неверно')->
         addMissingLabel('ogrn', 'ОГРН не указан указан')->        
-        addMissingLabel('text', 'информация о залоге не указана')
-        ;
+        addMissingLabel('text', 'информация о залоге не указана');
 
 ?>
 

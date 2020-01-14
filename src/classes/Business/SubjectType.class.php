@@ -40,6 +40,21 @@ final class SubjectType extends Enumeration
     {
         return $this->shortName;
     }
+    
+    public function isFiz()
+    {
+        return $this->getId() == self::TYPE_FIZ;
+    }
+    
+    public function isIp()
+    {
+        return $this->getId() == self::TYPE_IP;
+    }
+    
+    public function isYur()
+    {
+        return $this->getId() == self::TYPE_YUR;
+    }
 
     /**
      * @return SubjectType

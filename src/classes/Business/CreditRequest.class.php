@@ -32,17 +32,13 @@
 		}
 		
 		public function checkPermissions($label)
-                {
-                    return true;
-                    
+                {                    
                     return 
-                        ($label == AclAction::DELETE_ACTION && !$this->isDeleted() && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId()) || SecurityManager::isAllowedAction($label, AclContext::INVESTOR_OFFER_ID))) ||
-                        ($label == AclAction::RESTORE_ACTION && $this->isDeleted() && SecurityManager::isAllowedAction($label, AclContext::INVESTOR_OFFER_ID)) ||
-                        ($label == AclAction::PUBLISH_ACTION && !$this->isActive() && SecurityManager::isAllowedAction($label, AclContext::INVESTOR_OFFER_ID)) ||
+                        ($label == AclAction::DELETE_ACTION && !$this->isDeleted() && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
+                        ($label == AclAction::RESTORE_ACTION && $this->isDeleted() && SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID)) ||
                         (
                             $label != AclAction::DELETE_ACTION &&
-                            $label != AclAction::RESTORE_ACTION &&
-                            $label != AclAction::PUBLISH_ACTION
+                            $label != AclAction::RESTORE_ACTION
                         );
                 }
 	}

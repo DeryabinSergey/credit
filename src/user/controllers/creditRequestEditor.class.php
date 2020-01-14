@@ -3,11 +3,7 @@
 class creditRequestEditor extends CommandContainer
 {    
     const ACTION_START      = 'start';
-    const ACTION_PHONE      = 'phone';
-    const ACTION_RECOVERY   = 'recovery';
     const ACTION_CONFIRM    = 'confirm';
-    const ACTION_LOGIN      = 'login';
-    const ACTION_LOGOUT     = 'logout';
     
     const SESSION_PHONE  = 'request-phone';
     
@@ -20,10 +16,9 @@ class creditRequestEditor extends CommandContainer
     {
         $this->insertCommand(self::ACTION_START, CreditRequestStartCommand::create());
         $this->insertCommand(self::ACTION_CONFIRM, CreditRequestConfirmCommand::create());
+        $this->insertCommand(self::ACTION_DELETE, CreditRequestDropCommand::create());
 
         $this->defaultAction = self::ACTION_START;
-        
-        $this->secureController = false;
 
         parent::__construct(CreditRequest::create());
     }
@@ -38,7 +33,7 @@ class creditRequestEditor extends CommandContainer
             }
             if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_CONFIRM) {
                 $mav->
-                    setView(RedirectView::create(CommonUtils::makeUrl('controlPanel', array('added' => 1))))->
+                    setView(RedirectView::create(CommonUtils::makeUrl('controlPanel', array('added' => 1))."#requestList"))->
                     getModel()->drop('id');
             }
             
@@ -63,14 +58,12 @@ class creditRequestEditor extends CommandContainer
         if ($this->isDisplayView($mav)) {
 
             Singleton::getInstance('HTMLMetaManager')->
-                appendStyle('https://cdn.jsdelivr.net/npm/suggestions-jquery@19.8.0/dist/css/suggestions.min.css')->
-                appendJavaScript('https://cdn.jsdelivr.net/npm/suggestions-jquery@19.8.0/dist/js/jquery.suggestions.min.js')->
                 appendJavaScript('/i/jquery.mask.min.js')->                        
                 appendJavaScript('/i/credit-request.js')->
                 
                 setTitle('Заявка на кредит');
             
-            if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_START, self::ACTION_RECOVERY, self::ACTION_LOGIN))) {
+            if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_START))) {
                 Singleton::getInstance('HTMLMetaManager')->
                     appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
             }

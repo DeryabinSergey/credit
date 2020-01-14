@@ -18,7 +18,7 @@ class controlPanel extends baseFront implements UserController
             
             $list = 
                 Criteria::create(CreditRequest::dao())->
-                    //add(Expression::isFalse('deleted'))->
+                    add(Expression::isFalse('deleted'))->
                     add(Expression::eq('user', SecurityManager::getUser()->getId()))->
                     addOrder(OrderBy::create('id')->desc())->
                     getList();            

@@ -22,6 +22,7 @@
     </div>
     
     <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <input type="hidden" name="response" value="" id="google-response" />
         
         <div class="form-group row">

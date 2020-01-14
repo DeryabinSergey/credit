@@ -87,8 +87,10 @@
             <properties>
                 <identifier />
                 <property name="createdTime" type="Timestamp" required="true" />
+                <property name="status" type="CreditRequestStatus" relation="OneToOne" required="true" fetch="lazy" />
                 <property name="user" type="User" relation="OneToOne" required="true" fetch="lazy" />
                 <property name="type" type="SubjectType" relation="OneToOne" required="true" fetch="lazy" />
+                <property name="deleted" type="Boolean" required="true" default="false" />
                 <property name="category" type="Category" relation="OneToOne" required="true" fetch="lazy" />
                 <property name="name" type="String" size="255" required="false" />
                 <property name="summ" type="BigInteger" required="true" />

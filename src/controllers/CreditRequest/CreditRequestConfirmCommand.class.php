@@ -6,7 +6,8 @@ class CreditRequestConfirmCommand implements EditorCommand
     const ERROR_DUPLICATE   = 0x0004;
     const ERROR_BAN         = 0x0005;
     
-    const ERROR_EXPIRED     = 0x0003;
+    const ERROR_INVALID     = 0x0003;
+    const ERROR_YONG        = 0x0003;
 
     /**
      * @return CreditRequestConfirmCommand
@@ -49,6 +50,27 @@ class CreditRequestConfirmCommand implements EditorCommand
                     }
                 }
                 
+                if (!$form->getErrors() && $form->getValue('type')->getId() != SubjectType::TYPE_YUR && Timestamp::compare($form->getValue('birthDate'), Timestamp::create("-18 year")) > 0) {
+                    $form->markCustom('birthDate', self::ERROR_YONG);
+                }
+                
+                if (!$form->getErrors() && $form->getValue('type')->getId() != SubjectType::TYPE_YUR) {
+                    $req = json_encode(array($form->getValue('passport')));
+                    $head = "Content-Type: application/json\r\nAccept: application/json\r\nAuthorization: Token ".Constants::DADATA_TOKEN."\r\nX-Secret: ".Constants::DADATA_SECRET . PHP_EOL;
+                    try {
+                        $response = json_decode(file_get_contents("https://cleaner.dadata.ru/api/v1/clean/passport", false, stream_context_create( array('http' => array('method' => 'POST', 'header' => $head, 'content' => $req) ) )), "true");
+                        if ($response && is_array($response) && isset($response[0]) && is_array($response[0]) && isset($response[0]['qc']) && $response[0]['qc'] != 0) {
+                            $form->markCustom('passport', self::ERROR_INVALID);
+                        }
+                    } catch(Exception $e) { 
+                        /**
+                         * @fixme
+                         * Здесть при ошибке или недоступности сервиса надо бы ставить отметку что данные паспорта не проверены.
+                         * Наверняка все долбоебы привыкнут и будут считать эти данные достоверными
+                         */
+                    }
+                }
+                
                 
                 if (!$form->getErrors()) {
                     
@@ -66,6 +88,8 @@ class CreditRequestConfirmCommand implements EditorCommand
                                 );
                         
                         SmsUtils::send("7{$userPhone}", "Ваш пароль для входа на сайт: {$password}");
+                        SecurityManager::setUser($userExists, true, $request);
+                    } elseif ($userExists instanceof User && !SecurityManager::isAuth()) {
                         SecurityManager::setUser($userExists, true, $request);
                     }
                     FormUtils::form2object($form, $subject);
@@ -99,7 +123,7 @@ class CreditRequestConfirmCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'type', 'category', 'name', 'birthDate', 'ogrn', 'text', 'action', 'go', 'return', 'cancel');
+        $neededPrimitives = array('id', 'type', 'category', 'name', 'birthDate', 'ogrn', 'text', 'securityCode', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
@@ -111,7 +135,7 @@ class CreditRequestConfirmCommand implements EditorCommand
         $form->add(Primitive::string('profit')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", ""))->required());
         $form->add(Primitive::string('passport')->setAllowedPattern("/^\d{10}/is")->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", "")));
         $form->get('name')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars());
-        $form->get('text')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars())->required();
+        $form->get('text')->addImportFilter(Filter::textImport())->addImportFilter(Filter::pcre()->setExpression("/(\\r?\\n){2,}/isu", "\r\n"))->addDisplayFilter(Filter::htmlSpecialChars())->required();
         
         return $this;
     }

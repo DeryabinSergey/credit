@@ -53,4 +53,10 @@ class Constants
     const COOKIE_LIFETIME = 63072000;
     
     
+    /**
+     * Открытый и закрытый токен для запросов к стандартизации и подсказкам DaData
+     * @see https://dadata.ru/profile/#info
+     */
+    const DADATA_TOKEN      = '8e8269bebbb4d54cb70277e9fd2ea7955bc765b8';
+    const DADATA_SECRET     = '086048138d8e2c8e44d5fefe32538eef3031691e';
 }
