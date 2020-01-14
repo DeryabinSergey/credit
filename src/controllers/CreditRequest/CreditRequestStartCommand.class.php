@@ -2,11 +2,12 @@
 
 class CreditRequestStartCommand implements EditorCommand
 {
-    const ERROR_INTERNAL    = 0x0003;
-    const ERROR_DUPLICATE   = 0x0004;
-    const ERROR_BAN         = 0x0005;
+    const ERROR_INTERNAL        = 0x0003;
+    const ERROR_DUPLICATE       = 0x0004;
+    const ERROR_BAN             = 0x0005;
+    const ERROR_AUTH_ENABLED    = 0x0006;
     
-    const ERROR_EXPIRED     = 0x0003;
+    const ERROR_EXPIRED         = 0x0003;
 
     /**
      * @return CreditRequestStartCommand
@@ -23,6 +24,7 @@ class CreditRequestStartCommand implements EditorCommand
         $userExists = null;
         
         if (Session::exist(creditRequestEditor::SESSION_PHONE)) { Session::drop(creditRequestEditor::SESSION_PHONE); }
+        if (!SecurityManager::isAuth() && !SecurityManager::isAuthEnabled()) { $form->markCustom('phone', self::ERROR_AUTH_ENABLED); }
         
         if ($process && !$form->getErrors()) {
 

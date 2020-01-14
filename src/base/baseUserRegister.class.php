@@ -56,8 +56,13 @@ class baseUserRegister extends CommandContainer
                     setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_LOGIN, 'pact' => 1, 'return' => $this->getEncodedCurrentUrl($request)))))->
                     getModel()->drop('id');
             } elseif ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_CONFIRM) {
+                $pact = 2;
+                if ($mav->getModel()->has('pact')) {
+                    $pact = $mav->getModel()->get('pact');
+                    $mav->getModel()->drop('pact');
+                }
                 $mav->
-                    setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_LOGIN, 'pact' => 2, 'return' => $this->getEncodedCurrentUrl($request)))))->
+                    setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_LOGIN, 'pact' => $pact, 'return' => $this->getEncodedCurrentUrl($request)))))->
                     getModel()->drop('id');
             }
             

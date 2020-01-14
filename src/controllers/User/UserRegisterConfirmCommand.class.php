@@ -47,12 +47,17 @@ class UserRegisterConfirmCommand implements EditorCommand
                     
                     $userExists = $userExists->dao()->save($userExists->setPassword(hash('sha256', $password)));
                     
-                    Mail::create()->
-                        setTo($userExists->getEmail())->
-                        setFrom(DEFAULT_FROM)->
-                        setSubject('Восстановление пароля на портале '.DEFAULT_MAILER)->
-                        setText('Ваш новый пароль: '.$password)->
-                        send();
+                    if ($userExists->getEmail()) {
+                        Mail::create()->
+                            setTo($userExists->getEmail())->
+                            setFrom(DEFAULT_FROM)->
+                            setSubject('Восстановление пароля на портале '.DEFAULT_MAILER)->
+                            setText('Ваш новый пароль: '.$password)->
+                            send();
+                    } else {
+                        SmsUtils::send("7{$userExists->getPhone()}", "Ваш новый пароль: {$password}");
+                        $mav->getModel()->set('pact', 3);
+                    }
                     
                     $confirmPhone->dao()->dropById($confirmPhone->getId());
                     $confirm->dao()->dropById($confirm->getId());

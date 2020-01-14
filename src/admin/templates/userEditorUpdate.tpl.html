@@ -54,17 +54,19 @@
             </div>
         </div>
 
-        <div class="form-group row align-items-center">
-            <label for="group" class="col-12 col-sm-2 col-form-label col-form-label-lg">Группа админ.</label>
-            <div class="col-12 col-sm-10">
-                <select name="group" id="group" class="form-control form-control-lg">
-                    <option <?=$form->exportValue('group')?'':' selected="selected"'?>></option>
-                    <? foreach($groupList as $group) { ?>
-                        <option value="<?=$group->getId()?>"<?=$form->exportValue('group') && $form->exportValue('group') == $group->getId()?' selected="selected"':''?>><?=htmlspecialchars($group->getName())?></option>
-                    <? } ?>
-                </select>   
+        <? if ($form->exists('group')) { ?>
+            <div class="form-group row align-items-center">
+                <label for="group" class="col-12 col-sm-2 col-form-label col-form-label-lg">Группа админ.</label>
+                <div class="col-12 col-sm-10">
+                    <select name="group" id="group" class="form-control form-control-lg">
+                        <option <?=$form->exportValue('group')?'':' selected="selected"'?>></option>
+                        <? foreach($groupList as $group) { ?>
+                            <option value="<?=$group->getId()?>"<?=$form->exportValue('group') && $form->exportValue('group') == $group->getId()?' selected="selected"':''?>><?=htmlspecialchars($group->getName())?></option>
+                        <? } ?>
+                    </select>   
+                </div>
             </div>
-        </div>
+        <? } ?>
 
         <div class="form-group row align-items-center">
             <div class="col-12 col-sm-10 offset-sm-2">

@@ -7,7 +7,8 @@
         addMissingLabel('phone', 'номер телефона не указан')->
         addMissingLabel('code', 'код подтверждения телефона не указан')->
         addWrongLabel('response', 'защита от автоматических регистраций не пройдена')->
-        addCustomLabel('code', CreditRequestStartCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия');
+        addCustomLabel('code', CreditRequestStartCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия')->
+        addCustomLabel('code', CreditRequestStartCommand::ERROR_AUTH_ENABLED, 'для полноценного использования сайта необходимо включить поддержку <code>Cookie</code> в настройках Вашего браузера');
 ?>
 
 <!-- Begin page content -->
