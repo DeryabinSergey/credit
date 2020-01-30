@@ -12,19 +12,19 @@
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
         <h3>Запросы на кредит</h3>
         <p><a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список запросов</a></p>
-        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование<?=isset($creditRequestNew) && $creditRequestNew > 0 ? ", из них <strong class='text-danger'>ожидающих обработки: {$creditRequestNew}</strong>":''?>.</p>
+        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование<? if (isset($creditRequestNew) && $creditRequestNew > 0) { ?>, из них <a class='text-danger font-weight-bold' href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME)))?>">ожидающих обработки: <?=$creditRequestNew?></a><? } ?>.</p>
     <? } ?>    
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) { ?>
         <h3>Предложения инвестирования</h3>
         <p><a href="<?=CommonUtils::makeUrl('investorOfferList')?>">предложения инвестирования</a></p>
-        <p>Всего на сайте <?=$investorOfferNum?> <?=RussianTextUtils::selectCaseForNumber($investorOfferNum, array('предложение', 'предложения', 'предложений'))?> инвестирования<?=isset($investorOfferModerate) && $investorOfferModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$investorOfferModerate}</strong>":''?>.</p>
+        <p>Всего на сайте <?=$investorOfferNum?> <?=RussianTextUtils::selectCaseForNumber($investorOfferNum, array('предложение', 'предложения', 'предложений'))?> инвестирования<? if (isset($investorOfferModerate) && $investorOfferModerate > 0) { ?>, из них <a class='text-danger font-weight-bold' href="<?=CommonUtils::makeUrl('investorOfferList', array('active' => -1))?>">ожидающих проверки: <?=$investorOfferModerate?></a><? } ?>.</p>
     <? } ?>
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDITOR_ID)) { ?>
         <h3>Компании кредиторов</h3>
         <p><a href="<?=CommonUtils::makeUrl('creditorList')?>">компании кредиторов</a></p>
-        <p>Всего на сайте <?=$creditorNum?> <?=RussianTextUtils::selectCaseForNumber($creditorNum, array('кредитная организация', 'кредитные организации', 'кредитных организаций'))?><?=isset($creditorModerate) && $creditorModerate > 0 ? ", из них <strong class='text-danger'>ожидающих проверки: {$creditorModerate}</strong>":''?>.</p>
+        <p>Всего на сайте <?=$creditorNum?> <?=RussianTextUtils::selectCaseForNumber($creditorNum, array('кредитная организация', 'кредитные организации', 'кредитных организаций'))?><? if (isset($creditorModerate) && $creditorModerate > 0) { ?>, из них <a class='text-danger font-weight-bold' href="<?=CommonUtils::makeUrl('creditorList', array('active' => -1))?>">ожидающих проверки: <?=$creditorModerate?></a><? } ?>.</p>
     <? } ?>
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID)) { ?>

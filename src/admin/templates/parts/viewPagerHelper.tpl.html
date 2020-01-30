@@ -1,0 +1,55 @@
+<?php
+
+if ($helper->getPageCount() > 1) { 
+
+    if ($helper->getDiff()) {
+        $pageMin = max(1,  $helper->getCurrentPage() - $helper->getDiff());
+        $pageMax = min($helper->getPageCount(),  $helper->getCurrentPage() + $helper->getDiff());
+    } else {
+        $pageMin = 1;
+        $pageMax = $pageCount;
+    }
+?>
+
+    <nav>
+        <ul class="pagination pagination-resp justify-content-center">
+            <? if ($helper->isEnableArrows()) { ?>
+                <? if ($helper->getCurrentPage() > 1) { ?>
+                    <li class="page-item"><a class="page-link" href="<?=CommonUtils::makeUrl($helper->getModule(),  array($helper->getPageVar() => $helper->getCurrentPage() - 1) + $helper->getParams())?><?=$helper->getAnchor() ? '#'.$helper->getAnchor() : ''?>" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                <? } else { ?>
+                    <li class="page-item disabled font-weight-bold"><span class="page-link" aria-hidden="true">&laquo;</span></li>
+                <? } ?>
+            <? } ?>
+            <? if ($helper->getDiff()) { ?>
+                <? if ($helper->getCurrentPage() - $helper->getDiff() >= 2) { ?>
+                    <li class="page-item"><a class="page-link" href="<?=CommonUtils::makeUrl($helper->getModule(),  $helper->getParams())?><?=$helper->getAnchor() ? '#'.$helper->getAnchor() : ''?>">1</a></li>
+                <? } ?>
+                <? if ($pageMin > 2) { ?>
+                    <li class="page-item disabled"><span class="page-link" aria-hidden="true">&hellip;</span></li>
+                <? } ?>
+            <? } ?>
+            <? for ($i = $pageMin; $i <= $pageMax; $i++) { ?>
+                <? if ($i == $helper->getCurrentPage()) { ?>
+                    <li class="page-item active"><span class="page-link" aria-hidden="true"><?=$i?></span></li>
+                <? } else { ?>
+                    <li class="page-item"><a class="page-link" href="<?=CommonUtils::makeUrl($helper->getModule(), array($helper->getPageVar() => $i) + $helper->getParams())?><?=$helper->getAnchor() ? '#'.$helper->getAnchor() : ''?>"><?=$i?></a></li>
+                <? } ?>
+            <? } ?>
+            <? if ($helper->getDiff()) { ?>
+                <? if ($pageMax < $helper->getPageCount() - 1) { ?>
+                    <li class="page-item disabled"><span class="page-link" aria-hidden="true">&hellip;</span></li>
+                <? } ?>
+                <? if ($helper->getCurrentPage() + $helper->getDiff() <= $helper->getPageCount() - 1) { ?>
+                    <li class="page-item"><a class="page-link" href="<?=CommonUtils::makeUrl($helper->getModule(),  array($helper->getPageVar() => $helper->getPageCount()) + $helper->getParams())?><?=$helper->getAnchor() ? '#'.$helper->getAnchor() : ''?>"><span aria-hidden="true"><?=$helper->getPageCount()?></span></a></li>
+                <? } ?>
+            <? } ?>
+            <? if ($helper->isEnableArrows()) { ?>
+                <? if ($helper->getCurrentPage() < $helper->getPageCount()) { ?>
+                    <li class="page-item"><a class="page-link" href="<?=CommonUtils::makeUrl($helper->getModule(),  array($helper->getPageVar() => $helper->getCurrentPage() + 1) + $helper->getParams())?><?=$helper->getAnchor() ? '#'.$helper->getAnchor() : ''?>" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                <? } else { ?>
+                    <li class="page-item disabled font-weight-bold"><span class="page-link" aria-hidden="true">&raquo;</span></li>
+                <? } ?>
+            <? } ?>
+        </ul>
+    </nav>
+<? } ?>

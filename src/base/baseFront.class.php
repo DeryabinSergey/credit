@@ -21,6 +21,8 @@ abstract class baseFront implements Controller
         $this->form = 
             Form::create()->
                 add(Primitive::integer('page')->setMin(1)->setDefault(1));
+        
+        $this->addFilterKey('page');
     }
 
     /**
@@ -119,6 +121,20 @@ abstract class baseFront implements Controller
     }
     
     /**
+     * Добавить в форму элемент для фильтра
+     * @param BasePrimitive $primitive
+     * @return baseCoreFront
+     * @throws WrongArgumentException
+     */
+    protected function addFilter(BasePrimitive $primitive)
+    {
+        $this->form->add($primitive);
+        $this->addFilterKey($primitive->getName());
+        
+        return $this;
+    }
+    
+    /**
      * Удалить элемент формы по ключу из фильтра для отображения списка
      * @param string $key - ключ фильтра для удаления
      * @return baseCoreFront
@@ -157,7 +173,9 @@ abstract class baseFront implements Controller
             foreach($this->filterKeys as $key) {
                 if (
                     $this->form->get($key) instanceof PrimitiveIdentifierList ||
-                    $this->form->get($key) instanceof PrimitiveIdentifier
+                    $this->form->get($key) instanceof PrimitiveIdentifier ||
+                    $this->form->get($key) instanceof PrimitiveEnumeration ||
+                    $this->form->get($key) instanceof PrimitiveEnumerationList
                 ) {
                     $filter[$key] = $this->form->exportValue($key);
                 } elseif ($this->form->get($key) instanceof PrimitiveBoolean) {
@@ -203,14 +221,14 @@ abstract class baseFront implements Controller
     protected function getCountByQuery(SelectQuery $query)
     {
         $countQuery = clone $query;
-
+        
         $countQuery->
             unDistinct()->
             dropFields()->
             dropOrder()->
             limit(null, null)->
             get(
-                SQLFunction::create('count', SQLFunction::create('distinct', 'id'))->
+                SQLFunction::create('count', SQLFunction::create('distinct', DbField::create('id', $countQuery->getFirstTable())))->
                     setAlias('count_list')
             );
 

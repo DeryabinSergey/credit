@@ -116,7 +116,7 @@ class ViewTextUtils extends StaticFactory
      */
     public static function humanizeDate(Timestamp $timestamp, $todayWordNeed = true, $needTime = true)
     {
-        $timestampCheck = $timestamp->spawn(sprintf("%+d hour", SecurityManager::isAuth() ? SecurityManager::getUser()->getTimezone() : SERVER_TIMEZONE));
+        $timestampCheck = $timestamp->spawn();
         $dayStart = Timestamp::makeToday();
         $tomorrowDayStart = $dayStart->spawn('+1 day');
         $yesterdayStart = $dayStart->spawn('-1 day');
