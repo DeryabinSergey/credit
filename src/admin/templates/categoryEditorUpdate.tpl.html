@@ -31,6 +31,14 @@
             </div>
         </div>
         
+        <div class="form-group row align-items-start">
+            <label for="text" class="col-12 col-sm-2 col-form-label col-form-label-lg">Информация</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getDisplayValue('text')?></textarea>
+                <small class="form-text text-muted">Инструкция для администратора, что необходимо уточнить у заемщика и добавить в информацию о займе</small>
+            </div>
+        </div>
+        
         <div class="form-group row align-items-center">
             <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
                 <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">сохранить</button>

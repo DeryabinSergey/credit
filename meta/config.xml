@@ -134,6 +134,7 @@
                 <identifier />
                 <property name="name" type="String" size="128" required="true" />
                 <property name="sort" type="Integer" required="true" />
+                <property name="text" type="String" required="false" />
             </properties>
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>          

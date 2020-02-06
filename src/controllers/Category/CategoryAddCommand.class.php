@@ -31,6 +31,11 @@ class CategoryAddCommand extends AddCommand implements SecurityCommand
                 addImportFilter(Filter::textImport())->
                 addDisplayFilter(Filter::htmlSpecialChars());
         
+        $form->
+            get('text')->
+                addImportFilter(Filter::textImport())->
+                addDisplayFilter(Filter::htmlSpecialChars());
+        
         return $this;
     }
 

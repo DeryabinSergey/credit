@@ -31,6 +31,11 @@ class CategoryUpdateCommand extends SaveCommand implements SecurityCommand
                 addImportFilter(Filter::textImport())->
                 addDisplayFilter(Filter::htmlSpecialChars());
         
+        $form->
+            get('text')->
+                addImportFilter(Filter::textImport())->
+                addDisplayFilter(Filter::htmlSpecialChars());
+        
         return $this;
     }
 

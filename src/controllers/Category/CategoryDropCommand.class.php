@@ -31,7 +31,8 @@ class CategoryDropCommand extends DropCommand implements SecurityCommand
         $form->
             add(Primitive::boolean('ok'))->
             drop('sort')->
-            drop('name');
+            drop('name')->
+            drop('text');
         
         return $this;
     }
