@@ -22,17 +22,13 @@ $(document).ready(function(){
             $.post("/ajax/category-sort.json", {'ids': ids},
                 function(result) {
                     if (result.success) {
+                        showImageUploaded('Сортировка категорий сохранена');
                     } else {
-                        let errors = [];
-                        if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
-                        } else { errors.push('е удалось сохранить сортировку, попробуйте еще раз чуть позже&hellip;'); }
-                        $("#alert-block-content").html(errors.join('<br />'));
-                        $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+                        showError(result.errors ? result.errors : 'Не удалось сохранить сортировку, попробуйте еще раз чуть позже&hellip;');                        
                     }
                 },"json"
             ).fail(function() {
-                $("#alert-block-content").html('Не удалось сохранить сортировку, попробуйте еще раз чуть позже&hellip;');
-                $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+                showError('Не удалось сохранить сортировку, попробуйте еще раз чуть позже&hellip;');
             });
         },
         helper: function(e, ui) {

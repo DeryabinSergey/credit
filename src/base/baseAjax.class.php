@@ -7,6 +7,15 @@ abstract class baseAjax implements Controller
     const NOT_FOUND         = 0x0005;
     const NEED_AUTH         = 0x0006;
     
+    const SESSION_SECURITY_VAR  = 'security-code';
+    
+    /**
+     * Безопасный контроллер - по умолчанию включена csfr защита
+     * @var Boolean
+     */
+    protected $secureController = false;
+    protected $securityCode = null;
+    
     /**
      * @var Form
      */
@@ -30,6 +39,14 @@ abstract class baseAjax implements Controller
                 addCustomLabel('errorFlag', self::NEED_AUTH, 'необходима авторизация')->
                 addCustomLabel('errorFlag', self::FORBIDDEN, 'нет доступа');
         
+        if ($this->secureController) {
+            $this->
+                form->
+                    add(Primitive::string('securityCode')->required())->
+                    addWrongLabel('securityCode', 'нет доступа')->
+                    addMissingLabel('securityCode', 'нет доступа');
+        }
+        
         return $this;
     }
 
@@ -51,13 +68,13 @@ abstract class baseAjax implements Controller
         } else {
             $this->
                 initForm($request)->
-                initVars();
+                initVars($request);
             
             if (!$this->form->getErrors()) {
-                if (method_exists($this, 'checkPermissions') && !$this->checkPermissions()) {
-                    $this->form->markCustom('errorFlag', self::FORBIDDEN);
-                } else {
+                if ($this->checkPermissions()) {
                     $model = $this->getModel($request);
+                } else {
+                    $this->form->markCustom('errorFlag', self::FORBIDDEN);
                 }
             }
         }
@@ -79,7 +96,25 @@ abstract class baseAjax implements Controller
         return $this;
     }
     
-    protected function initVars() { return $this; }
-}
+    protected function initVars(HttpRequest $request)
+    {
+        if ($this->secureController) {
 
-?>
+            $codes = array();
+            foreach(($request->hasSessionVar(self::SESSION_SECURITY_VAR) ? $request->getSessionVar(self::SESSION_SECURITY_VAR) : array()) as $editor => $names) {
+                foreach($names as $code) {
+                    $this->securityCode = is_array($this->securityCode) ? array_merge($this->securityCode, array_values($code)) : array_values($code);
+                }
+            }
+            
+            if (is_array($this->securityCode)) { $this->securityCode = array_unique($this->securityCode); }
+        }
+        
+        return $this;
+    }
+    
+    protected function checkPermissions()
+    {
+        return !$this->secureController || in_array($this->form->getValue('securityCode'), $this->securityCode);
+    }
+}

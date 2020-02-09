@@ -5,8 +5,6 @@ class baseCreditRequestEditor extends CommandContainer
     const ACTION_START      = 'start';
     const ACTION_CONFIRM    = 'confirm';
     
-    const SESSION_PHONE  = 'request-phone';
-    
     /**
      * @return creditRequestEditor
      */

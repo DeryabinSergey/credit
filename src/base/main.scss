@@ -5,6 +5,8 @@
 @import "/var/www/fontawesome-free-5.12.0-web/scss/solid.scss";
 @import "/var/www/fontawesome-free-5.12.0-web/scss/regular.scss";
 @import "/var/www/fontawesome-free-5.12.0-web/scss/v4-shims.scss";
+@import "/var/www/PhotoSwipe/src/css/main.scss";
+@import "/var/www/PhotoSwipe/src/css/default-skin/default-skin.scss";
 
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance:textfield; }
@@ -25,54 +27,48 @@ html {
         
         .ui-sortable-helper { background-color: white; }
         .ui-state-highlight { background-color: whitesmoke; }
-        .ui-sortable .handle { cursor: move; }    
+        .ui-sortable .handle { cursor: move; }
+        
+        .toast-danger {
+            border: 1px solid rgba(220,53,69,.1);
+            box-shadow: 0 0.25rem 0.75rem rgba(220,53,69,.1);
+            
+            .toast-header, button, .close:hover {
+                color: $white;
+            }
+            .toast-header {
+                background-color: $red;
+            }
+        }    
     
         #related-images, .preview-row {
 
-            .image-cont-placeholder {
+            .card-placeholder {
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-color: whitesmoke;
-                width: block;
-                flex: none;
-                width: 150px;
-                height: 150px;
+                width: 200px;
+                height: 200px;
                 border: 1px dashed lightgray;
-            }
+                margin-right: 1rem;
+                margin-bottom: 1rem;
+            }     
 
             .card {
+                
                 background-size: cover;
-                background-repeat: no-repeat;
-                width: block;
-                flex: none;
-                width: 150px;
-                height: 150px;
+                width: 200px;
+                height: 200px;
+                margin-right: 1rem;
+                margin-bottom: 1rem;
+                
+                .card-header { background: rgba(0,0,0,.5); }
 
-                .card-block {
-                    display: flex; 
-                    flex-direction: row; 
-                    padding: 1rem 0.25rem;
-                    background-color: rgba(220,220,220,0.6);
-                    visibility: hidden;
-
-                    i.fa {
-                        flex: auto; 
-                        display: flex; 
-                        justify-content: center; 
-                        cursor: pointer;
-                    }
-                }
+                li i { cursor: pointer; }
             }
 
-            .card:hover {
-                .card-block {
-                    visibility: visible;
-                }
-            }
-
-            @include media-breakpoint-down(sm) {
-                .card .card-block { visibility: visible; }
-            }
+            @include media-breakpoint-down(sm) { .card, .card-placeholder { width: 125px; height: 125px; } }
+            @include media-breakpoint-down(md) { .card, .card-placeholder { width: 150px; height: 150px; } }
         }        
     }
     

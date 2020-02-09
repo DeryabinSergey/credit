@@ -23,7 +23,6 @@ class CreditRequestStartCommand implements EditorCommand
         $subject = $form->getValue('id');
         $userExists = null;
         
-        if (Session::exist(creditRequestEditor::SESSION_PHONE)) { Session::drop(creditRequestEditor::SESSION_PHONE); }
         if (!SecurityManager::isAuth() && !SecurityManager::isAuthEnabled()) { $form->markCustom('phone', self::ERROR_AUTH_ENABLED); }
         
         if ($process && !$form->getErrors()) {
@@ -54,7 +53,24 @@ class CreditRequestStartCommand implements EditorCommand
             
             if (!$form->getErrors()) {
                 
-                Session::assign(creditRequestEditor::SESSION_PHONE, $form->getValue('phone'));
+                if (!$userExists instanceof User) {
+                    $password = ViewTextUtils::createRandomPassword(10);
+
+                    $userExists = 
+                        User::dao()->
+                            add(
+                                User::create()->
+                                    setName($form->getValue('phone'))->
+                                    setPassword(hash('sha256', $password))->
+                                    setPhone($form->getValue('phone'))->
+                                    setActive(true)
+                            );
+
+                    SmsUtils::send("7{$form->getValue('phone')}", "Ваш пароль для входа на сайт: {$password}");
+                    SecurityManager::setUser($userExists, true, $request);
+                } elseif ($userExists instanceof User && !SecurityManager::isAuth()) {
+                    SecurityManager::setUser($userExists, true, $request);
+                }                
                 
                 $mav->setView(EditorController::COMMAND_SUCCEEDED);
             }

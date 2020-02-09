@@ -125,8 +125,8 @@ class PictureUtils extends FilesUtils
     
     public static function getImageResizeSizes(Identifiable $object, $thumb = false) 
     {
-        if ($object instanceof HotelImage) {
-            return $thumb ? array(Constants::HOTEL_IMAGE_PREVIEW_SIZE, Constants::HOTEL_IMAGE_PREVIEW_SIZE) : array(Constants::HOTEL_IMAGE_SIZE, Constants::HOTEL_IMAGE_SIZE);
+        if ($object instanceof CreditRequestImage) {
+            return $thumb ? array(Constants::CREDIT_REQUEST_IMAGE_THUMB, Constants::CREDIT_REQUEST_IMAGE_THUMB) : array(Constants::CREDIT_REQUEST_IMAGE, Constants::CREDIT_REQUEST_IMAGE);
         } else {
             Assert::isUnreachable('Define data in PictureUtils first');
         }
@@ -137,8 +137,8 @@ class PictureUtils extends FilesUtils
         $nestingPath = self::getNestingPathById($object instanceof ImageUniqueFileName ? $object->getFileName() : $object->getId());
         $path = "";
         
-        if ($object instanceof HotelImage) {
-            $path = UPLOAD_PATH . IMAGE_PATH_HOTEL_IMAGE;
+        if ($object instanceof CreditRequestImage) {
+            $path = UPLOAD_PATH . CREDIT_REQUEST_IMAGE;
         } else {
             Assert::isUnreachable('Define data in PictureUtils first');
         }
@@ -151,8 +151,8 @@ class PictureUtils extends FilesUtils
         $nestingPath = self::getNestingPathById($object instanceof ImageUniqueFileName ? $object->getFileName() : $object->getId());
         $path = "";
         
-        if ($object instanceof HotelImage) {
-            $path = UPLOAD_URL . IMAGE_PATH_HOTEL_IMAGE;
+        if ($object instanceof CreditRequestImage) {
+            $path = UPLOAD_URL . CREDIT_REQUEST_IMAGE;
         } else {
             Assert::isUnreachable('Define data in PictureUtils first');
         }

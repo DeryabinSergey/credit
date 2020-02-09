@@ -8,8 +8,6 @@
         addMissingLabel('category', 'вид залога не указан')->
         addWrongLabel('summ', 'необходимая сумма указана неверно')->
         addMissingLabel('summ', 'необходимая сумма не указана')->
-        addWrongLabel('profit', 'суммарный доход указан неверно')->
-        addMissingLabel('profit', 'суммарный доход не указан')->
         addMissingLabel('name', 'ФИО не указаны')->
         addWrongLabel('birthDate', 'дата рождения указана неверно')->
         addMissingLabel('birthDate', 'дата рождения не указана')->
@@ -35,11 +33,12 @@
     </div>
     
     <form action="" method="POST" class="">
-        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <input type="hidden" name="id" value="" id="object-id" />
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />
         
         <div class="form-group row">
             <label class="col-sm-2 col-form-label col-form-label-lg">Телефон</label>
-            <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $userPhone)?></label>
+            <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $userExists->getPhone())?></label>
         </div>
         <? if ($userExists instanceof User && $userExists->getEmail()) { ?>
             <div class="form-group row">
@@ -78,16 +77,6 @@
                 <div class="input-group">
                     <input id="summ" class="form-control form-control-lg" name="summ" value="<?=$form->getDisplayValue('summ')?>" type="text">
                     <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group row align-items-center">
-            <label for="profit" class="col-12 col-sm-2 col-form-label col-form-label-lg">Месячный доход</label>
-            <div class="col-12 col-sm-10 form-inline justify-content-between">
-                <div class="input-group">
-                    <input id="profit" class="form-control form-control-lg" name="profit" value="<?=$form->getDisplayValue('profit')?>" type="text">
-                    <div class="input-group-append"><span class="input-group-text">&#8381;</span></div>
                 </div>
             </div>
         </div>
@@ -132,6 +121,36 @@
             </div>
         </div>
         
+        <div class="form-group row align-items-center">
+            <label for="passport" class="col-12 col-sm-2 col-form-label col-form-label-lg">Прикрепленные изображения</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <div class="custom-file">
+                    <input class="custom-file-input" type="file" name="file" id="photo-upload" multiple>
+                    <label class="custom-file-label form-control-lg" for="photo-upload">Choose file</label>
+                    <small class="form-text text-muted">Можно загрузить любые изображения, Вашего объекта залога или документов</small>
+                </div>
+            </div>
+        </div>
+    
+        <div class="images-cont sortable d-flex mt-5 mb-4" id="related-images" style='flex-wrap: wrap;'>
+            <? 
+                foreach($imagesList as $image) { 
+            ?>
+            
+                <div class="card text-white" style="background: url(<?=$image->getUrl(true)?>);" id="image-id-<?=$image->getId()?>">
+                    <div class="card-header">
+                        <ul class="list-inline mb-0 d-flex justify-content-between">
+                            <li class="list-inline-item" id="rotate-cw-<?=$image->getId()?>"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>
+                            <li class="list-inline-item" id="rotate-acw-<?=$image->getId()?>"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>
+                            <li class="list-inline-item" id="delete-<?=$image->getId()?>"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>
+                        </ul>                        
+                    </div>
+                </div>            
+            <? 
+                }
+            ?>
+        </div>
+        
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-10 d-flex justify-content-between">
                 <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">отправить</button>
@@ -142,5 +161,7 @@
     </div>    
     
 </main>
+
+
 
 <? $partViewer->view('parts/footer'); ?>

@@ -19,7 +19,15 @@ $(document).ready(function(){
         }
     );
     
-    $( "#name" ).autocomplete({
+    objectData = {
+        image: 'CreditRequestImage',
+        imageOwner: 'CreditRequest',
+        previewType: 1
+    };
+    
+    var formData = { 'id': $('#object-id').val() };
+    
+    $("#name").autocomplete({
         minLength: 3,
         source: function( request, response ) {
             let term = request.term;
@@ -37,7 +45,7 @@ $(document).ready(function(){
         }
     });
     
-    $( "#ogrn" ).autocomplete({
+    $("#ogrn").autocomplete({
         minLength: 3,
         source: function( request, response ) {
             let term = request.term;
@@ -119,16 +127,11 @@ $(document).ready(function(){
                     $("#warning-block").hide("swing");
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                 } else {
-                    let errors = [];
-                    if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
-                    } else { errors.push('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;'); }
-                    $("#alert-block-content").html(errors.join('<br />'));
-                    $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+                    showError(result.errors ? result.errors : 'Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
                 }
             },"json"
         ).fail(function() {
-            $("#alert-block-content").html('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
-            $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+            showError('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
         });
     });
 });

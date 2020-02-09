@@ -15,10 +15,6 @@
         <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
             <? if (SecurityManager::isAllowedAction(AclAction::ADD_ACTION, AclContext::CATEGORY_ID)) { ?><a href="<?=CommonUtils::makeUrl('categoryEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" class="btn btn-primary">добавить</a><? } ?>
         </div>
-    </div>  
-    
-    <div id="alert-block" class="alert alert-danger" role="alert" style="display: none;">
-        <p class="mb-0" id="alert-block-content"></p>
     </div>
     
     <? if ($list) { ?>

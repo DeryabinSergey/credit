@@ -21,18 +21,16 @@ class CreditRequestConfirmCommand implements EditorCommand
         
         $form->markGood('id');
         $subject = CreditRequest::create();
-        $userPhone = Session::exist(creditRequestEditor::SESSION_PHONE) ? Session::get(creditRequestEditor::SESSION_PHONE) : false;
         $userExists = SecurityManager::getUser();
+                
+        $imagesList = 
+            Criteria::create(CreditRequestImage::dao())->
+                add(Expression::isNull('owner'))->
+                add(Expression::eq('user', SecurityManager::getUser()->getId()))->
+                addOrder(OrderBy::create('sort')->asc())->
+                getList();        
         
-        if ($userExists instanceof User || $userPhone) {
-            
-            if ($userExists instanceof User) {
-                $userPhone = $userExists->getPhone();
-            } else {
-                try {
-                    $userExists = User::dao()->getByLogic(Expression::eq('phone', $userPhone));
-                } catch(ObjectNotFoundException $e) { /* nothin here */ }
-            }
+        if ($userExists instanceof User) {
 
             if ($process && !$form->getErrors()) {
                 
@@ -74,28 +72,13 @@ class CreditRequestConfirmCommand implements EditorCommand
                 
                 if (!$form->getErrors()) {
                     
-                    if (!$userExists instanceof User) {
-                        $password = ViewTextUtils::createRandomPassword(10);
-                    
-                        $userExists = 
-                            User::dao()->
-                                add(
-                                    User::create()->
-                                        setName($form->getValue('name'))->
-                                        setPassword(hash('sha256', $password))->
-                                        setPhone($userPhone)->
-                                        setActive(true)
-                                );
-                        
-                        SmsUtils::send("7{$userPhone}", "Ваш пароль для входа на сайт: {$password}");
-                        SecurityManager::setUser($userExists, true, $request);
-                    } elseif ($userExists instanceof User && !SecurityManager::isAuth()) {
-                        SecurityManager::setUser($userExists, true, $request);
-                    }
                     FormUtils::form2object($form, $subject);
                     $subject = $subject->dao()->add($subject->setUser($userExists));
-                    if (Session::exist(creditRequestEditor::SESSION_PHONE)) Session::drop(creditRequestEditor::SESSION_PHONE);
+                    foreach($imagesList as $image) {
+                        $image->dao()->save($image->dropUser()->setOwner($subject));
+                    }
                     $mav->setView(EditorController::COMMAND_SUCCEEDED);
+                    
                 }
             }
 
@@ -109,7 +92,7 @@ class CreditRequestConfirmCommand implements EditorCommand
                 $mav->
                     getModel()->
                         set('categoryList', $categoryList)->
-                        set('userPhone', $userPhone)->
+                        set('imagesList', $imagesList)->
                         set('userExists', $userExists);
             }
         } else {
@@ -132,7 +115,6 @@ class CreditRequestConfirmCommand implements EditorCommand
         
         $form->get('birthDate')->optional();
         $form->add(Primitive::string('summ')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", ""))->required());
-        $form->add(Primitive::string('profit')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", ""))->required());
         $form->add(Primitive::string('passport')->setAllowedPattern("/^\d{10}/is")->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", "")));
         $form->get('name')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars());
         $form->get('text')->addImportFilter(Filter::textImport())->addImportFilter(Filter::pcre()->setExpression("/(\\r?\\n){2,}/isu", "\r\n"))->addDisplayFilter(Filter::htmlSpecialChars())->required();

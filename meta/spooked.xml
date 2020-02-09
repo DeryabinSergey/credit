@@ -2,6 +2,23 @@
 <!DOCTYPE metaconfiguration SYSTEM "meta.dtd">
 <metaconfiguration>
 <classes>
+        
+    <class name="ImageBase" type="abstract">
+        <implement interface="SecurityObject" />
+        <implement interface="Created"/>
+        <implement interface="Sortable" />
+        <properties>
+            <identifier />
+            <property name="user" type="User" required="false" relation="OneToOne" fetch="lazy" />
+            <property name="createdTime" type="Timestamp" required="true" />
+            <property name="type" type="ImageType" relation="OneToOne" required="true" fetch="lazy" />
+            <property name="text" type="String" required="false" />
+            <property name="sort" type="Integer" required="false" />
+            <property name="width" type="SmallInteger" required="true" />
+            <property name="height" type="SmallInteger" required="true" />
+        </properties>
+        <pattern name="AbstractClass" />
+    </class>
     
     <class name="ConfirmType" type="final">
         <properties>

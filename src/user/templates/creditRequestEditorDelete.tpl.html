@@ -41,6 +41,19 @@
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getStatus()->getName())?></label>
         </div>
         
+        <? if ($form->getValue('id')->getImages()->getCount()) { ?>
+            <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                <? 
+                    foreach($form->getValue('id')->getImages()->getList() as $image) { 
+                        $sizes = getimagesize($image->getPath());
+                ?>
+                    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$sizes[0]?>x<?=$sizes[1]?>"  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                        <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />
+                    </a>
+                <? } ?>
+            </div>
+        <? } ?>
+        
         <div class="form-group row">
             <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
                 <button type="submit" name="ok" class="btn btn-lg btn-success mr-2 mb-2">удалить</button>

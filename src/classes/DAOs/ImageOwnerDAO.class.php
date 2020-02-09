@@ -7,6 +7,54 @@
 
 	abstract class ImageOwnerDAO extends AutoImageOwnerDAO
 	{
-		// nothing here yet
+            public function dropById($id)
+            {
+                try {
+                    $tr = InnerTransaction::begin($this);
+
+                    $object = $this->getById($id);
+                    if ($object->getImages(true)->getList()) {
+                        $object->getImages(true)->getDao()->dropByIds(
+                            $object->getImages(true)->getList()
+                        );
+                    }
+
+                    $count = parent::dropById($id);
+
+                    $tr->commit();
+                } catch (Exception $e) {
+                    $tr->rollback();
+
+                    throw $e;
+                }
+
+                return $count;
+            }
+
+            public function dropByIds(array $ids)
+            {
+                try {
+                    $tr = InnerTransaction::begin($this);
+
+                    foreach($ids as $id) {
+                        $object = $this->getById($id);
+                        if ($object->getImages(true)->getList()) {
+                            $object->getImages(true)->getDao()->dropByIds(
+                                $object->getImages(true)->getList()
+                            );
+                        }
+                    }
+
+                    $count = parent::dropByIds($ids);
+
+                    $tr->commit();
+                } catch (Exception $e) {
+                    $tr->rollback();
+
+                    throw $e;
+                }
+
+                return $count;
+            }
 	}
 ?>

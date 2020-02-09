@@ -12,7 +12,7 @@
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
         <h3>Запросы на кредит</h3>
         <p><a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список запросов</a></p>
-        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование<? if (isset($creditRequestNew) && $creditRequestNew > 0) { ?>, из них <a class='text-danger font-weight-bold' href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME)))?>">ожидающих обработки: <?=$creditRequestNew?></a><? } ?>.</p>
+        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование<? if (isset($creditRequestNew) && $creditRequestNew > 0) { ?>, из них <a class='text-danger font-weight-bold' href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1))?>">ожидающих обработки: <?=$creditRequestNew?></a><? } ?>.</p>
     <? } ?>    
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::INVESTOR_OFFER_ID)) { ?>

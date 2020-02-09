@@ -9,20 +9,6 @@
     
     <classes>
         
-        <class name="ImageBase" type="abstract">
-            <implement interface="Created"/>
-            <implement interface="Sortable" />
-            <properties>
-                <identifier />
-                <property name="user" type="User" required="false" relation="OneToOne" fetch="lazy" />
-                <property name="createdTime" type="Timestamp" required="true" />
-                <property name="type" type="ImageType" relation="OneToOne" required="true" fetch="lazy" />
-                <property name="text" type="String" required="false" />
-                <property name="sort" type="Integer" required="false" />
-            </properties>
-            <pattern name="AbstractClass" />
-        </class>
-        
         <class name="User" extends="NamedObject">
             <implement interface="Created"/>
             <properties>
@@ -81,7 +67,7 @@
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>
         
-        <class name="CreditRequest" extends="NamedObject" type="final">
+        <class name="CreditRequest" extends="ImageOwner" type="final">
             <implement interface="Created"/>
             <implement interface="SecurityObject"/>
             <properties>
@@ -95,12 +81,22 @@
                 <property name="name" type="String" size="255" required="false" />
                 <property name="summ" type="BigInteger" required="true" />
                 <property name="birthDate" type="Timestamp" required="false" />
-                <property name="profit" type="BigInteger" required="true" />
+                <property name="profit" type="BigInteger" required="false" />
                 <property name="text" type="String" required="true" />
                 <property name="passport" type="BigInteger" required="false" />
                 <property name="ogrn" type="BigInteger" required="false" />
+                <property name="images" type="CreditRequestImage" relation="OneToMany" />
             </properties>           
             <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>
+
+        <class name="CreditRequestImage" extends="ImageBase">
+            <implement interface="ImageUniqueFileName"/>
+            <properties>
+                <property name="owner" type="CreditRequest" required="false" relation="OneToOne" fetch="lazy" />
+                <property name="fileName" type="String" size="128" required="true" />
+            </properties>
+            <pattern name="StraightMapping" />
         </class>
         
         <class name="Creditor" extends="NamedObject" type="final">
