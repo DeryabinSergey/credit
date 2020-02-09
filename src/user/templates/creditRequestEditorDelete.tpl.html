@@ -47,7 +47,7 @@
                     foreach($form->getValue('id')->getImages()->getList() as $image) { 
                         $sizes = getimagesize($image->getPath());
                 ?>
-                    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$sizes[0]?>x<?=$sizes[1]?>"  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
                         <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />
                     </a>
                 <? } ?>
