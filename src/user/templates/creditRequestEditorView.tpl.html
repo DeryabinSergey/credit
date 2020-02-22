@@ -1,0 +1,159 @@
+<? 
+    $partViewer->view('parts/header');
+    
+    $offers = $form->getValue('id')->getCreditorOffers(array(), array(CreditRequestCreditorOfferStatus::TYPE_CANCELED, CreditRequestCreditorOfferStatus::TYPE_REJECT));
+    $offerSuccess = $form->getValue('id')->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_SUCCESS)) ? $form->getValue('id')->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_SUCCESS))[0] : false;
+    $offerMeeting = $form->getValue('id')->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_MEETING)) ? $form->getValue('id')->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_MEETING))[0] : false;
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Просмотр запроса</h1>
+    
+    <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />     
+
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Заёмщик</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=htmlspecialchars($form->getValue('id')->getName())?>
+                <? if (!$form->getValue('id')->getType()->isFiz()) { ?><br />ОГРН: <?=$form->getValue('id')->getOgrn()?><? } ?>
+                <? if (!$form->getValue('id')->getType()->isYur()) { ?><br />Паспорт: <?=$form->getValue('id')->getPassport()?><br />Дата рождения: <?=$form->getValue('id')->getBirthDate()->toFormatString('d.m.Y')?><? } ?>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=htmlspecialchars($form->getValue('id')->getCategory()->getName())?><br />
+                <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getText()))?></span>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=number_format($form->getValue('id')->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></label>
+        </div>
+        
+        <div class="form-group row align-items-top">
+            <label for="type" class="col-12 col-sm-2 col-form-label col-form-label-lg">Статус</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <p class="<?=$offerSuccess || $offerMeeting?'':'mb-0 '?>"><?=htmlspecialchars($form->getValue('id')->getStatus()->getName())?></p>
+                <? if ($offerSuccess) { ?>
+                    <p>
+                        Процентная ставка <span class="font-weight-bold"><?=$offerSuccess->getPercents()?>% годовых</span> на
+                        <? if (!$offerSuccess->getMinPeriod() && !$offerSuccess->getMaxPeriod()) { ?>
+                            <span class="font-weight-bold">любой срок</span>.
+                        <? } elseif ($offerSuccess->getMinPeriod() && $offerSuccess->getMaxPeriod()) { ?>
+                            <? if ($offerSuccess->getMinPeriod() == $offerSuccess->getMaxPeriod()) { ?>
+                                <span class="font-weight-bold"><?=$offerSuccess->getMinPeriod()?> месяцев</span>.
+                            <? } else { ?>
+                                срок <span class="font-weight-bold">от <?=$offerSuccess->getMinPeriod()?> до <?=$offerSuccess->getMaxPeriod()?> месяцев</span>.
+                            <? } ?>
+                        <? } else { ?>
+                            срок <span class="font-weight-bold"><?= $offerSuccess->getMinPeriod() ? 'от '.$offerSuccess->getMinPeriod() : 'до '.$offerSuccess->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($offerSuccess->getMinPeriod() ? $offerSuccess->getMinPeriod() : $offerSuccess->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                        <? } ?>
+                        <? if ($offerSuccess->getPercentsOnly()) { ?>Можно погашать только проценты.<? } ?>
+                    </p>
+                <? } elseif ($offerMeeting) { ?>
+                    <p class="text-danger font-weight-normal">Назначена встреча на <span class="font-weight-bold"> на <?=$offerMeeting->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offerMeeting->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $offerMeeting->getTime()->getHour(), $offerMeeting->getTime()->getMinute())?></span> по адресу <span class="font-weight-bold"><?=htmlspecialchars($offerMeeting->getAddress())?></span></p>
+                    <p class="text-danger font-weight-normal mb-0"><small><?=nl2br(htmlspecialchars($offerMeeting->getText()))?></small></p>
+                <? } ?>
+            </label>
+        </div>
+        
+        
+        <? if ($form->getValue('id')->getImages()->getCount()) { ?>
+            <hr class="my-5" />        
+        
+            <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                <? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
+                    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                        <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />
+                    </a>
+                <? } ?>
+            </div>
+        <? } ?>
+        
+        <? 
+            if (
+                !$offerSuccess &&
+                (
+                    !in_array($form->getValue('id')->getStatus()->getId(), array(CreditRequestStatus::TYPE_REJECT, CreditRequestStatus::TYPE_CANCELED, CreditRequestStatus::TYPE_INCOME)) ||
+                    $offers
+                )
+            ) { 
+        ?>
+            <hr class="my-5" />
+
+            <h4 class="mb-5">Предложения займа</h4>
+
+            <? if ($offers) { ?>
+                <div class="row my-5">
+                <? foreach($offers as $item) { ?>
+                    <div class='<?=(count($offers) == 1 ? 'col-12' : (count($offers) == 2 ? 'col-12 col-md-6' : 'col-12 col-md-6 col-xl-4') )?> mb-3'>
+                        <div class="card <?=(in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'border-success': 'border-dark' )?> h-100">
+                            <div class="card-header">
+                                <h4 class="mb-0 card-title text-center font-weight-bold"><?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></h4>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle text-center mb-2 text-<?=(in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'success': 'dark')?>"><?=$item->getStatus()->getName()?></h6>
+                                <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                    <h6 class="card-subtitle text-center mb-2 text-success">
+                                        <?=$item->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $item->getTime()->getHour(), $item->getTime()->getMinute())?>
+                                    </h6>
+                                <? } ?>
+
+                                <p class="card-text mb-0">
+                                    Процентная ставка <span class="font-weight-bold"><?=$item->getPercents()?>% годовых</span> на
+                                    <? if (!$item->getMinPeriod() && !$item->getMaxPeriod()) { ?>
+                                        <span class="font-weight-bold">любой срок</span>.
+                                    <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
+                                        <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
+                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> месяцев</span>.
+                                        <? } else { ?>
+                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> месяцев</span>.
+                                        <? } ?>
+                                    <? } else { ?>
+                                        срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                                    <? } ?>
+                                    <? if ($item->getPercentsOnly()) { ?>Можно погашать только проценты.<? } ?>
+                                </p>
+                            </div>
+                            <? if ($item->checkPermissions(AclAction::CANCEL_ACTION) || $item->checkPermissions(AclAction::ACCEPT_ACTION) || $item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                <div class='card-footer border-top-0 bg-transparent'>
+                                    <p class='text-center mb-0'>
+                                        <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                            <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_MEETING_CANCEL, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap" onclick="return confirm('Уверены что хотите отменить встречу?')"><i class="fas fa-ban mr-2"></i>отменить встречу</a>
+                                        <? } ?>
+                                        <? if ($item->checkPermissions(AclAction::ACCEPT_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_ACCEPT, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-success text-nowrap" onclick="return confirm('Уверены что хотите принять предложение?')"><i class="fas fa-check mr-2"></i>принять</a><? } ?>
+                                        <? if ($item->checkPermissions(AclAction::CANCEL_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_CANCEL, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap" onclick="return confirm('Уверены что хотите отклонить предложение?')"><i class="far fa-trash-alt mr-2"></i>отклонить</a><? } ?>
+                                    </p>
+                                </div>
+                            <? } ?>
+                        </div>
+                    </div>
+                <? } ?>
+                </div>        
+            <? } else { ?>
+                <h5 class="my-5 text-center text-muted font-italic">пока не поступало предложений&hellip;</h5>
+            <? } ?>
+        <? } ?>
+        
+        <hr class="my-5" />
+        
+        <div class="form-group row">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" name="cancel" class="btn btn-link mb-2">вернуться</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

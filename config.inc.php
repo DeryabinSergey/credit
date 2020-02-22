@@ -91,6 +91,8 @@ $autoloader->addPaths(array(
     PATH_CONTROLLER_COMMANDS.'Category',
     PATH_CONTROLLER_COMMANDS.'Creditor',
     PATH_CONTROLLER_COMMANDS.'CreditRequest',
+    PATH_CONTROLLER_COMMANDS.'CreditRequestCreditor',
+    PATH_CONTROLLER_COMMANDS.'CreditRequestCreditorOffer',
     PATH_CONTROLLER_COMMANDS.'InvestorOffer',
     PATH_CONTROLLER_COMMANDS.'User',
 

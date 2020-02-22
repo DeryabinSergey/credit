@@ -1,5 +1,4 @@
-$(document).ready(function(){
-    let alertTimer = null;
+$(document).ready(function() {
     let cacheName = {};
     let cacheOgrn = {};
     $('#phone').mask('(000) 000-00-00');
@@ -21,11 +20,8 @@ $(document).ready(function(){
     
     objectData = {
         image: 'CreditRequestImage',
-        imageOwner: 'CreditRequest',
-        previewType: 1
+        imageOwner: 'CreditRequest'
     };
-    
-    var formData = { 'id': $('#object-id').val() };
     
     $("#name").autocomplete({
         minLength: 3,

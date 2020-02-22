@@ -7,6 +7,8 @@
 
 	final class CreditRequest extends AutoCreditRequest implements Prototyped, DAOConnected
 	{
+                protected $creditorOffers = array();
+            
 		/**
 		 * @return CreditRequest
 		**/
@@ -30,14 +32,65 @@
 		{
 			return Singleton::getInstance('ProtoCreditRequest');
 		}
+                
+                public function getCreditorOffers(array $status = array(), array $exclude = array())
+                {
+                    $key = md5(serialize(array($status, $exclude)));
+                    
+                    if (!isset($this->creditorOffers[$key])) {
+                        
+                        if ($this->getCreditorRequests(true)->isFetched() && $this->getCreditorRequests(true)->getCriteria()) {
+                            $this->getCreditorRequests(true)->setCriteria(Criteria::create())->clean();
+                        }
+                        $ids = $this->getCreditorRequests(true)->getList();
+                        
+                        if ($ids) {
+                            $criteria = 
+                                Criteria::create(CreditRequestCreditorOffer::dao())->
+                                    add(Expression::in('request', $ids));
+                            if ($status) {
+                                $criteria->add(Expression::in('status', $status));
+                            }    
+                            if ($exclude) {
+                                $criteria->add(Expression::notIn('status', $exclude));
+                            }
+                            $this->creditorOffers[$key] = $criteria->getList();
+                        } else {
+                            $this->creditorOffers[$key] = array();
+                        }
+                        
+                    }
+                    
+                    return $this->creditorOffers[$key];
+                }
+                
+                /**
+                 * Метод позволяет определить есть ли у запроса принятые кредитные предложения.
+                 * !!! Актуально только для заемщика
+                 * @return boolean
+                 */
+                public function hasAcceptedOffers()
+                {
+                    $hasAccepted = false;
+                    
+                    foreach($this->getCreditorOffers() as $offer) {
+                        $hasAccepted = $hasAccepted || in_array($offer->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING));
+                        
+                        if ($hasAccepted) break;
+                    }
+                    
+                    return $hasAccepted;
+                }
 		
 		public function checkPermissions($label)
-                {                    
+                {
                     return 
+                        ($label == AclAction::EDIT_ACTION && $this->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) ||
                         ($label == AclAction::VIEW_ACTION && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId() && !$this->isDeleted()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
-                        ($label == AclAction::DELETE_ACTION && !$this->isDeleted() && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
+                        ($label == AclAction::DELETE_ACTION && !$this->isDeleted() && !in_array($this->getStatus()->getId(), array(CreditRequestStatus::TYPE_SUCCESS, CreditRequestStatus::TYPE_REJECT)) && ((SecurityManager::isAuth() && $this->getUser()->getId() == SecurityManager::getUser()->getId()) || SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID))) ||
                         ($label == AclAction::RESTORE_ACTION && $this->isDeleted() && SecurityManager::isAllowedAction($label, AclContext::CREDIT_REQUEST_ID)) ||
                         (
+                            $label != AclAction::EDIT_ACTION &&
                             $label != AclAction::VIEW_ACTION &&
                             $label != AclAction::DELETE_ACTION &&
                             $label != AclAction::RESTORE_ACTION

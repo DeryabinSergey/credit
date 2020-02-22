@@ -1,0 +1,168 @@
+<? 
+    $partViewer->view('parts/header');
+    
+    $offers = $form->getValue('id')->getRequest()->getRequest()->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED));
+?>
+
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Просмотр запроса</h1>
+    
+    <form action="" method="POST" class="">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Разместил</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=$form->getValue('id')->getRequest()->getRequest()->getUser()->getName() ? htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getUser()->getName()).'<br />' : ""?>
+                <? if ($form->getValue('id')->getRequest()->getRequest()->getUser()->getEmail()) { ?><?=htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getUser()->getEmail())?><br /><? } ?>
+                <a href="tel:+7<?=$form->getValue('id')->getRequest()->getRequest()->getUser()->getPhone()?>"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $form->getValue('id')->getRequest()->getRequest()->getUser()->getPhone())?></a>
+            </label>
+        </div>        
+
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Заёмщик</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getName())?>
+                <? if (!$form->getValue('id')->getRequest()->getRequest()->getType()->isFiz()) { ?><br />ОГРН: <?=$form->getValue('id')->getRequest()->getRequest()->getOgrn()?><? } ?>
+                <? if (!$form->getValue('id')->getRequest()->getRequest()->getType()->isYur()) { ?><br />Паспорт: <?=$form->getValue('id')->getRequest()->getRequest()->getPassport()?><br />Дата рождения: <?=$form->getValue('id')->getRequest()->getRequest()->getBirthDate()->toFormatString('d.m.Y')?><? } ?>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getCategory()->getName())?><br />
+                <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getText()))?></span>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=number_format($form->getValue('id')->getRequest()->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="type" class="col-12 col-sm-2 col-form-label col-form-label-lg">Статус</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getRequest()->getRequest()->getStatus()->getName())?></label>
+        </div>
+        
+        <? if ($form->getValue('id')->getRequest()->getRequest()->getImages()->getCount()) { ?>
+            <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                <? foreach($form->getValue('id')->getRequest()->getRequest()->getImages()->getList() as $image) { ?>
+                    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                        <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="rounded img-thumbnail mb-2 mr-1" alt="" />
+                    </a>
+                <? } ?>
+            </div>
+        <? } ?>
+        
+        <hr class="my-5" />
+        
+        <? if ($offers) { ?>
+            <div class="row my-5">
+            <? foreach($offers as $item) { ?>
+                <div class='col-12 mb-3'>
+                    <div class="card border-success h-100">
+                        <div class="card-header">
+                            <h4 class="mb-0 card-title text-center font-weight-bold"><?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></h4>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle text-center mb-2 text-success"><?=$item->getStatus()->getName()?></h6>
+
+                            <p class="card-text mb-0">
+                                Процентная ставка <span class="font-weight-bold"><?=$item->getPercents()?>% годовых</span> на
+                                <? if (!$item->getMinPeriod() && !$item->getMaxPeriod()) { ?>
+                                    <span class="font-weight-bold">любой срок</span>.
+                                <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
+                                    <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
+                                        <span class="font-weight-bold"><?=$item->getMinPeriod()?> месяцев</span>.
+                                    <? } else { ?>
+                                        срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> месяцев</span>.
+                                    <? } ?>
+                                <? } else { ?>
+                                    срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                                <? } ?>
+                                <? if ($item->getPercentsOnly()) { ?>Можно погашать только проценты.<? } ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <? } ?>
+            </div>        
+        <? } else { ?>
+            <h5 class="my-5 text-center text-muted font-italic">пока не поступало предложений&hellip;</h5>
+        <? } ?>
+        
+        <hr class="my-5" />
+        
+        <h4 class="mb-5">Информация о компании - кредиторе</h4>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Разместил</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=$form->getValue('id')->getRequest()->getCreditor()->getUser()->getName() ? htmlspecialchars($form->getValue('id')->getRequest()->getCreditor()->getUser()->getName()).'<br />' : ""?>
+                <? if ($form->getValue('id')->getRequest()->getCreditor()->getUser()->getEmail()) { ?><?=htmlspecialchars($form->getValue('id')->getRequest()->getCreditor()->getUser()->getEmail())?><br /><? } ?>
+                <a href="tel:+7<?=$form->getValue('id')->getRequest()->getCreditor()->getUser()->getPhone()?>"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $form->getValue('id')->getRequest()->getCreditor()->getUser()->getPhone())?></a>
+            </label>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Название</label>
+            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                <?=htmlspecialchars($form->getValue('id')->getRequest()->getCreditor()->getType()->getName())?> <?=htmlspecialchars($form->getValue('id')->getRequest()->getCreditor()->getName())?>
+            </label>
+        </div>
+        
+        <div class="card border-danger mb-2">
+            <div class="card-body">
+                <h4 class="card-title">Уточнить у кредитора</h4>
+                <p class="card-text">несколько удобных дат и времени для встречи, список документов по заявке. Заполнить сопроводительное письмо.</p>
+                <h4 class="card-title">Назначить встречу заемщику</h4>
+                <p class="card-text">Проговорить дату и место встречи, список необходимых документов</p>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <label for="address" class="col-12 col-sm-2 col-form-label col-form-label-lg">Адрес</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <input id="address" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('address') ? 'in' : '').'valid' : ''?>" name="address" value="<?=$form->getDisplayValue('address')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center" >
+            <label for="date" class="col-12 col-sm-2 col-form-label col-form-label-lg">Дата встречи</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-start">
+                <div class="input-group mr-3">
+                    <input id="date" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('date') ? 'in' : '').'valid' : ''?>" name="date" value="<?=$form->getValue('date') instanceof Date ? $form->getValue('date')->toFormatString('d.m.Y') : ''?>" type="text" style="width: 10rem;">
+                    <div class="input-group-append"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div>
+                </div>
+                <input id="time" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('time') ? 'in' : '').'valid' : ''?>" name="time" value="<?=$form->getValue('time') instanceof Time ? sprintf('%02d:%02d', $form->getValue('time')->getHour(), $form->getValue('time')->getMinute()) : ''?>" type="text" style="width: 7rem;">
+            </div>
+        </div>
+
+        <div class="form-group row align-items-start">
+            <div class="col-12">
+                <label for="text" class=" col-form-label col-form-label-lg">Сопроводительная информация для заемщика</label>
+                <textarea id="text" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('text') ? 'in' : '').'valid' : ''?>" rows="4" name="text" id="text"><?=$form->getDisplayValue('text')?></textarea>
+                <small class="form-text text-muted">Данная информация будет отправлена заемщику в письме и кредитной организации</small>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="col-12 d-flex justify-content-between flex-wrap">
+                <button type="submit" name="accept" class="btn btn-lg btn-success mr-2 mb-2">назначить встречу</button>
+                <button type="submit" name="reject" class="btn btn-lg btn-danger mr-2 mb-2">отменить выбор</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">вернуться</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

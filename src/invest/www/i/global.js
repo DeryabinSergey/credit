@@ -1,16 +1,25 @@
 $(function () {
 
     let toastId = 0;
+    let selectedIds = {};
     
     $(".table-responsive .selectpicker").each(function(i, el) {
-        let init = false;
+        // Хуй знает зачем я это добавил, уже и не вспомню, поставил пока на true
+        let init = true;
         $(el).on('show.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            selectedIds[$(el).attr('id')] = $(el).val();
             $('.table-responsive').css( "overflow", "inherit" );
         });
         $(el).on('hide.bs.select', function (e, clickedIndex, isSelected, previousValue) {
             $('.table-responsive').css( "overflow", "auto" );
-            if (init) { 
-                $('#filter-form').submit(); 
+            let newIds = $(el).val();
+            let find = newIds.length == selectedIds[$(el).attr('id')].length;
+            for(i in newIds) {
+                find = find && selectedIds[$(el).attr('id')].indexOf(newIds[i]) > -1;
+                if (!find) break;
+            }
+            if (init && !find) { 
+                $('#filter-form').submit();
             } else {
                 init = true;
             }

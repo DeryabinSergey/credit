@@ -15,6 +15,9 @@
             const DELETE_ACTION = 'delete';
             const RESTORE_ACTION = 'restore';
             const PUBLISH_ACTION = 'publish';
+            const REJECT_ACTION         = 'reject';
+            const CANCEL_ACTION         = 'cancel';
+            const ACCEPT_ACTION         = 'accept';
 
             protected static $emptyActionList = array(
                 self::ADD_ACTION => self::ADD_ACTION,

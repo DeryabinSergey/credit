@@ -38,7 +38,7 @@
                         <th scope="col" class="align-middle"><a href="<?=CommonUtils::makeUrl($area, array_merge($filter, array("sort" => "id", "d" => $form->getValueOrDefault('d') == "asc" ? "desc" : "asc")))?>">Дата <i class="fas fa-sort-numeric-<?=$form->getValueOrDefault('d') == "asc"?'up':'down-alt'?>"></i></a></th>
                         <th scope="col">Пользователь</th>
                         <th scope="col">
-                            <select class="selectpicker" name="type[]" multiple data-selected-text-format="count" data-none-selected-text="заемщик" data-width="125px">
+                            <select class="selectpicker" name="type[]" multiple data-selected-text-format="count" data-none-selected-text="тип" data-width="125px">
                                 <? foreach(SubjectType::getList(SubjectType::create(SubjectType::getAnyId())) as $type) { ?>
                                     <option value="<?=$type->getId()?>"<?=$form->getValue('type') && in_array($type->getId(), $form->exportValue('type'))?' selected':''?>><?=htmlspecialchars($type->getShortName())?></option>
                                 <? } ?>

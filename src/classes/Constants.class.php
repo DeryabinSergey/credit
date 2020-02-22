@@ -63,6 +63,11 @@ class Constants
     const CREDIT_REQUEST_IMAGE = 1800;    
     
     /**
+     * Время жизни запроса кредита к кредитной организации в статусе Поступило
+     */
+    const CREDIT_REQUEST_CREDITOR_INCOME_LIFETIME = 18;
+    
+    /**
      * Открытый и закрытый токен для запросов к стандартизации и подсказкам DaData
      * @see https://dadata.ru/profile/#info
      */

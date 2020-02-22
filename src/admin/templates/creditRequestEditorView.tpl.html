@@ -1,5 +1,7 @@
 <? 
     $partViewer->view('parts/header');
+    
+    $offers = $form->getValue('id')->getCreditorOffers();
 ?>
 
 <!-- Begin page content -->
@@ -10,13 +12,13 @@
     <h1 class="mb-5">Просмотр запроса</h1>
     
     <form action="" method="POST" class="">
-        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />
         
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Разместил</label>
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
-                <?=$form->getValue('id')->getUser()->getName() ? htmlspecialchars($form->getValue('id')->getUser()->getName()).'<br />' : ""?>
-                <?=htmlspecialchars($form->getValue('id')->getUser()->getEmail())?><br />
+                <a href='<?=CommonUtils::makeUrl('creditRequestList', array('user' => array($form->getValue('id')->getUser()->getId())))?>' title='Посмотреть все запросы на кредиты пользователя' target='_blank'><?=$form->getValue('id')->getUser()->getName() ? htmlspecialchars($form->getValue('id')->getUser()->getName()).'<br />' : ""?></a>
+                <? if ($form->getValue('id')->getUser()->getEmail()) { ?><?=htmlspecialchars($form->getValue('id')->getUser()->getEmail())?><br /><? } ?>
                 <a href="tel:+7<?=$form->getValue('id')->getUser()->getPhone()?>"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $form->getValue('id')->getUser()->getPhone())?></a>
             </label>
         </div>        
@@ -44,17 +46,140 @@
         </div>
         
         <div class="form-group row align-items-center">
-            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Доход месячный</label>
-            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=number_format($form->getValue('id')->getProfit(), 0, '.', '&nbsp;').'&#8381;'?></label>
-        </div>
-        
-        <div class="form-group row align-items-center">
             <label for="type" class="col-12 col-sm-2 col-form-label col-form-label-lg">Статус</label>
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getStatus()->getName())?></label>
         </div>
         
+        <? if ($form->getValue('id')->getImages()->getCount()) { ?>
+        
+            <hr class="my-5" />
+            
+            <? if ($form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
+            
+                <div class="form-group row align-items-center">
+                    <label for="passport" class="col-12 col-sm-2 col-form-label col-form-label-lg">Прикрепленные изображения</label>
+                    <div class="col-12 col-sm-10 form-inline justify-content-between">
+                        <div class="custom-file">
+                            <input class="custom-file-input" type="file" name="file" id="photo-upload" multiple>
+                            <label class="custom-file-label form-control-lg" for="photo-upload">Choose file</label>
+                            <small class="form-text text-muted">Можно загрузить любые изображения, Вашего объекта залога или документов</small>
+                        </div>
+                    </div>
+                </div>            
+            
+                <div class="images-cont sortable d-flex mt-5 mb-4 justify-content-between flex-wrap" id="related-images">
+                    <? 
+                        foreach($form->getValue('id')->getImages()->getList() as $image) { 
+                    ?>
+
+                        <div class="card text-white" style="background: url(<?=$image->getUrl(true)?>?ts=<?=time()?>);" id="image-id-<?=$image->getId()?>">
+                            <div class="card-header">
+                                <ul class="list-inline mb-0 d-flex justify-content-between">
+                                    <li class="list-inline-item" id="rotate-cw-<?=$image->getId()?>"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>
+                                    <li class="list-inline-item" id="rotate-acw-<?=$image->getId()?>"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>
+                                    <li class="list-inline-item" id="delete-<?=$image->getId()?>"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>
+                                </ul>                        
+                            </div>
+                        </div>            
+                    <? 
+                        }
+                    ?>
+                </div>            
+            <? } else { ?>
+                <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                    <? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
+                        <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                            <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="rounded img-thumbnail mb-2 mr-1" alt="" />
+                        </a>
+                    <? } ?>
+                </div>
+            <? } ?>
+        <? } ?>
+        
+        <? if ($form->getValue('id')->getStatus()->getId() != CreditRequestStatus::TYPE_INCOME) { ?>
+            <hr class="my-5" id="offers" />
+
+            <h4 class="mb-5">Предложения займа</h4>
+
+            <? if ($offers) { ?>
+                <div class="row my-5">
+                <? foreach($offers as $item) { ?>
+                    <div class='<?=(count($offers) == 1 ? 'col-12' : (count($offers) == 2 ? 'col-12 col-md-6' : 'col-12 col-md-6 col-xl-4') )?> mb-3'>
+                        <div class="card <?=($item->getStatus()->getId()==CreditRequestCreditorOfferStatus::TYPE_INCOME?'border-warning': (in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'border-success': 'border-secondary' ) )?> h-100">
+                            <div class="card-header">
+                                <h4 class="mb-0 card-title text-center font-weight-bold"><?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></h4>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle text-center mb-2 text-<?=($item->getStatus()->getId()==CreditRequestCreditorOfferStatus::TYPE_INCOME?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'success': 'secondary' ) )?>"><?=$item->getStatus()->getName()?></h6>
+                                <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                    <h6 class="card-subtitle text-center mb-2 text-success">
+                                        <?=$item->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $item->getTime()->getHour(), $item->getTime()->getMinute())?>
+                                    </h6>
+                                <? } ?>
+
+                                <p class="card-text mb-0">
+                                    Процентная ставка <span class="font-weight-bold"><?=$item->getPercents()?>% годовых</span> на
+                                    <? if (!$item->getMinPeriod() && !$item->getMaxPeriod()) { ?>
+                                        <span class="font-weight-bold">любой срок</span>.
+                                    <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
+                                        <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
+                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> месяцев</span>.
+                                        <? } else { ?>
+                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> месяцев</span>.
+                                        <? } ?>
+                                    <? } else { ?>
+                                        срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                                    <? } ?>
+                                    <? if ($item->getPercentsOnly()) { ?>Можно погашать только проценты.<? } ?>
+                                </p>
+                            </div>
+
+                            <div class='card-footer border-top-0 bg-transparent'>
+                                <p class='text-center mb-0'>
+                                    <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING || $item->getRequest()->hasMeetingOffers()) { ?>
+                                        <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_CREDITOR_ACCEPT, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-success text-nowrap" onclick="return confirm('Вы подтверждаете выдачу займа на указанных условиях?\r\n\r\nДанный запрос будет закрыт и переведен в статус «оформлено».')"><i class="fas fa-check mr-2"></i>оформлено</a>
+                                    <? } ?>
+                                    <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                        <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_MEETING_CANCEL, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap" onclick="return confirm('Уверены что хотите отменить встречу с заемщиком?')"><i class="fas fa-ban mr-2"></i>отменить</a>
+                                    <? } ?>
+                                    <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap"><i class="far fa-trash-alt mr-2"></i>удалить</a><? } ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <? } ?>
+                </div>        
+            <? } else { ?>
+                <h5 class="my-5 text-center text-muted font-italic">еще нет предложений&hellip;</h5>
+            <? } ?>   
+        <? } ?>
+        
+        <? if ($form->exists('text')) { ?>
+            <div class="card border-danger mb-2">
+                <div class="card-body">
+                    <h4 class="card-title">Проверить заемщика</h4>
+                    <? if (!$form->getValue('id')->getType()->isYur()) { ?><p class="card-text">Проверить паспорт заемщика на действительность на сайте <a href="http://xn--b1afk4ade4e.xn--b1ab2a0a.xn--b1aew.xn--p1ai/info-service.htm?sid=2000" target="_blank">МВД</a> (обновляется ежедневно)</p><? } ?>
+                    <? if (!$form->getValue('id')->getType()->isFiz()) { ?><p class="card-text">Проверить что ИП или ООО действующее и не в статусе ликвидации в выписке <a href="https://egrul.nalog.ru/index.html" target="_blank">налоговой</a></p><? } ?>
+                    <? if ($form->getValue('id')->getCategory()->getText()) { ?>
+                        <h4 class="card-title">Уточнить о залоге</h4>
+                        <p class="card-text"><?=preg_replace("/([\r\n]+)/isu", "</p><p class=\"card-text\">", $form->getValue('id')->getCategory()->getText())?></p>
+                    <? } ?>
+                </div>
+            </div>
+        
+            <div class="form-group row align-items-start">
+                <div class="col-12 justify-content-between">
+                    <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getDisplayValue('text')?></textarea>
+                </div>
+            </div>
+        <? } ?>
+        
+        <hr class="my-5" />
+        
         <div class="form-group row">
-            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+            <div class="col-12 d-flex justify-content-between flex-wrap">
+                <? if ($form->exists('accept')) { ?><button type="submit" name="accept" class="btn btn-lg btn-success mr-2 mb-2">передать кредиторам</button><? } ?>
+                <? if ($form->exists('reject')) { ?><button type="submit" name="reject" class="btn btn-lg btn-danger mr-2 mb-2">отклонить</button><? } ?>
                 <button type="submit" name="cancel" class="btn btn-link mb-2">вернуться</button>
             </div>
         </div>

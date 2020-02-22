@@ -29,6 +29,7 @@
                 <property name="securityType" type="SecurityType" relation="OneToOne" required="true" fetch="lazy" />
                 <property name="group" type="AclGroup" relation="OneToOne" required="false" fetch="lazy" />
                 <property name="clones" type="User" relation="ManyToMany" />
+                <property name="creditors" type="Creditor" relation="OneToMany" />
             </properties>
             <pattern name="StraightMapping" />
         </class>
@@ -86,6 +87,7 @@
                 <property name="passport" type="BigInteger" required="false" />
                 <property name="ogrn" type="BigInteger" required="false" />
                 <property name="images" type="CreditRequestImage" relation="OneToMany" />
+                <property name="creditorRequests" type="CreditRequestCreditor" relation="OneToMany" />
             </properties>           
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>
@@ -97,6 +99,42 @@
                 <property name="fileName" type="String" size="128" required="true" />
             </properties>
             <pattern name="StraightMapping" />
+        </class>
+
+        <class name="CreditRequestCreditor" type="final">
+            <implement interface="Created"/>
+            <properties>
+                <identifier />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="request" type="CreditRequest" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="creditor" type="Creditor" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="status" type="CreditRequestCreditorStatus" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="expired" type="Timestamp" required="false" />
+                
+                <property name="offers" type="CreditRequestCreditorOffer" relation="OneToMany" />
+            </properties>
+            <pattern name="StraightMapping" fetch="lazy" />
+        </class>
+
+        <class name="CreditRequestCreditorOffer" type="final">
+            <implement interface="Created"/>
+            <implement interface="SecurityObject"/>
+            <properties>
+                <identifier />
+                <property name="request" type="CreditRequestCreditor" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="status" type="CreditRequestCreditorOfferStatus" required="true" relation="OneToOne" fetch="lazy" />
+                <property name="createdTime" type="Timestamp" required="true" />
+                <property name="summ" type="Integer" required="true" />
+                <property name="minPeriod" type="Integer" required="false" />
+                <property name="maxPeriod" type="Integer" required="false" />
+                <property name="percents" type="Float" required="true" />
+                <property name="percentsOnly" type="Boolean" default="false" required="true" />
+                <property name="address" type="String" required="false" />
+                <property name="date" type="Date" required="false" />
+                <property name="time" type="Time" required="false" />
+                <property name="text" type="String" required="false" />
+            </properties>
+            <pattern name="StraightMapping" fetch="lazy" />
         </class>
         
         <class name="Creditor" extends="NamedObject" type="final">

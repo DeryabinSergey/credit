@@ -3,11 +3,6 @@
 class baseCreditorEditor extends CommandLogger implements UserController
 {    
     const ACTION_PUBLISH    = 'publish';
-    
-    /**
-     * @return creditorEditor
-     */
-    public static function create() { return new self; }
 
     public function __construct()
     {

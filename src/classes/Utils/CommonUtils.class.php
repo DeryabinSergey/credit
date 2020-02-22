@@ -4,20 +4,21 @@ class CommonUtils
 {    
     private static $urlMapping = 
         array(
-            'userRegister'              => 'user/',
+            'userRegister'                      => 'user/',
             
-            'aclActionList'             => 'acl-action/',
-            'aclContextList'            => 'acl-context/',
-            'aclRightList'              => 'acl-right/',
-            'aclGroupList'              => 'acl-group/',
-            'categoryList'              => 'category/',
-            'userList'                  => 'users/',
-            'creditorList'              => array(PATH_WEB_CREDITOR => 'cabinet/my/', PATH_WEB_ADMIN => 'creditor/'),
-            'investorOfferList'         => array(PATH_WEB_INVESTOR => 'cabinet/my/', PATH_WEB_ADMIN => 'invest-offer/'),
-            'creditRequestList'         => array(PATH_WEB_BASE => 'cabinet/my/', PATH_WEB_ADMIN => 'credit-request/'),
-            'controlPanel'              => 'cabinet/',
+            'aclActionList'                     => 'acl-action/',
+            'aclContextList'                    => 'acl-context/',
+            'aclRightList'                      => 'acl-right/',
+            'aclGroupList'                      => 'acl-group/',
+            'categoryList'                      => 'category/',
+            'userList'                          => 'users/',
+            'creditorList'                      => array(PATH_WEB_CREDITOR => 'cabinet/my/', PATH_WEB_ADMIN => 'creditor/'),
+            'investorOfferList'                 => array(PATH_WEB_INVESTOR => 'cabinet/my/', PATH_WEB_ADMIN => 'invest-offer/'),
+            'creditRequestList'                 => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/', PATH_WEB_BASE => 'cabinet/my/', PATH_WEB_ADMIN => 'credit-request/'),
+            'creditRequestCreditorOfferList'    => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/offer/', PATH_WEB_BASE => 'cabinet/my/offer/', PATH_WEB_ADMIN => 'credit-request/offer/'),
+            'controlPanel'                      => 'cabinet/',
             
-            'main'                      => ''
+            'main'                              => ''
         );
     
     /**

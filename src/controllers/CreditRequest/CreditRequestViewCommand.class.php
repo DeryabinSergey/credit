@@ -9,7 +9,95 @@ class CreditRequestViewCommand implements SecurityCommand, EditorCommand
 
     public function run(Prototyped $subject, Form $form, HttpRequest $request)
     {
-        return ModelAndView::create();
+        $process = $request->getServerVar('REQUEST_METHOD') == 'POST';
+        $mav = ModelAndView::create();
+        
+        if ($process && $form->exists('accept') && $form->exists('reject')) {
+            if ($form->getValue('reject')) {
+                $form->getValue('id')->setStatusId(CreditRequestStatus::TYPE_REJECT);
+            }
+            if ($form->getValue('accept')) {
+                $form->
+                    getValue('id')->
+                        setStatusId(CreditRequestStatus::TYPE_CONCIDERED)->
+                        setText($form->getValue('text'));
+            }
+            
+            try {
+                $tr = DBPool::getByDao($subject->dao())->begin();
+                $subject = $form->getValue('id')->dao()->save($form->getValue('id'));
+                if ($subject->getStatus()->getId() == CreditRequestStatus::TYPE_REJECT) {
+                    SmsUtils::send("7{$subject->getUser()->getPhone()}", "Заявка от ".$subject->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($subject->getCreatedTime()->getMonth())." на ".number_format($subject->getSumm(), 0, '.', ' ')."руб. не принята к рассмотрению и отклонена");
+                } else {
+                    $creditorIds = 
+                        ArrayUtils::convertToPlainList(
+                            Criteria::create(CreditorCategory::dao())->
+                                setDistinct()->
+                                addProjection(Projection::property('creditor'))->
+                                add(Expression::eq('category', 3))->
+                                getCustomList(), 'creditor_id'
+                        );
+                    if ($creditorIds) {
+                        $users = array();
+                        $creditorList = 
+                            Criteria::create(Creditor::dao())->
+                                add(Expression::isTrue('active'))->
+                                add(Expression::isFalse('deleted'))->
+                                add(Expression::in('id', $creditorIds))->
+                                getList();
+                        
+                        foreach($creditorList as $creditor) {
+                            if ($creditor->getUser()->getEmail() && !isset($users[$creditor->getUser()->getId()])) {
+                                $users[$creditor->getUser()->getId()] = true;
+                                
+                                Mail::create()->
+                                    setTo($creditor->getUser()->getEmail())->
+                                    setFrom(DEFAULT_FROM)->
+                                    setSubject('Новая заявка на кредит')->
+                                    //setText("Поступила новая заявка на кредит.\r\n\r\nПосмотреть все заявки ожидающие обработки: ".CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1), PATH_WEB_ADMIN))->
+                                    setText("Поступила новая заявка на кредит, с залогом в категории {$subject->getCategory()->getName()}.\r\n\r\nВсе Ваши запросы на кредит: ".CommonUtils::makeUrl('creditRequestList', array(), PATH_WEB_CREDITOR))->
+                                    send();
+                            }
+                            
+                            $creditorRequest = 
+                                CreditRequestCreditor::create()->
+                                    setRequest($subject)->
+                                    setCreditor($creditor)->
+                                    setStatusId(CreditRequestCreditorStatus::TYPE_INCOME)->
+                                    setExpired(Timestamp::create(sprintf("+%d hour", Constants::CREDIT_REQUEST_CREDITOR_INCOME_LIFETIME)));
+                            $creditorRequest->dao()->add($creditorRequest);
+                        }
+                    }
+                }
+                $mav->setView(BaseEditor::COMMAND_SUCCEEDED);
+                $tr->commit();
+            } catch(Exception $e) {
+                $tr->rollback();
+            }
+        }
+        
+        return $mav;
+    }
+
+    public function setForm(Form $form)
+    {
+        $neededPrimitives = array('id', 'action', 'go', 'return', 'cancel', 'securityCode');
+        if (!$form->getValue('id')->isDeleted() && $form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) {
+            $neededPrimitives[] = 'text';
+            $form->get('text')->addImportFilter(Filter::textImport())->addImportFilter(Filter::pcre()->setExpression("/(\\r?\\n){2,}/isu", "\r\n"))->addDisplayFilter(Filter::htmlSpecialChars())->required();
+            $form->
+                add(Primitive::boolean('accept'))->
+                add(Primitive::boolean('reject'));
+            $neededPrimitives[] = 'accept';
+            $neededPrimitives[] = 'reject';                    
+        }
+        foreach($form->getPrimitiveNames() as $primitive) {
+            if (!in_array($primitive, $neededPrimitives)) {
+                $form->drop($primitive);
+            }
+        }
+        
+        return $this;
     }
 
     public function checkPermissions(Form $form)

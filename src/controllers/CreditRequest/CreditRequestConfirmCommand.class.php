@@ -21,16 +21,16 @@ class CreditRequestConfirmCommand implements EditorCommand
         
         $form->markGood('id');
         $subject = CreditRequest::create();
-        $userExists = SecurityManager::getUser();
-                
-        $imagesList = 
-            Criteria::create(CreditRequestImage::dao())->
-                add(Expression::isNull('owner'))->
-                add(Expression::eq('user', SecurityManager::getUser()->getId()))->
-                addOrder(OrderBy::create('sort')->asc())->
-                getList();        
+        $userExists = SecurityManager::getUser();        
         
         if ($userExists instanceof User) {
+                
+            $imagesList = 
+                Criteria::create(CreditRequestImage::dao())->
+                    add(Expression::isNull('owner'))->
+                    add(Expression::eq('user', SecurityManager::getUser()->getId()))->
+                    addOrder(OrderBy::create('sort')->asc())->
+                    getList();
 
             if ($process && !$form->getErrors()) {
                 
@@ -77,6 +77,37 @@ class CreditRequestConfirmCommand implements EditorCommand
                     foreach($imagesList as $image) {
                         $image->dao()->save($image->dropUser()->setOwner($subject));
                     }
+                    
+                    /**
+                     * Отправка уведомлений пользователям с правами на публикацию заявлений на кредит
+                     */
+                    $groupsIds = 
+                        ArrayUtils::convertToPlainList(
+                            Criteria::create(AclGroupRight::dao())->
+                                setDistinct()->
+                                addProjection(Projection::property('group'))->
+                                add(Expression::eq('right.context', AclContext::CREDIT_REQUEST_ID))->
+                                add(Expression::eq('right.action.action', AclAction::PUBLISH_ACTION))->
+                                getCustomList(), 'group_id'
+                        );
+                    if ($groupsIds) {
+                        $users = 
+                            Criteria::create(User::dao())->
+                                add(Expression::in('group', $groupsIds))->
+                                getList();
+                        
+                        foreach($users as $user) {
+                            if ($user->getEmail()) {
+                                Mail::create()->
+                                    setTo($user->getEmail())->
+                                    setFrom(DEFAULT_FROM)->
+                                    setSubject('Новая заявка на кредит')->
+                                    setText("Поступила новая заявка на кредит.\r\n\r\nПосмотреть все заявки ожидающие обработки: ".CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1), PATH_WEB_ADMIN))->
+                                    send();
+                            }
+                        }
+                    }
+                    
                     $mav->setView(EditorController::COMMAND_SUCCEEDED);
                     
                 }

@@ -59,6 +59,20 @@
         </properties>
         <pattern name="SpookedEnumeration" />
     </class>
+    
+    <class name="CreditRequestCreditorStatus" type="final">
+        <properties>
+            <identifier />
+        </properties>
+        <pattern name="SpookedEnumeration" />
+    </class>
+    
+    <class name="CreditRequestCreditorOfferStatus" type="final">
+        <properties>
+            <identifier />
+        </properties>
+        <pattern name="SpookedEnumeration" />
+    </class>
 
     <!--class name="ImageOwner" type="abstract">
         <properties>

@@ -15,10 +15,32 @@ class baseCreditRequestEditor extends CommandContainer
         $this->insertCommand(self::ACTION_START, CreditRequestStartCommand::create());
         $this->insertCommand(self::ACTION_CONFIRM, CreditRequestConfirmCommand::create());
         $this->insertCommand(self::ACTION_DELETE, CreditRequestDropCommand::create());
+        $this->insertCommand(self::ACTION_VIEW, CreditRequestViewCommand::create());
 
         $this->defaultAction = self::ACTION_START;
 
         parent::__construct(CreditRequest::create());
+    }
+    
+    public function handleRequest(HttpRequest $request)
+    {
+        /**
+         * FIXME это пиздец, это надо пофиксить обязательно пока кто-то не увидел и не засмеял
+         */
+        if ($request->hasGetVar('action') && $request->getGetVar('action') != self::ACTION_START && !SecurityManager::isAuth()) {
+            if ($request->hasGetVar('return')) {
+                $curl = $request->getGetVar('return');
+            } elseif ($request->hasServerVar('REQUEST_URI')) {
+                $curl = base64_encode(PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1));
+            } else {
+                $curl = base64_encode(PATH_WEB);
+            }
+            $view = RedirectView::create(CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_LOGIN, 'return' => $curl, 'needAuth' => 1)));
+            
+            return ModelAndView::create()->setView($view);
+        }
+        
+        return parent::handleRequest($request);
     }
 
     public function postHandleRequest(ModelAndView $mav, HttpRequest $request)
@@ -55,8 +77,8 @@ class baseCreditRequestEditor extends CommandContainer
 
         if ($this->isDisplayView($mav)) {
 
-            Singleton::getInstance('HTMLMetaManager')->
-                appendJavaScript('/i/jquery.mask.min.js')->                        
+            Singleton::getInstance('HTMLMetaManager')->                      
+                appendJavaScript('/i/jquery.mask.min.js')->                    
                 appendJavaScript('/i/credit-request.js')->
                 
                 setTitle('Заявка на кредит');
@@ -65,6 +87,21 @@ class baseCreditRequestEditor extends CommandContainer
                 Singleton::getInstance('HTMLMetaManager')->
                     appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
             }
+            
+
+            if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_CONFIRM) {
+            
+                Singleton::getInstance('HTMLMetaManager');
+                
+            }
+            
+
+            if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_CONFIRM, self::ACTION_VIEW))) {
+            
+                Singleton::getInstance('HTMLMetaManager')->                      
+                    appendJavaScript('/i/photo-editor.js');
+                
+            }             
         }
 
         return $mav;

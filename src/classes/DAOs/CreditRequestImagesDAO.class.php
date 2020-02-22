@@ -28,5 +28,14 @@
 		{
 			return 'owner_id';
 		}
+                
+                public function getList()
+                {
+                    if (!$this->fetched && !$this->getCriteria() instanceof Criteria) {
+                        $this->setCriteria(Criteria::create()->addOrder(OrderBy::create('sort')->asc()));
+                    }
+                    
+                    return parent::getList();
+                }
 	}
 ?>

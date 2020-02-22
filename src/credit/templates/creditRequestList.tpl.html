@@ -1,0 +1,99 @@
+<? $partViewer->view('parts/header'); ?>
+
+<!-- Begin page content -->
+<main role="main" class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('controlPanel')?>">Личный Кабинет</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Запросы кредитов</li>
+        </ol>
+    </nav>
+    <? 
+        if ($result->getCount() > 0) {
+    
+            if ($result->getCount() > $onPage) {
+                viewPagerHelper::create($result->getCount())->setModule($area)->setPage($form->getValueOrDefault('page'))->setPerPage($onPage)->setParams($filter)->setPartViewer($partViewer)->dump();
+            }
+    ?>     
+        <form action="" method="get" id="filter-form">
+            <input type="hidden" name="sort" value="<?=$form->getValueOrDefault('sort')?>" />
+            <input type="hidden" name="d" value="<?=$form->getValueOrDefault('d')?>" />
+            <input type="hidden" name="page" value="<?=$form->getValueOrDefault('page')?>" />
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle"><a href="<?=CommonUtils::makeUrl($area, array_merge($filter, array("sort" => "id", "d" => $form->getValueOrDefault('d') == "asc" ? "desc" : "asc")))?>">Дата <i class="fas fa-sort-numeric-<?=$form->getValueOrDefault('d') == "asc"?'up':'down-alt'?>"></i></a></th>
+                        <? if (count($creditors) > 1) { ?>
+                            <th scope="col" class="align-middle text-center">
+                                <select class="selectpicker" name="creditor[]" multiple data-selected-text-format="count" data-none-selected-text="кредитор">
+                                    <? foreach($creditors as $creditor) { ?>
+                                        <option value="<?=$creditor->getId()?>"<?=$form->getValue('creditor') && in_array($creditor->getId(), $form->exportValue('creditor'))?' selected':''?>><?=htmlspecialchars($creditor->getName())?></option>
+                                    <? } ?>
+                                </select>
+                            </th>
+                        <? } ?>
+                        <th scope="col" class="align-middle text-center">
+                            <select class="selectpicker" name="status[]" multiple data-selected-text-format="count" data-none-selected-text="статус" data-width="125px">
+                                <? foreach(CreditRequestCreditorStatus::getList(CreditRequestCreditorStatus::create(CreditRequestCreditorStatus::getAnyId())) as $status) { ?>
+                                    <option value="<?=$status->getId()?>"<?=$form->getValue('status') && in_array($status->getId(), $form->exportValue('status'))?' selected':''?>><?=htmlspecialchars($status->getName())?></option>
+                                <? } ?>
+                            </select>
+                        </th>
+                        <th scope="col" class="align-middle text-center">
+                            <select class="selectpicker" name="type[]" multiple data-selected-text-format="count" data-none-selected-text="заемщик" data-width="125px">
+                                <? foreach(SubjectType::getList(SubjectType::create(SubjectType::getAnyId())) as $type) { ?>
+                                    <option value="<?=$type->getId()?>"<?=$form->getValue('type') && in_array($type->getId(), $form->exportValue('type'))?' selected':''?>><?=htmlspecialchars($type->getShortName())?></option>
+                                <? } ?>
+                            </select>
+                            <select class="selectpicker" name="category[]" multiple data-selected-text-format="count" data-none-selected-text="тип залога">
+                                <? foreach($categories as $category) { ?>
+                                    <option value="<?=$category->getId()?>"<?=$form->getValue('category') && in_array($category->getId(), $form->exportValue('category'))?' selected':''?>><?=htmlspecialchars($category->getName())?></option>
+                                <? } ?>
+                            </select>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                <? foreach($result->getList() as $item) { ?>
+                <tr>
+                    <td class="align-middle text-nowrap"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот заявки"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></a></td>
+                    <? if (count($creditors) > 1) { ?><td class="align-middle text-nowrap"><?=htmlspecialchars($item->getCreditor()->getName())?></td><? } ?>
+                    <td class="align-middle text-center">
+                        <span class="text-<?=$item->getStatus()->getId()==CreditRequestCreditorStatus::TYPE_INCOME?'danger':($item->getStatus()->getId()==CreditRequestCreditorStatus::TYPE_CONCIDERED?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestCreditorStatus::TYPE_SUCCESS))?'success': ($item->getStatus()->getId()==CreditRequestCreditorStatus::TYPE_REJECT?'secondary' : 'dark') ) )?>"><?=$item->getStatus()->getName()?></span>
+                    </td>
+                    <td class="align-middle">
+                        <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот заявки"><?=htmlspecialchars($item->getRequest()->getType()->getShortName())?> / <?=htmlspecialchars($item->getRequest()->getCategory()->getName())?> / <?=number_format($item->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                        <? if ($item->getOffers()->getCount()) { ?>
+                            <br /><i class="fas fa-hand-holding-usd"></i> <?=$item->getOffers()->getCount()?> <?=RussianTextUtils::selectCaseForNumber($item->getOffers()->getCount(), array('предложение', 'предложения', 'предложений'))?>
+                        <? } elseif ($item->getStatus()->getId() == CreditRequestCreditorStatus::TYPE_CONCIDERED) { ?>
+                            <br /><span class="text-danger"><i class="fas fa-hand-holding-usd"></i> нет предложений</span>
+                        <? } ?>
+                    </td>
+                </tr>
+                <? } ?>
+                </tbody>
+                </table>
+            </div>
+        </form>
+    <?
+    
+            if ($result->getCount() > $onPage) {
+                viewPagerHelper::create($result->getCount())->setModule($area)->setPage($form->getValueOrDefault('page'))->setPerPage($onPage)->setParams($filter)->setPartViewer($partViewer)->dump();
+            }
+            
+        } else { 
+    ?>
+        <div class="card">
+          <div class="card-body">
+            <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+            <? if ($filter) { ?><p class="my-4 text-center"><a href="<?=CommonUtils::makeUrl($area)?>">сбросить фильтр</a></p><? } ?>
+          </div>
+        </div>    
+    <? } ?>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

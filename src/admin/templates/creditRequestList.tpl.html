@@ -36,7 +36,7 @@
                         <th scope="col" class="align-middle"><a href="<?=CommonUtils::makeUrl($area, array_merge($filter, array("sort" => "id", "d" => $form->getValueOrDefault('d') == "asc" ? "desc" : "asc")))?>">Дата <i class="fas fa-sort-numeric-<?=$form->getValueOrDefault('d') == "asc"?'up':'down-alt'?>"></i></a></th>
                         <th scope="col" class="align-middle">Пользователь</th>
                         <th scope="col" class="align-middle text-center">
-                            <select class="selectpicker" name="status[]" multiple data-selected-text-format="count" data-none-selected-text="статус">
+                            <select class="selectpicker" name="status[]" multiple data-selected-text-format="count" data-none-selected-text="статус" data-width="150px">
                                 <? foreach(CreditRequestStatus::getList(CreditRequestStatus::create(CreditRequestStatus::getAnyId())) as $status) { ?>
                                     <option value="<?=$status->getId()?>"<?=$form->getValue('status') && in_array($status->getId(), $form->exportValue('status'))?' selected':''?>><?=htmlspecialchars($status->getName())?></option>
                                 <? } ?>
@@ -66,12 +66,19 @@
                 <tbody>
                 <? foreach($result->getList() as $item) { ?>
                 <tr>
-                    <td class="align-middle text-nowrap"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></td>
+                    <td class="align-middle text-nowrap"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></a></td>
                     <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><?=$item->getUser()->getName()? htmlspecialchars($item->getUser()->getName()) : htmlspecialchars($item->getUser()->getEmail())?><?=$item->isDeleted()?'</del>':''?></td>
                     <td class="align-middle text-center">
-                        <span class="text-<?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'danger':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_APPROVE, CreditRequestStatus::TYPE_CONFIRM, CreditRequestStatus::TYPE_SUCCESS))?'success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'secondary' : 'dark') ) )?>"><?=$item->getStatus()->getName()?></span>
+                        <span class="text-<?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'danger':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_SUCCESS))?'success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'secondary' : 'dark') ) )?>"><?=$item->getStatus()->getName()?></span>
                     </td>
-                    <td class="align-middle"><?=$item->isDeleted()?'<del>':''?><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>"><?=htmlspecialchars($item->getName())?> / <?=htmlspecialchars($item->getCategory()->getName())?> / <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a><?=$item->isDeleted()?'</del>':''?></td>
+                    <td class="align-middle">
+                        <?=$item->isDeleted()?'<del>':''?>
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>"><?=htmlspecialchars($item->getName())?> / <?=htmlspecialchars($item->getCategory()->getName())?> / <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                            <? if ($item->getCreditorOffers()) { ?>
+                                <br /><i class="fas fa-hand-holding-usd"></i> <?=count($item->getCreditorOffers())?> <?=RussianTextUtils::selectCaseForNumber(count($item->getCreditorOffers()), array('предложение', 'предложения', 'предложений'))?>
+                            <? } ?>                            
+                        <?=$item->isDeleted()?'</del>':''?>
+                    </td>
                     <td class="align-middle text-center">
                         <? if ($item->checkPermissions(AclAction::RESTORE_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_RESTORE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="fas fa-undo-alt"></i></a><? } ?>
                     </td>

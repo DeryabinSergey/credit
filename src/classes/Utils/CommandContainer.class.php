@@ -15,6 +15,7 @@ abstract class CommandContainer extends BaseEditor
     const ACTION_UPDATE     = 'update';
     const ACTION_DELETE     = 'delete';
     const ACTION_RESTORE    = 'restore';
+    const ACTION_VIEW       = 'view';
 
     const COMMAND_CANCELED  = 'cancel';
     

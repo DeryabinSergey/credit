@@ -13,7 +13,12 @@
         <hr />    
     
         <div class="row flex-row mb-4" id="requestList">
-            <div class="col-12 col-sm-9 col-md-10"><h1 class="">Мои запросы</h1></div>    
+            <div class="col-12 col-sm-9 col-md-10">
+                <h1 class="d-inline mr-5 mb-2">Мои заявки</h1>
+                <h5 class="d-inline mb-2">
+                    <a href="<?=CommonUtils::makeUrl('controlPanel', $form->getValue('all') ? array() : array('all' => 1))?>"><?=$form->getValue('all') ? 'показать текущие' : 'показать все'?></a>
+                </h5>
+            </div>
             <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
                 <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" class="btn btn-primary">подать заявку</a>
             </div>
@@ -31,18 +36,39 @@
             <div class="row">
             <? foreach($list as $item) { ?>
                 <div class='<?=(count($list) == 1 ? 'col-12' : (count($list) == 2 ? 'col-12 col-md-6' : 'col-12 col-md-6 col-lg-4') )?> mb-3'>
-                <div class="card <?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'border-secondary':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'border-warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_APPROVE, CreditRequestStatus::TYPE_CONFIRM, CreditRequestStatus::TYPE_SUCCESS))?'border-success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'border-danger' : 'border-dark') ) )?> h-100">
+                <div class="card <?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'border-secondary':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'border-warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_SUCCESS))?'border-success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'border-danger' : 'border-dark') ) )?> h-100">
                     <div class="card-body"> 
-                        <h5 class="card-title"><?=htmlspecialchars($item->getName())?></h5>
+                        <h5 class="card-title">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link"><?=htmlspecialchars($item->getName())?></a>
+                        </h5>
                         <? if (!$item->getType()->isFiz()) { ?><h6 class="card-subtitle mb-2 text-muted">ОГРН: <?=$item->getOgrn()?></h6><? } ?>
-                        <h6 class="card-subtitle mb-2 text-<?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'secondary':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_APPROVE, CreditRequestStatus::TYPE_CONFIRM, CreditRequestStatus::TYPE_SUCCESS))?'success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'danger' : 'dark') ) )?>"><?=$item->getStatus()->getName()?></h6>
-                        </p>
+                        <h6 class="card-subtitle mb-2 text-<?=$item->getStatus()->getId()==CreditRequestStatus::TYPE_INCOME?'secondary':($item->getStatus()->getId()==CreditRequestStatus::TYPE_CONCIDERED?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_SUCCESS))?'success': ($item->getStatus()->getId()==CreditRequestStatus::TYPE_REJECT?'danger' : 'dark') ) )?>"><?=$item->getStatus()->getName()?></h6>
+                        
+                        <? 
+                            if (in_array($item->getStatus()->getId(), array(CreditRequestStatus::TYPE_CONCIDERED))) { 
+                                $offers = $item->getCreditorOffers(array(), array(CreditRequestCreditorOfferStatus::TYPE_CANCELED, CreditRequestCreditorOfferStatus::TYPE_REJECT));
+                                $offerMeeting = $item->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_MEETING), array()) ? $item->getCreditorOffers(array(CreditRequestCreditorOfferStatus::TYPE_MEETING), array())[0] : false;
+                                
+                                if ($offerMeeting) {
+                        ?>
+                                    <h6 class="card-subtitle my-3 font-weight-bold text-center"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-success">назначена встреча на <span class="text-nowrap"><?=$offerMeeting->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offerMeeting->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $offerMeeting->getTime()->getHour(), $offerMeeting->getTime()->getMinute())?></span></a></h6>
+                        <?  
+                                } elseif ($offers) { 
+                        ?>
+                                    <h6 class="card-subtitle my-3 font-weight-bold"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-success"><i class="fas fa-hand-holding-usd"></i> <?=count($offers)?> <?=RussianTextUtils::selectCaseForNumber(count($offers), array('кредитное предложение', 'кредитных предложения', 'кредитных предложений'))?></a></h6>
+                        <? 
+                                } 
+                            }
+                        ?>
+                        
                         <p class="card-text my-2"><?=htmlspecialchars($item->getCategory()->getName())?><br />Сумма <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></p>
                         <p class="card-text small mb-0"><?=nl2br(ViewTextUtils::getStrippedText(htmlspecialchars($item->getText()), 192, ViewTextUtils::STRIP_TEXT_PATTERN, '&hellip;'))?></p>
                     </div>
-                    <div class='card-footer'>
-                        <p class='text-center mb-0'><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link"><i class="far fa-trash-alt mr-2"></i>удалить</a></p>
-                    </div>
+                    <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?>
+                        <div class='card-footer'>
+                            <p class='text-center mb-0'><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-danger" onclick="return confirm('Вы уверены что хотите удалить заявку на кредит?')"><i class="far fa-trash-alt mr-2"></i>удалить</a></p>
+                        </div>
+                    <? } ?>
                 </div>
                 </div>
             <? } ?>

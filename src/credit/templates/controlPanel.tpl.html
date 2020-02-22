@@ -8,10 +8,19 @@
             break;
         }
     }
+    $now = Timestamp::makeNow();
 ?>
 
     <? if ($hasCompany) { ?>
     <main role="main" class="container flex-shrink-0">
+    
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+                <li class="breadcrumb-item active">Личный Кабинет</li>
+            </ol>
+        </nav>
+        
         <p>Информация для тех, у кого есть или были размещенные кредитные организации:</p>
         <ul>
             <li>текущие сделки (активные) с планируемой доходностью</li>
@@ -21,7 +30,87 @@
             <li>просмотр текущих активных предложений от инвесторов</li>
             <li>просмотр запросов от заемщиков</li>
         </ul>  
-        <hr />    
+    
+        <div class="row flex-row mb-4">
+            <div class="col"><h1 class="">Запросы на кредит</h1></div>
+        </div>
+        
+        <? if ($meetingList) { ?>
+            <div class="row flex-row mb-2">
+                <div class="col-12"><h3>Назначенные встречи</h3></div>
+
+                <div class="table-responsive col-12">
+                    <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle">Дата встречи</th>
+                            <th scope="col" class="align-middle text-center">Информация и займе</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <? 
+                        foreach($meetingList as $item) { 
+                            $offer = $item->getOffers()->setCriteria(Criteria::create()->add(Expression::eq('status', CreditRequestCreditorOfferStatus::TYPE_MEETING)))->getList()[0];
+                            $date = Timestamp::create($offer->getDate()->toFormatString('d.m.Y')." ".sprintf('%02d:%02d:00', $offer->getTime()->getHour(), $offer->getTime()->getMinute()));
+                    ?>
+                    <tr class="<?=Timestamp::compare($now, $date) == 1 ? 'table-danger' : ($now->getDay() == $offer->getDate()->getDay() && $now->getMonth() == $offer->getDate()->getMonth() ? 'table-success' : '')?>">
+                        <td class="align-middle text-nowrap">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса">
+                                <?=$offer->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $offer->getTime()->getHour(), $offer->getTime()->getMinute())?>
+                            </a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getRequest()->getType()->getShortName())?> / <?=htmlspecialchars($item->getRequest()->getCategory()->getName())?> / <?=number_format($item->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                        </td>
+                    </tr>
+                    <? } ?>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        <? } ?>
+        
+        <? if ($incomeList) { ?>
+            <div class="row flex-row mb-2">
+                <div class="col-12"><h3>Входящие запросы</h3></div>
+
+                <div class="table-responsive col-12">
+                    <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle">Дата</th>
+                            <th scope="col" class="align-middle text-center">Информация и займе</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <? foreach($incomeList as $item) { ?>
+                    <tr>
+                        <td class="align-middle text-nowrap">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getRequest()->getType()->getShortName())?> / <?=htmlspecialchars($item->getRequest()->getCategory()->getName())?> / <?=number_format($item->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                        </td>
+                    </tr>
+                    <? } ?>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        <? } ?>
+        
+        <div class="row flex-row mb-4">
+            <div class="col">
+                <h5 class="text-center">
+                    <a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список&nbsp;всех&nbsp;запросов</a>
+                    <? if ($inWorkCount) { ?>
+                        (<a href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestCreditorStatus::TYPE_CONCIDERED)))?>">запросов в работе: <?=$inWorkCount?></a>)
+                    <? } ?>
+                </h5>
+            </div>
+        </div>
+        
+        <hr />  
     
         <div class="row flex-row mb-4">
             <div class="col-12 col-sm-9 col-md-10"><h1 class="">Мои компании</h1></div>    

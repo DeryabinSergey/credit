@@ -18,12 +18,13 @@ class ajaxCreditRequestOgrn extends baseAjax
         $form = $this->form;
         $result = array();
         
-        if ($form->getValue('term') && $form->getValue('type') instanceof SubjectType && $form->getValue('type')->getId() != SubjectType::TYPE_FIZ) {
-            $request = json_encode(array('query' => $form->getValue('term'), 'type' => $form->getValue('type')->getId() == SubjectType::TYPE_IP ? 'INDIVIDUAL' : 'LEGAL'));
+        if ($form->getValue('term') && $form->getValue('type') instanceof SubjectType && !$form->getValue('type')->isFiz()) {
+            $request = json_encode(array('query' => $form->getValue('term'), 'type' => $form->getValue('type')->isIp() ? 'INDIVIDUAL' : 'LEGAL'));
             $response = json_decode(file_get_contents("https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party", false, stream_context_create( array('http' => array('method' => 'POST', 'header' => "Content-Type: application/json\r\nAccept: application/json\r\nAuthorization: Token ".Constants::DADATA_TOKEN . PHP_EOL, 'content' => $request) ) )), "true");
             if (is_array($response) && isset($response['suggestions']) && $response['suggestions']) {
                 foreach($response['suggestions'] as $item) {
-                    $result[] = array('label' => $item['data']['ogrn']." ".$item['value'], 'value' => $item['data']['ogrn'], 'date' => $item['data']['ogrn_date'] ? Date::create($item['data']['ogrn_date'])->toFormatString('d.m.Y') : null, 'name' => $item['value']);
+                    if ($form->getValue('type')->isIp() || $item['data']['branch_type'] == 'MAIN')
+                        $result[] = array('label' => $item['data']['ogrn']." ".$item['value'], 'value' => $item['data']['ogrn'], 'date' => $item['data']['ogrn_date'] ? Date::create($item['data']['ogrn_date'])->toFormatString('d.m.Y') : null, 'name' => $item['value']);
                 }
             }
         }

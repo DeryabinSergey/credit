@@ -26,7 +26,7 @@
             
             public function markAsDeleted(CreditRequest $creditRequest)
             {
-                return $this->save($creditRequest->setDeleted(true));
+                return $this->save($creditRequest->setDeleted(true)->setStatusId(CreditRequestStatus::TYPE_CANCELED));
             }
             
             public function restore(CreditRequest $creditRequest)
