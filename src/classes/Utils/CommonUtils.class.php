@@ -14,7 +14,7 @@ class CommonUtils
             'userList'                          => 'users/',
             'creditorList'                      => array(PATH_WEB_CREDITOR => 'cabinet/my/', PATH_WEB_ADMIN => 'creditor/'),
             'investorOfferList'                 => array(PATH_WEB_INVESTOR => 'cabinet/my/', PATH_WEB_ADMIN => 'invest-offer/'),
-            'creditRequestList'                 => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/', PATH_WEB_BASE => 'cabinet/my/', PATH_WEB_ADMIN => 'credit-request/'),
+            'creditRequestList'                 => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/', PATH_WEB_BASE => 'cabinet/my/', PATH_WEB_ADMIN => 'credit-request/', PATH_WEB_INVESTOR => 'cabinet/invest-request/'),
             'creditRequestCreditorOfferList'    => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/offer/', PATH_WEB_BASE => 'cabinet/my/offer/', PATH_WEB_ADMIN => 'credit-request/offer/'),
             'controlPanel'                      => 'cabinet/',
             

@@ -1,0 +1,29 @@
+<? $partViewer->view('parts/header'); ?>
+
+<main role="main" class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Контакты</li>
+        </ol>
+    </nav>
+    
+    <div class="container mt-2 mb-5">
+
+        <h1>Связаться с нами</h1>
+        
+        <p>Мы всегда на связи и готовы помочь в любой возникшей ситуации с 10:00 до 20:00 по Московскому времени (GMT+3).</p>
+        
+        <h3 class="my-5">По телефону: <a href="tel:+74959999999">+7 495 999-99-99</a></h3>
+        
+        <h3 class="my-5">По почте: <a href="mailto:info@finresurs.online">info@finresurs.online<a></h3>
+                    
+        <h3 class="my-5">На сайте: <a href="javascript:jivo_api.open()">в онлайн чате<a></h3>
+    </div>
+    
+</main>
+
+<? $partViewer->view('parts/pageFooter'); ?>
+
+<? $partViewer->view('parts/footer'); ?>

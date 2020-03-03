@@ -27,6 +27,7 @@ class CreditRequestStartCommand implements EditorCommand
         
         if ($process && !$form->getErrors()) {
 
+            if (!$form->getValue('accept')) { $form->markWrong('accept'); }
             $response = json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify", false, stream_context_create( array('http' => array('method' => 'POST', 'header' => 'Content-Type: application/x-www-form-urlencoded' . PHP_EOL, 'content' => http_build_query(array('secret' => GOOGLE_RECAPTCHA_CLOSED, 'response' => $form->getValue('response')))) ) )), "true");
             if (!$response['success']) {
                 $form->markWrong('response');
@@ -94,6 +95,7 @@ class CreditRequestStartCommand implements EditorCommand
             }
         }
         
+        $form->add(Primitive::boolean('accept')->required());
         $form->add(Primitive::string('phone')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/", ""))->setAllowedPattern("/\d{10}/is")->required());
         $form->add(Primitive::integer('code')->setMax(9999)->setMin(1)->required());
         $form->add(Primitive::string('response')->required());

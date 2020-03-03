@@ -34,7 +34,7 @@ class CreditRequestViewCommand implements SecurityCommand, EditorCommand
                             Criteria::create(CreditorCategory::dao())->
                                 setDistinct()->
                                 addProjection(Projection::property('creditor'))->
-                                add(Expression::eq('category', 3))->
+                                //add(Expression::eq('category', 3))->
                                 getCustomList(), 'creditor_id'
                         );
                     if ($creditorIds) {

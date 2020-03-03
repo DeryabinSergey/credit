@@ -10,12 +10,12 @@ define('DEFAULT_DB_ENCODING', 'UTF8mb4');
 mb_internal_encoding(DEFAULT_ENCODING);
 mb_regex_encoding(DEFAULT_ENCODING);
 
-define('__LOCAL_DEBUG__', true);
+
 
 /**
  * Базовый домен - он всегда один во всех проектах и неизменный, не учитывается ничего
  */
-$baseDomain = 'd.svdev.ru';
+$baseDomain = 'finresurs.online';
 
 /**
  * Текущий путь с учетом поддоменов
@@ -61,14 +61,14 @@ define('FONT_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'misc'.DIRECTORY_SEPARAT
 define('GOOGLE_RECAPTCHA_OPEN', '6LduXMoUAAAAAFoYraxpvGeUdI_g-Uc5unE9Bq0k');
 define('GOOGLE_RECAPTCHA_CLOSED', '6LduXMoUAAAAADH7RjF8_2yJHbT5JTd8wgOOle8m');
 
-define('DEFAULT_EMAIL', 'info@d.svdev.ru');
-define('DEFAULT_MAILER', 'Агрегатор Залогов');
+define('DEFAULT_EMAIL', 'noreply@finresurs.online');
+define('DEFAULT_MAILER', 'Финансовый Ресурс');
 define('DEFAULT_FROM', DEFAULT_MAILER.' <'.DEFAULT_EMAIL.'>');
 
 // onPHP init
 require '/var/www/onPHP/global.inc.php';
 
-define('DB_NAME', 'credit');
+define('DB_NAME', 'finresurs.online');
 
 DBPool::me()->setDefault(DB::spawn('MySQLim', 'svd', 'Roswell-47', 'localhost:3306', DB_NAME, false, DEFAULT_DB_ENCODING)->setNeedAutoCommit(true));
         

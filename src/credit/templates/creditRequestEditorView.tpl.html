@@ -16,7 +16,7 @@
             </ol>
         </nav>
     
-    <form action="#offers" method="POST" class="">
+    <form action="#offers" method="POST" id="form" class="">
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />       
 
         <h4 class="mb-2">Запрос в компанию <span class="font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getCreditor()->getType()->getShortName())?> <?=htmlspecialchars($form->getValue('id')->getCreditor()->getName())?></span></h4>
@@ -58,12 +58,144 @@
             </div>
         <? } ?>
         
+        <? /*
+        
+        Кредитные предложения для заемщика
+        
+        */ ?>
+        
         <? if ($form->getValue('id')->getStatus()->getId() != CreditRequestCreditorStatus::TYPE_INCOME) { ?>
             <? if ($form->getValue('id')->getStatus()->getId() == CreditRequestCreditorStatus::TYPE_CONCIDERED || $form->getValue('id')->getOffers()->getCount()) { ?>
                 <hr class="my-5" id="offers" />
 
-                <h4 class="mb-5">Ваши предложения займа</h4>
+                <div class="mb-5 d-flex justify-content-between">
+                    <h4>Ваши предложения займа</h4>
+                    <a href="#offerCont" id="offerButton" class="btn btn-link">добавить</a>
+                </div>                
 
+                <? if ($form->getValue('id')->getOffers()->getList()) { ?>
+                    <div class="row my-5">
+                    <? foreach($form->getValue('id')->getOffers()->getList() as $item) { ?>
+                        <div class='<?=($form->getValue('id')->getOffers()->getCount() == 1 ? 'col-12' : ($form->getValue('id')->getOffers()->getCount() == 2 ? 'col-12 col-md-6' : 'col-12 col-md-6 col-xl-4') )?> mb-3'>
+                            <div class="card <?=($item->getStatus()->getId()==CreditRequestCreditorOfferStatus::TYPE_INCOME?'border-warning': (in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'border-success': 'border-secondary' ) )?> h-100">
+                                <div class="card-header">
+                                    <h4 class="mb-0 card-title text-center font-weight-bold"><?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></h4>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-subtitle text-center mb-2 text-<?=($item->getStatus()->getId()==CreditRequestCreditorOfferStatus::TYPE_INCOME?'warning': (in_array($item->getStatus()->getId(), array(CreditRequestCreditorOfferStatus::TYPE_ACCEPTED, CreditRequestCreditorOfferStatus::TYPE_MEETING, CreditRequestCreditorOfferStatus::TYPE_SUCCESS))?'success': 'secondary' ) )?>"><?=$item->getStatus()->getName()?></h6>
+                                    <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                        <h6 class="card-subtitle text-center mb-2 text-success">
+                                            <?=$item->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $item->getTime()->getHour(), $item->getTime()->getMinute())?>
+                                        </h6>
+                                    <? } ?>
+
+                                    <p class="card-text mb-0">
+                                        Процентная ставка <span class="font-weight-bold"><?=$item->getPercents()?>% годовых</span> на
+                                        <? if (!$item->getMinPeriod() && !$item->getMaxPeriod()) { ?>
+                                            <span class="font-weight-bold">любой срок</span>.
+                                        <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
+                                            <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
+                                                <span class="font-weight-bold"><?=$item->getMinPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod(), array('месяц', 'месяца', 'месяцев'))?></span>.
+                                            <? } else { ?>
+                                                срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                                            <? } ?>
+                                        <? } else { ?>
+                                            срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
+                                        <? } ?>
+                                        <? if ($item->getPercentsOnly()) { ?>Можно погашать только проценты.<? } ?>
+                                    </p>
+                                </div>
+
+                                <div class='card-footer border-top-0 bg-transparent'>
+                                    <p class='text-center mb-0'>
+                                        <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING || $form->getValue('id')->hasMeetingOffers()) { ?>
+                                            <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_CREDITOR_ACCEPT, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-success text-nowrap" onclick="return confirm('Вы подтверждаете выдачу займа на указанных условиях?\r\n\r\nДанный запрос будет закрыт и переведен в статус «оформлено».')"><i class="fas fa-check mr-2"></i>оформлено</a>
+                                        <? } ?>
+                                        <? if ($item->getStatus()->getId() == CreditRequestCreditorOfferStatus::TYPE_MEETING) { ?>
+                                            <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_MEETING_CANCEL, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap" onclick="return confirm('Уверены что хотите отменить встречу с заемщиком?')"><i class="fas fa-ban mr-2"></i>отменить</a>
+                                        <? } ?>
+                                        <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?><a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => base64_encode($_SERVER['REQUEST_URI'])))?>" class="card-link text-danger text-nowrap" onclick="return confirm('Уверены что хотите удалить кредитное предложение?')"><i class="far fa-trash-alt mr-2"></i>удалить</a><? } ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    <? } ?>
+                    </div>        
+                <? } else { ?>
+                    <h5 class="my-5 text-center text-muted font-italic">вы не делали предложений&hellip;</h5>
+                <? } ?>    
+            <? } ?>
+        <? } ?>
+        
+        <? if ($form->exists('summ') && $form->exists('percents') && $form->exists('minPeriod') && $form->exists('maxPeriod') && $form->exists('percentsOnly')) { ?>
+        <div id="offerCont"<?=$form->getValue('offer')?'':' style="display:none;"'?>>
+            <div class="form-group row align-items-center">
+                <div class="col-12 col-md-6">
+                    <label for="summ" class="col-form-label">Максимальная сумма</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control<?=$process && $form->getValue('offer') ? ' is-'.($form->hasError('summ') ? 'in' : '').'valid' : ''?>" id="summ" name="summ" value="<?=$form->getDisplayValue('summ')?>" />
+                        <div class="input-group-append"><div class="input-group-text">&#8381;</div></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="percents" class="col-form-label">Годовая ставка</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control<?=$process && $form->getValue('offer') ? ' is-'.($form->hasError('percents') ? 'in' : '').'valid' : ''?>" id="percents" name="percents" value="<?=$form->getValue('percents') ? sprintf("%0.2f", $form->getDisplayValue('percents')) : ''?>">
+                        <div class="input-group-append"><div class="input-group-text">%</div></div>
+                    </div>
+                </div>
+            </div>        
+
+            <div class="form-group row align-items-center">
+                <div class="col-12 col-md-6">
+                    <label for="minPeriod" class="col-form-label">Минимальный срок</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control<?=$process && $form->getValue('offer') ? ' is-'.($form->hasError('minPeriod') ? 'in' : '').'valid' : ''?>" id="minPeriod" name="minPeriod" value="<?=$form->getDisplayValue('minPeriod')?>">
+                        <div class="input-group-append"><div class="input-group-text">мес.</div></div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="maxPeriod" class="col-form-label">Максимальный срок</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control<?=$process && $form->getValue('offer') ? ' is-'.($form->hasError('maxPeriod') ? 'in' : '').'valid' : ''?>" id="maxPeriod" name="maxPeriod" value="<?=$form->getDisplayValue('maxPeriod')?>">
+                        <div class="input-group-append"><div class="input-group-text">мес.</div></div>
+                    </div>
+                </div>
+            </div>  
+
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="percentsOnly" value="1" id="percentsOnly"<?=$process && $form->getValue('percentsOnly') ? ' checked="checked"' : '' ?>>
+                        <label class="form-check-label" for="percentsOnly">возможность ежемесячно платить только проценты</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-12"><button type="submit" id="offer" name="offer" class="btn btn-success">добавить предложение</button></div>
+            </div>
+        </div>
+        <? } ?>
+        
+        <? /* 
+        
+        Инвестирование заявки
+        
+        */ ?>
+        
+        <? if ($form->getValue('id')->getStatus()->getId() != CreditRequestCreditorStatus::TYPE_INCOME) { ?>
+            <? if ($form->getValue('id')->getStatus()->getId() == CreditRequestCreditorStatus::TYPE_CONCIDERED || $form->getValue('id')->getOffers()->getCount()) { ?>
+                <hr class="my-5" id="investOffers" />
+
+                <div class="<?=$form->getValue('id')->getInvestSumm()?'':'mb-5 '?>d-flex justify-content-between">
+                    <h4>Предложения инвестирования</h4>
+                    <a href="#investRequestCont" id="investRequestButton" class="btn btn-link"><?=$form->getValue('id')->getInvestSumm()?'изменить':'добавить'?></a>
+                </div>
+                <? if ($form->getValue('id')->getInvestSumm()) { ?>
+                    <p class="mb-5">Ваш запрос на инвестиции по данной заявке <span class="font-weight-bold"><?=number_format($form->getValue('id')->getInvestSumm(), 0, '.', '&nbsp;').'&#8381;'?> на <?=$form->getValue('id')->getInvestPeriod()?> <?=RussianTextUtils::selectCaseForNumber($form->getValue('id')->getInvestPeriod(), array('месяц', 'месяца', 'месяцев'))?> с максимальной ставкой <?=$form->getValue('id')->getInvestPercents()?>% в месяц</span>.</p>
+                <? } ?>
+<? /*                    
                 <? if ($form->getValue('id')->getOffers()->getList()) { ?>
                     <div class="row my-5">
                     <? foreach($form->getValue('id')->getOffers()->getList() as $item) { ?>
@@ -112,59 +244,45 @@
                         </div>
                     <? } ?>
                     </div>        
-                <? } else { ?>
-                    <h5 class="my-5 text-center text-muted font-italic">вы не делали предложений&hellip;</h5>
-                <? } ?>    
+                <? } elseif ($form->getValue('id')->getInvestSumm()) { ?>
+                    <h5 class="my-5 text-center text-muted font-italic">еще не поступало предложений от инвесторов&hellip;</h5>
+                <? } ?>  
+                
+*/ ?>                
+                
             <? } ?>
         <? } ?>
         
-        <? if ($form->exists('summ') && $form->exists('percents') && $form->exists('minPeriod') && $form->exists('maxPeriod') && $form->exists('percentsOnly')) { ?>
+        <? if ($form->exists('investRequest')) { ?>
+        <div id="investRequestCont"<?=$form->getValue('investRequest')?'':' style="display: none;"'?>>
             <div class="form-group row align-items-center">
-                <div class="col-12 col-md-6">
-                    <label for="summ" class="col-form-label">Максимальная сумма</label>
+                <div class="col-12 col-md-4">
+                    <label for="summ" class="col-form-label">Необходимая сумма</label>
                     <div class="input-group">
-                        <input type="text" class="form-control<?=$process ? ' is-'.($form->hasError('summ') ? 'in' : '').'valid' : ''?>" id="summ" name="summ" value="<?=$form->getDisplayValue('summ')?>" />
+                        <input type="text" class="form-control<?=$process && $form->getValue('investRequest') ? ' is-'.($form->hasError('investSumm') ? 'in' : '').'valid' : ''?>" id="investSumm" name="investSumm" value="<?=$form->getDisplayValue('investSumm')?>" />
                         <div class="input-group-append"><div class="input-group-text">&#8381;</div></div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label for="percents" class="col-form-label">Годовая ставка</label>
+                <div class="col-12 col-md-4">
+                    <label for="percents" class="col-form-label">Максимальная ставка в мес.</label>
                     <div class="input-group">
-                        <input type="text" class="form-control<?=$process ? ' is-'.($form->hasError('percents') ? 'in' : '').'valid' : ''?>" id="percents" name="percents" value="<?=$form->getValue('percents') ? sprintf("%0.2f", $form->getDisplayValue('percents')) : ''?>">
+                        <input type="text" class="form-control<?=$process && $form->getValue('investRequest') ? ' is-'.($form->hasError('investPercents') ? 'in' : '').'valid' : ''?>" id="investPercents" name="investPercents" value="<?=$form->getValue('investPercents') ? sprintf("%0.2f", $form->getDisplayValue('investPercents')) : ''?>">
                         <div class="input-group-append"><div class="input-group-text">%</div></div>
                     </div>
                 </div>
-            </div>        
-
-            <div class="form-group row align-items-center">
-                <div class="col-12 col-md-6">
-                    <label for="minPeriod" class="col-form-label">Минимальный срок</label>
+                <div class="col-12 col-md-4">
+                    <label for="investPeriod" class="col-form-label">Срок</label>
                     <div class="input-group">
-                        <input type="text" class="form-control<?=$process ? ' is-'.($form->hasError('minPeriod') ? 'in' : '').'valid' : ''?>" id="minPeriod" name="minPeriod" value="<?=$form->getDisplayValue('minPeriod')?>">
+                        <input type="text" class="form-control<?=$process && $form->getValue('investRequest') ? ' is-'.($form->hasError('investPeriod') ? 'in' : '').'valid' : ''?>" id="investPeriod" name="investPeriod" value="<?=$form->getDisplayValue('investPeriod')?>">
                         <div class="input-group-append"><div class="input-group-text">мес.</div></div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label for="maxPeriod" class="col-form-label">Максимальный срок</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control<?=$process ? ' is-'.($form->hasError('maxPeriod') ? 'in' : '').'valid' : ''?>" id="maxPeriod" name="maxPeriod" value="<?=$form->getDisplayValue('maxPeriod')?>">
-                        <div class="input-group-append"><div class="input-group-text">мес.</div></div>
-                    </div>
-                </div>
-            </div>  
-
+            </div>   
+        
             <div class="form-group row">
-                <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="percentsOnly" value="1" id="percentsOnly"<?=$process && $form->getValue('percentsOnly') ? ' checked="checked"' : '' ?>>
-                        <label class="form-check-label" for="percentsOnly">возможность ежемесячно платить только проценты</label>
-                    </div>
-                </div>
+                <div class="col-12"><button type="submit" name="investRequest" id="investRequest" class="btn btn-success"><?=$form->getValue('id')->getInvestSumm()?'изменить':'создать'?> запрос инвестирования</button></div>
             </div>
-
-            <div class="form-group row">
-                <div class="col-12"><button type="submit" class="btn btn-success">добавить предложение</button></div>
-            </div>
+        </div>
         <? } ?>
         
         <hr class="my-5" />

@@ -11,7 +11,13 @@
     
     <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
     
-    <h1 class="mb-5">Просмотр запроса</h1>
+    <nav aria-label="breadcrumb" class='my-3'>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('controlPanel')?>">Личный Кабинет</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Просмотр заявки</li>
+        </ol>
+    </nav>
     
     <form action="" method="POST" class="">
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />     
@@ -113,9 +119,9 @@
                                         <span class="font-weight-bold">любой срок</span>.
                                     <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
                                         <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
-                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> месяцев</span>.
+                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod(), array('месяц', 'месяца', 'месяцев'))?></span>.
                                         <? } else { ?>
-                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> месяцев</span>.
+                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
                                         <? } ?>
                                     <? } else { ?>
                                         срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.

@@ -123,9 +123,9 @@
                                         <span class="font-weight-bold">любой срок</span>.
                                     <? } elseif ($item->getMinPeriod() && $item->getMaxPeriod()) { ?>
                                         <? if ($item->getMinPeriod() == $item->getMaxPeriod()) { ?>
-                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> месяцев</span>.
+                                            <span class="font-weight-bold"><?=$item->getMinPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod(), array('месяц', 'месяца', 'месяцев'))?></span>.
                                         <? } else { ?>
-                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> месяцев</span>.
+                                            срок <span class="font-weight-bold">от <?=$item->getMinPeriod()?> до <?=$item->getMaxPeriod()?> <?=RussianTextUtils::selectCaseForNumber($item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.
                                         <? } ?>
                                     <? } else { ?>
                                         срок <span class="font-weight-bold"><?= $item->getMinPeriod() ? 'от '.$item->getMinPeriod() : 'до '.$item->getMaxPeriod() ?> <?=RussianTextUtils::selectCaseForNumber($item->getMinPeriod() ? $item->getMinPeriod() : $item->getMaxPeriod(), array('месяца', 'месяцев', 'месяцев'))?></span>.

@@ -96,10 +96,9 @@ class CreditRequestCreditorViewCommand implements SecurityCommand, EditorCommand
                     $tr->rollback();
                 }
             } else {
-                if ($form->exists('summ') && $form->exists('percents') && $form->exists('minPeriod') && $form->exists('maxPeriod') && $form->exists('percentsOnly')) {
+                if ($form->exists('offer') && $form->getValue('offer')) {
                     if ($form->getValue('summ') <= 0) { $form->markWrong('summ'); } else { $form->markGood('summ'); }
                     if ($form->getValue('percents') <= 0 || $form->getValue('percents') >= 999.99) { $form->markWrong('percents'); } else { $form->markGood('percents'); } 
-                    if ($form->getValue('summ') > 0)
                     if ($form->getValue('minPeriod') && $form->getValue('maxPeriod') && $form->getValue('minPeriod') > $form->getValue('maxPeriod')) {
                         $temp = $form->getValue('maxPeriod');
                         $form->setValue('maxPeriod', $form->getValue('minPeriod'));
@@ -112,6 +111,22 @@ class CreditRequestCreditorViewCommand implements SecurityCommand, EditorCommand
                         $offer = $offer->dao()->add($offer);
                         $mav->setView( RedirectView::create( $request->getServerVar('REQUEST_URI') ) );
                     }
+                } elseif ($form->exists('investRequest') && $form->getValue('investRequest')) {
+                    if ($form->getValue('investSumm') <= 0) { $form->markWrong('investSumm'); } else { $form->markGood('investSumm'); }
+                    if ($form->getValue('investPercents') <= 0 || $form->getValue('investPercents') >= 999.99) { $form->markWrong('investPercents'); } else { $form->markGood('investPercents'); } 
+                    if ($form->getValue('investPeriod') <= 0) { $form->markWrong('investPeriod'); } else { $form->markGood('investPeriod'); }
+                    
+                    if (!$form->getErrors()) {
+                        $subject = 
+                            $subject->dao()->save(
+                                $form->getValue('id')->
+                                    setInvestSumm($form->getValue('investSumm'))->
+                                    setInvestPercents($form->getValue('investPercents'))->
+                                    setInvestPeriod($form->getValue('investPeriod'))->
+                                    dropInvestNotified()
+                            );
+                        $mav->setView( RedirectView::create( $request->getServerVar('REQUEST_URI') ) );
+                    }                    
                 }
             }
         }
@@ -131,11 +146,18 @@ class CreditRequestCreditorViewCommand implements SecurityCommand, EditorCommand
                 add(Primitive::boolean('reject'));
             
             $form->
-                add(Primitive::string('summ')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", ""))->required())->
-                add(Primitive::string('percents')->addImportFilter(Filter::pcre()->setExpression("/([^\d\.]+)/isu", ""))->required())->
+                add(Primitive::boolean('offer'))->
+                add(Primitive::string('summ')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", "")))->
+                add(Primitive::string('percents')->addImportFilter(Filter::pcre()->setExpression("/([^\d\.]+)/isu", "")))->
                 add(Primitive::integer('minPeriod'))->
                 add(Primitive::integer('maxPeriod'))->
                 add(Primitive::boolean('percentsOnly'));
+            
+            $form->
+                add(Primitive::boolean('investRequest'))->
+                drop('investSumm')->drop('investPercents')->
+                add(Primitive::string('investSumm')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", "")))->
+                add(Primitive::string('investPercents')->addImportFilter(Filter::pcre()->setExpression("/([^\d\.]+)/isu", "")));
         }
         
         $form->drop('createdTime')->drop('request')->drop('creditor')->drop('status');

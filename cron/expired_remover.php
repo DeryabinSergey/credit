@@ -14,8 +14,7 @@ class ExpiredRemover extends BaseCron
             expiredConfirm()->
             expiredRegistration()->
             expiredBan()->
-            expiredCreditRequestCreditor()->
-            rejectCreditRequest();
+            expiredCreditRequestCreditor();
 
         return $this;
     }
@@ -94,29 +93,6 @@ class ExpiredRemover extends BaseCron
         
         if ($ids) { 
             CreditRequestCreditor::dao()->dropByIds(ArrayUtils::convertToPlainList($ids, 'id'));
-        }
-        
-        return $this;
-    }
-    
-    protected function rejectCreditRequest()
-    {
-        $list = 
-            Criteria::create(CreditRequest::dao())->
-                add(Expression::eq('status', CreditRequestStatus::TYPE_CONCIDERED))->
-                getList();
-        
-        foreach($list as $creditRequest) {
-            $onlyDeclinded = true;
-            foreach($creditRequest->getCreditorRequests()->getList() as $creditorRequest) {
-                $onlyDeclinded = $creditorRequest->getStatus()->getId() == CreditRequestCreditorStatus::TYPE_REJECT;
-                if (!$onlyDeclinded) break;
-            }
-            
-            if ($onlyDeclinded) {
-                $creditRequest->dao()->save($creditRequest->setStatusId(CreditRequestStatus::TYPE_REJECT));
-                SmsUtils::send("7{$creditRequest->getUser()->getPhone()}", "По заявке от ".$creditRequest->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($creditRequest->getCreatedTime()->getMonth())." на ".number_format($creditRequest->getSumm(), 0, '.', ' ')."руб. пришел отказ от всех партнеров");
-            }
         }
         
         return $this;

@@ -21,6 +21,7 @@ class UserRegisterStartCommand implements EditorCommand
         $userExists = null;
         
         if (Session::exist(userRegister::SESSION_REGISTRATION)) { Session::drop(userRegister::SESSION_REGISTRATION); }
+        if (!$form->getValue('accept')) { $form->markWrong('accept'); }
         
         if ($process && !$form->getErrors()) {
 
@@ -60,7 +61,8 @@ class UserRegisterStartCommand implements EditorCommand
             }
         }
         
-        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN)->addDisplayFilter(Filter::htmlSpecialChars());
+        $form->get('email')->setAllowedPattern(PrimitiveString::MAIL_PATTERN)->addDisplayFilter(Filter::htmlSpecialChars())->required();
+        $form->add(Primitive::boolean('accept')->required());
         $form->add(Primitive::string('response')->required());
         
         return $this;

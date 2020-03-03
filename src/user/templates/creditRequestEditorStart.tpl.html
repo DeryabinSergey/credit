@@ -7,6 +7,7 @@
         addMissingLabel('phone', 'номер телефона не указан')->
         addMissingLabel('code', 'код подтверждения телефона не указан')->
         addWrongLabel('response', 'защита от автоматических регистраций не пройдена')->
+        addWrongLabel('accept', 'для подачи заявления необходимо согласиться с нашей <a href="'.PATH_WEB_BASE.'static/privacy-policy.html" target="_blank" class="alert-link">политикой обработки персональных данных</a>')->
         addCustomLabel('code', CreditRequestStartCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия')->
         addCustomLabel('code', CreditRequestStartCommand::ERROR_AUTH_ENABLED, 'для полноценного использования сайта необходимо включить поддержку <code>Cookie</code> в настройках Вашего браузера');
 ?>
@@ -42,7 +43,16 @@
         <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
             <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
             <div class="col-12 col-sm-auto">
-                <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="" type="number">
+                <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="<?=$process && !$form->getError('code') ? $form->getDisplayValue('code') : ''?>" type="number">
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-12 col-sm-10 offset-sm-2">
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="accept" name="accept"<?=$process && $form->getValue('accept')?' checked="checked"':''?> />
+                    <label class="form-check-label" for="accept">принимаю </label> <a href="/static/privacy-policy.html" target="_blank">политику обработки персональных данных</a>
+                </div>
             </div>
         </div>
         
