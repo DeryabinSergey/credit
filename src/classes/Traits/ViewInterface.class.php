@@ -20,7 +20,7 @@ trait ViewInterface
     
     protected function errorView($status, ModelAndView $mav = null)
     {
-        $path = PATH_BASE . 'src/user/www/errors/';
+        $path = PATH_BASE . 'src/'.PATH_SOURCE_DIR.'/www/errors/';
         $errorView = new HttpErrorView(new HttpStatus($status), $path, '.html');
         if ($mav instanceof ModelAndView) {
             $mav->setView($errorView);
