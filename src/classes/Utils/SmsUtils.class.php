@@ -4,7 +4,7 @@ class SmsUtils
 {
     const API_USER              = 'deryabinsergey@gmail.com';
     const API_PASSWORD          = '14K2H4J12B';
-    const API_SENDER            = 'Coral dmd';
+    const API_SENDER            = 'FinResurs';
     
     const API_TOKEN             = 'X7tvWPbCrdRq6UYSHZqM';
     
