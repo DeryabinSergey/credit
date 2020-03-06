@@ -118,4 +118,6 @@ Cache::setDefaultWorker('CacheDaoWorker');
 session_name('credit');
 session_set_cookie_params(0, '/', COOKIE_DOMAIN);
 
+ini_set('sendmail_from', 'info@finresurs.online');
+
 Session::start();

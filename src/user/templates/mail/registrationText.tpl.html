@@ -1,0 +1,15 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+Вы успешно зарегистрировались на портале Финансовый Ресурс ( <?=PATH_WEB_BASE?>?utm_source=email&utm_medium=admin&utm_campaign=registration-welcome )
+
+Ваши учетные данные на сайте:
+
+
+Email: <?=$user->getEmail()?>
+
+Телефон: <?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7 (\\1) \\2-\\3-\\4", $user->getPhone())?>
+
+Пароль: <?=$password?>
+
+
+<?php $partViewer->view('parts/footerText'); ?>

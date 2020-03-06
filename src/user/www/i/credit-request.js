@@ -32,7 +32,7 @@ $(document).ready(function() {
                 return;
             }
  
-            $.getJSON("/ajax/credit-request-name.json", request, function( data, status, xhr ) {
+            $.getJSON("/ajax/user-name.json", request, function( data, status, xhr ) {
                 if (data.list) {
                     cacheName[term] = data.list;
                     response(data.list);

@@ -57,7 +57,7 @@
             </div>
         </div>
         
-        <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
+        <div id="code-block" class="form-group row"<?=!$process || $userExists instanceof User?' style="display: none;"':''?>>
             <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
             <div class="col-12 col-sm-auto">
                 <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="" type="number">

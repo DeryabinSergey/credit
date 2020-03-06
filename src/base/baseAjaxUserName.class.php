@@ -1,6 +1,6 @@
 <?php
 
-class ajaxCreditRequestName extends baseAjax
+class baseAjaxUserName extends baseAjax
 {
     public function  __construct() 
     {

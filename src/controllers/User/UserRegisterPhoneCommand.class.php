@@ -21,19 +21,39 @@ class UserRegisterPhoneCommand implements EditorCommand
         $form->markGood('id');
         $subject = $form->getValue('id');
         $userEmail = Session::exist(userRegister::SESSION_REGISTRATION) ? Session::get(userRegister::SESSION_REGISTRATION) : false;
-        $userExists = null;
+        $userExists = $confirm = null;
         
         if ($userEmail) {
 
-            if ($process && !$form->getErrors()) {
+            if ($process && $form->getValue('phone')) {
                 
                 try {
                     $userExists = User::dao()->getByLogic(Expression::eq('phone', $form->getValue('phone')));
                     $form->markCustom('phone', self::ERROR_DUPLICATE);
                 } catch(ObjectNotFoundException $e) { /* nothin here */ }
                 
+                if (!$userExists instanceof User) {
+                    try {
+                        $confirm = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_REGISTRATION_PHONE), Expression::eq('phone', $form->getValue('phone'))));
+                    } catch(ObjectNotFoundException $e) {
+                        /** Чувак то оказался долбоебом и не сообразил нажать на кнопочку отправить код - исправляем **/
+                        $confirm = 
+                            Confirm::dao()->add(
+                                Confirm::create()->
+                                    setType(ConfirmType::create(ConfirmType::TYPE_REGISTRATION_PHONE))->
+                                    setPhone($form->getValue('phone'))->
+                                    setCode(random_int(1, 9999))
+                            );
+                        SmsUtils::send("7{$form->getValue('phone')}", sprintf("Код подтверждения для регистрации: %04d", $confirm->getCode()));
+                        $form->markWrong('code');
+                    }
+                }
+            } 
+            
+            if ($process && !$form->getErrors()) {
+                
                 try {
-                    $confirm = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_REGISTRATION_PHONE), Expression::eq('phone', $form->getValue('phone'))));
+                    
                     if (
                         Timestamp::compare($confirm->getExpiredTime(), Timestamp::makeNow()) == -1 ||
                         $confirm->getTry() >= 3
@@ -41,7 +61,7 @@ class UserRegisterPhoneCommand implements EditorCommand
                     if ($confirm->getCode() != $form->getValue('code')) {
                         $form->markWrong('code');
                         $confirm->dao()->save($confirm->setTry($confirm->getTry() + 1));
-                    }    
+                    }
                         
                 } catch (ObjectNotFoundException $e) {
                     $form->markCustom('code', self::ERROR_EXPIRED);
@@ -61,13 +81,12 @@ class UserRegisterPhoneCommand implements EditorCommand
                                     setPhone($form->getValue('phone'))
                             );
                     
-                    Mail::create()->
-                        setTo($userEmail)->
-                        setFrom(DEFAULT_FROM)->
-                        setSubject('Регистрация на портале '.DEFAULT_MAILER)->
-                        setText('Ваш пароль: '.$password)->
+                    MimeMailSender::create('Регистрация на портале '.parse_url(PATH_WEB, PHP_URL_HOST), 'registrationHtml', 'registrationText')->
+                        setTo($subject->getEmail(), $subject->getName())->
+                        set('password', $password)->
+                        set('user', $subject)->
                         send();
-
+                    
                     Session::drop(userRegister::SESSION_REGISTRATION);
                     $confirm->dao()->dropById($confirm->getId());
                     $mav->setView(EditorController::COMMAND_SUCCEEDED);
