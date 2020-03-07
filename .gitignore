@@ -1,3 +1,7 @@
 log/
+src/admin/www/robots.txt
+src/credit/www/robots.txt
+src/invest/www/robots.txt
+src/user/www/robots.txt
 src/user/www/u
 config.inc.php
