@@ -70,6 +70,24 @@ class CommonUtils
         
         return $link;
     }
+    
+    /**
+     * Вырезает из пути на сайте для возврата UTM метки и success отметку
+     * @param string $curl URL на сайте
+     * @return string
+     */
+    public static function postProcessCurrentUrl($curl)
+    {
+        if (mb_stripos($curl, "success=") !== false || mb_stripos($curl, "utm_") !== false) {
+            $curl = preg_replace("/(?(?=\\\?success=\d)success=\d&?|&success=\d)/isu", "", $curl);
+            $curl = preg_replace("/(?(?=\\\?utm_[a-z]+=[a-z0-9 \-]+)utm_[a-z]+=[a-z0-9 \-]+&?|&utm_[a-z]+=[a-z0-9 \-]+)/isu", "", $curl);
+            if (mb_substr($curl, mb_strlen($curl) - 1) == '?') {
+                $curl = mb_substr($curl, 0, mb_strlen($curl) - 1);
+            }            
+        }
+        
+        return $curl;
+    }
 
     protected static function getQueryStringByParametrs($params = array(), $prefix = '&', $keyToUse = array(), $separator = '&', $encType = PHP_QUERY_RFC3986)
     {

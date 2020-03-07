@@ -42,7 +42,7 @@ try {
         if ($request->hasGetVar('return')) {
             $curl = $request->getGetVar('return');
         } elseif ($request->hasServerVar('REQUEST_URI')) {
-            $curl = base64_encode(PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1));
+            $curl = base64_encode(CommonUtils::postProcessCurrentUrl(PATH_WEB . substr($request->getServerVar('REQUEST_URI'), 1)));
         } else {
             $curl = base64_encode(PATH_WEB);
         }

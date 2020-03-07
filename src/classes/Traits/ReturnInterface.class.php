@@ -40,7 +40,7 @@ trait ReturnInterface
                 $curl = defined('PATH_WEB') ? PATH_WEB : '/';
             }
             
-            $curl = $this->postProcessCurrentUrl($curl);
+            $curl = CommonUtils::postProcessCurrentUrl($curl);
             
             $this->currentUrl = $curl;
         }
@@ -59,18 +59,6 @@ trait ReturnInterface
     protected function getDefaultReturnUrl()
     {
         return false;
-    }
-    
-    protected function postProcessCurrentUrl($curl)
-    {
-        if (mb_stripos($curl, "success=") !== false) {
-            $curl = preg_replace("/(?(?=\\\?success=\d)success=\d&?|&success=\d)/isu", "", $curl);
-            if (mb_substr($curl, mb_strlen($curl) - 1) == '?') {
-                $curl = mb_substr($curl, 0, mb_strlen($curl) - 1);
-            }            
-        }
-        
-        return $curl;
     }
     
     /**
