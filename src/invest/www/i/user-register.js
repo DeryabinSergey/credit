@@ -1,7 +1,6 @@
 $(document).ready(function(){
     let cacheName = {};
     
-    let alertTimer = null;
     $('#phone').mask('(000) 000-00-00');
     
     $("#name").autocomplete({
@@ -25,43 +24,48 @@ $(document).ready(function(){
     $("#code-button").on("click", function() {
         $.post("/ajax/user-register-code.json", {'phone': $("#phone").val()},
             function(result) {
+                $("#alert-block").hide("swing");
+                
                 if (result.userExists) {
                     $("#warning-block").show("swing");
                 } else if (result.success) {
                     $("#warning-block").hide("swing");
                     $("#code-block").show("swing", function() { $("#code").focus(); });
+                    showSuccess('SMS сообщение с кодом подтверждения отправлено');
                 } else {
                     let errors = [];
                     if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
                     } else { errors.push('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;'); }
-                    $("#alert-block-content").html(errors.join('<br />'));
-                    $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+                    $("#warning-block").hide("swing");
+                    $("#alert-block").hide("swing");
+                    showError(errors);
                 }
             },"json"
         ).fail(function() {
-            $("#alert-block-content").html('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
-            $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+            $("#alert-block").hide("swing");
+            $("#warning-block").hide("swing");
+            showError('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
         });
-    }); 
+    });
     
     $("#code-confirm-button").on("click", function() {
         $.post("/ajax/user-confirm-code.json", {'uuid': $("#uuid").val()},
             function(result) {
-                if (result.userExists) {
-                    $("#warning-block").show("swing");
-                } else if (result.success) {
+                $("#alert-block").hide("swing");
+                
+                if (result.success) {
                     $("#code-block").show("swing", function() { $("#code").focus(); });
+                    showSuccess('SMS сообщение с кодом подтверждения отправлено');
                 } else {
                     let errors = [];
                     if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
                     } else { errors.push('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;'); }
-                    $("#alert-block-content").html(errors.join('<br />'));
-                    $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+                    showError(errors);
                 }
             },"json"
         ).fail(function() {
-            $("#alert-block-content").html('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
-            $("#alert-block").show("swing", function() { clearTimeout(alertTimer); alertTimer = setTimeout(function() { $("#alert-block").hide("swing"); }, 3000); });
+            $("#alert-block").hide("swing");
+            showError('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
         });
-    });   
+    });
 });

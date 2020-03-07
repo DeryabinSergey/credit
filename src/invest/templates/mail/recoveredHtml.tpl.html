@@ -1,7 +1,7 @@
 <?php $partViewer->view('parts/header'); ?>
 <p style="font-size: 120%; margin-bottom: 1em;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
 
-<p style="font-size: 120%; margin-bottom: 1em;">Вы успешно зарегистрировались на портале <a href="<?=CommonUtils::makeUrl('main', array('utm_source' => 'email', 'utm_medium' => 'admin', 'utm_campaign' => 'registration-welcome'))?>" target="_blank">Финансовый Ресурс</a>, ваши учетные данные на сайте:</p>
+<p style="font-size: 120%; margin-bottom: 1em;">По Вашему запросу мы обновили Ваш пароль портале <a href="<?=CommonUtils::makeUrl('main', array('utm_source' => 'email', 'utm_medium' => 'admin', 'utm_campaign' => 'password-recovered'))?>" target="_blank">Финансовый Ресурс</a>:</p>
 
 <p style="font-size: 120%">Email: <?=$user->getEmail()?></p>
 <p style="font-size: 120%">Телефон: <?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $user->getPhone())?></p>

@@ -1,0 +1,11 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+На сайте была запрошена смена пароля, мы храним пароли в зашифрованном виде, поэтому мы не знаем Вашего пароля, а можем только его сбросить.
+
+
+Ваша ссылка для сброса пароля: <?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_CONFIRM, 'uuid' => $confirm->getCode(), 'utm_source' => 'email', 'utm_medium' => 'admin', 'utm_campaign' => 'password-recovery'))?>
+
+
+Если Вы не запрашивали смену пароля - просто проигнорируйте данное письмо, Ваши учетные данные в безопасности!
+
+<?php $partViewer->view('parts/footerText'); ?>

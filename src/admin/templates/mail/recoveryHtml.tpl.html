@@ -1,0 +1,11 @@
+<?php $partViewer->view('parts/header'); ?>
+<p style="font-size: 120%;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
+
+<p style="font-size: 120%; margin-bottom: 1em;">На сайте была запрошена смена пароля, мы храним пароли в зашифрованном виде, поэтому мы не знаем Вашего пароля, а можем только его сбросить.</p>
+
+<p style="font-size: 120%">Ваша ссылка для сброса пароля: <a href="<?=CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_CONFIRM, 'uuid' => $confirm->getCode(), 'utm_source' => 'email', 'utm_medium' => 'admin', 'utm_campaign' => 'password-recovery'))?>" target="_blank">сбросить пароль</a></p>
+
+<p style="font-size: 120%; margin-top: 1em;">Если Вы не запрашивали смену пароля - просто проигнорируйте данное письмо, Ваши учетные данные в безопасности!</p>
+
+<p style="font-size: 120%; margin-top: 0.5em;">Удачной работы и хорошего дня!</p>
+<?php $partViewer->view('parts/footer'); ?>

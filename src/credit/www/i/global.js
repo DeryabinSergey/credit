@@ -39,13 +39,9 @@ $(function () {
                 '</div><div class="toast-body">';
         if (Array.isArray(error)) {
             if (error.length == 1) {
-                for(i in error) { text += error[i]; }
+                text += error.join('');
             } else {
-                text += "<ul class='mb-0'>";
-                for(i in error) {
-                    text += "<li>"+error[i]+"</li>";
-                }
-                text += "</ul>";
+                text += "<ul class='mb-0'><li>" + error.join('</li><li>') + "</li></ul>";
             }
         } else {
             text += error;
@@ -56,10 +52,21 @@ $(function () {
         toastId++;
     }
 
+    showSuccess = function(text, title) {
+        if ($("#toast-cont").length == 0) { $('<div class="fixed-bottom p-4" id="toast-cont"></div>').appendTo('body'); }
+        text = 
+            '<div class="toast toast-success mr-auto" id="toast-'+toastId+'" role="alert" data-autohide="false">' +
+            (title ? '<div class="toast-header"><strong class="mr-auto">'+title+'</strong><button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">×</span></button></div>' : '') + 
+            '<div class="toast-body">'+text+'</div></div>';
+        $(text).appendTo("#toast-cont").toast('show');
+        setTimeout(hideToast, 2500, toastId);
+        toastId++;
+    }
+
     showImageUploaded = function(text, image) {
         if ($("#toast-cont").length == 0) { $('<div class="fixed-bottom p-4" id="toast-cont"></div>').appendTo('body'); }
         text = 
-            '<div class="toast mr-auto" id="toast-'+toastId+'" role="alert" data-autohide="false">' +
+            '<div class="toast toast-success mr-auto" id="toast-'+toastId+'" role="alert" data-autohide="false">' +
             '<div class="toast-body"><div class="media">' +
             (image ? '<img src="'+image+'" class="align-self-center mr-3 rounded border border-light" style="width: 48px;" alt="">' : '') +
             '<div class="media-body align-self-center">' + text + '</div></div></div></div>';

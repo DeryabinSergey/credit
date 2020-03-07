@@ -76,11 +76,10 @@ class UserRegisterRecoveryCommand implements EditorCommand
             }
             
             if ($userExists->getEmail()) {
-                Mail::create()->
-                    setTo($userExists->getEmail())->
-                    setFrom(DEFAULT_FROM)->
-                    setSubject('Сброс пароля на портале '.DEFAULT_MAILER)->
-                    setText('Ссылка для сброса пароля: '.CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_CONFIRM, 'uuid' => $confirm->getCode())))->
+                MimeMailSender::create('Сброс пароля на портале '.parse_url(PATH_WEB, PHP_URL_HOST), 'recoveryHtml', 'recoveryText')->
+                    setTo($userExists->getEmail(), $userExists->getName())->
+                    set('confirm', $confirm)->
+                    set('user', $userExists)->
                     send();
             } else {
                 $mav->setView(RedirectView::create(CommonUtils::makeUrl('userRegister', array('action' => userRegister::ACTION_CONFIRM, 'uuid' => $confirm->getCode()))));

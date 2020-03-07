@@ -29,9 +29,24 @@ class UserRegisterConfirmCommand implements EditorCommand
                 $userExists = $confirm->getUser();
             } catch(ObjectNotFoundException $e) { $form->markWrong('uuid'); }            
 
-            if ($process && !$form->getErrors()) {
+            if ($process && $confirm instanceof Confirm && $userExists instanceof User) {
                 try {
                     $confirmPhone = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_RECOVERY_PHONE), Expression::eq('user_id', $userExists->getId())));
+                } catch (ObjectNotFoundException $e) {
+                    /** Чувак то оказался долбоебом и не сообразил нажать на кнопочку отправить код - исправляем **/
+                    $confirmPhone = 
+                        Confirm::dao()->add(
+                            Confirm::create()->
+                                setType(ConfirmType::create(ConfirmType::TYPE_RECOVERY_PHONE))->
+                                setUser($userExists)->
+                                setCode(random_int(1, 9999))
+                        );
+                }
+                
+            }
+            
+            if ($process && !$form->getErrors()) {
+                try {
                     if ($confirmPhone->getTry() >= 3) throw new ObjectNotFoundException();
                     if ($confirmPhone->getCode() != $form->getValue('code')) {
                         $form->markWrong('code');
@@ -48,11 +63,10 @@ class UserRegisterConfirmCommand implements EditorCommand
                     $userExists = $userExists->dao()->save($userExists->setPassword(hash('sha256', $password)));
                     
                     if ($userExists->getEmail()) {
-                        Mail::create()->
-                            setTo($userExists->getEmail())->
-                            setFrom(DEFAULT_FROM)->
-                            setSubject('Восстановление пароля на портале '.DEFAULT_MAILER)->
-                            setText('Ваш новый пароль: '.$password)->
+                        MimeMailSender::create('Ваш новый пароль на портале '.parse_url(PATH_WEB, PHP_URL_HOST), 'recoveredHtml', 'recoveredText')->
+                            setTo($userExists->getEmail(), $userExists->getName())->
+                            set('password', $password)->
+                            set('user', $userExists)->
                             send();
                     } else {
                         SmsUtils::send("7{$userExists->getPhone()}", "Ваш новый пароль: {$password}");
