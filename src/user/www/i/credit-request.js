@@ -117,16 +117,16 @@ $(document).ready(function() {
     $("#code-button").on("click", function() {
         $.post("/ajax/credit-request-code.json", {'phone': $("#phone").val()},
             function(result) {
-                if (result.userExists) {
-                    $("#warning-block").show("swing");
-                } else if (result.success) {
-                    $("#warning-block").hide("swing");
+                $("#alert-block").hide("swing");
+                if (result.success) {
+                    showSuccess('SMS сообщение с кодом подтверждения отправлено');
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                 } else {
                     showError(result.errors ? result.errors : 'Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
                 }
             },"json"
         ).fail(function() {
+            $("#alert-block").hide("swing");
             showError('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
         });
     });

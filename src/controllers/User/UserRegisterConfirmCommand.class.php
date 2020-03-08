@@ -41,6 +41,7 @@ class UserRegisterConfirmCommand implements EditorCommand
                                 setUser($userExists)->
                                 setCode(random_int(1, 9999))
                         );
+                    SmsUtils::send("7{$userExists->getPhone()}", sprintf("Код подтверждения для сброса пароля: %04d", $confirmPhone->getCode()));
                 }
                 
             }

@@ -79,6 +79,27 @@ class CreditRequestConfirmCommand implements EditorCommand
                     }
                     
                     /**
+                     * Если именем пользователя было установлен номер телефона на предыдущем шаге (заявка без регистрации) - 
+                     * пытаемся здесь получить имя пользователя
+                     */
+                    if (
+                        !$userExists->getEmail() && 
+                        $userExists->getName() == $userExists->getPhone() && 
+                        !$subject->getType()->isYur() &&
+                        $subject->getName()
+                    ) {
+                        $userName = explode(" ", $subject->getName(), $subject->getType()->isIP() ? 3 : 2);
+                        if (
+                            ($subject->getType()->isIP() && count($userName) == 3 && $userName[2]) ||
+                            ($subject->getType()->isFiz() && count($userName) == 2 && $userName[1])
+                        ) {
+                            $userName = $userName[$subject->getType()->isIP() ? 2 : 1];
+                            $userExists->dao()->save($userExists->setName($userName));
+                        }
+                        
+                    }
+                    
+                    /**
                      * Отправка уведомлений пользователям с правами на публикацию заявлений на кредит
                      */
                     $groupsIds = 
@@ -90,6 +111,7 @@ class CreditRequestConfirmCommand implements EditorCommand
                                 add(Expression::eq('right.action.action', AclAction::PUBLISH_ACTION))->
                                 getCustomList(), 'group_id'
                         );
+                    
                     if ($groupsIds) {
                         $users = 
                             Criteria::create(User::dao())->
@@ -98,11 +120,10 @@ class CreditRequestConfirmCommand implements EditorCommand
                         
                         foreach($users as $user) {
                             if ($user->getEmail()) {
-                                Mail::create()->
-                                    setTo($user->getEmail())->
-                                    setFrom(DEFAULT_FROM)->
-                                    setSubject('Новая заявка на кредит')->
-                                    setText("Поступила новая заявка на кредит.\r\n\r\nПосмотреть все заявки ожидающие обработки: ".CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1), PATH_WEB_ADMIN))->
+                                MimeMailSender::create('Новая заявка на кредит', 'creditRequestNewHtml', 'creditRequestNewText')->
+                                    setTo($user->getEmail(), $user->getName())->
+                                    set('request', $subject)->
+                                    set('user', $user)->
                                     send();
                             }
                         }

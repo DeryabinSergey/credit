@@ -12,6 +12,7 @@
     <h1 class="mb-5">Просмотр запроса</h1>
     
     <form action="" method="POST" class="">
+        <input type="hidden" name="id" value="<?=$form->getValue('id')->getId()?>" id="object-id" />
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />
         
         <div class="form-group row align-items-center">
@@ -75,6 +76,7 @@
                         <div class="card text-white" style="background: url(<?=$image->getUrl(true)?>?ts=<?=time()?>);" id="image-id-<?=$image->getId()?>">
                             <div class="card-header">
                                 <ul class="list-inline mb-0 d-flex justify-content-between">
+                                    <li class="list-inline-item"><a href="<?=$image->getUrl()?>?ts=<?=time()?>" target="_blank" title="Посмотреть изображение" class="text-white"><i class="far fa-eye"></i></a></li>
                                     <li class="list-inline-item" id="rotate-cw-<?=$image->getId()?>"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>
                                     <li class="list-inline-item" id="rotate-acw-<?=$image->getId()?>"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>
                                     <li class="list-inline-item" id="delete-<?=$image->getId()?>"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>

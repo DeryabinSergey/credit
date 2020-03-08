@@ -1,0 +1,10 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+
+Новая заявка на кредит от <?=$request->getType()->getShortName()?> на сумму <?=number_format($request->getSumm(), 0, '.', ' ').'руб.'?> с категорией залога <?=$request->getCategory()->getName()?>: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $request->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-request'), PATH_WEB_ADMIN)?>
+
+
+Посмотреть все поступившие заявки ожидающие обработки: <?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-request'), PATH_WEB_ADMIN)?>
+
+
+<?php $partViewer->view('parts/footerText'); ?>

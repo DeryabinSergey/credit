@@ -120,6 +120,7 @@ class baseAjaxPhotoUpload extends baseAjaxPhotoEditor
             $tr->commit();                
             $model->
                 set('file', $image->getUrl(true).'?'.time())->
+                set('fileFull', $image->getUrl().'?'.time())->
                 set('name', $this->raw['name'])->
                 set('id', $image->getId());
         } catch(Exception $e) {

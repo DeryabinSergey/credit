@@ -83,6 +83,7 @@ $(function () {
                 $("#related-images").append(
                     '<div class="card text-white" style="background: url('+data.result.file+');" id="image-id-'+data.result.id+'">'+
                         '<div class="card-header"><ul class="list-inline mb-0 d-flex justify-content-between">' +
+                            '<li class="list-inline-item"><a href="'+data.result.fileFull+'" target="_blank" title="Посмотреть изображение" class="text-white"><i class="far fa-eye"></i></a></li>'+
                             '<li class="list-inline-item" id="rotate-cw-'+data.result.id+'"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>'+
                             '<li class="list-inline-item" id="rotate-acw-'+data.result.id+'"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>'+
                             '<li class="list-inline-item" id="delete-'+data.result.id+'"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>'+

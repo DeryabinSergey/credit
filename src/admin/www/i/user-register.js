@@ -33,12 +33,9 @@ $(document).ready(function(){
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                     showSuccess('SMS сообщение с кодом подтверждения отправлено');
                 } else {
-                    let errors = [];
-                    if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
-                    } else { errors.push('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;'); }
                     $("#warning-block").hide("swing");
                     $("#alert-block").hide("swing");
-                    showError(errors);
+                    showError(result.errors ? result.errors : 'Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
                 }
             },"json"
         ).fail(function() {
@@ -57,10 +54,7 @@ $(document).ready(function(){
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                     showSuccess('SMS сообщение с кодом подтверждения отправлено');
                 } else {
-                    let errors = [];
-                    if (result.errors) { $.each(result.errors, function (index, error) { errors.push(error); });
-                    } else { errors.push('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;'); }
-                    showError(errors);
+                    showError(result.errors ? result.errors : 'Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
                 }
             },"json"
         ).fail(function() {

@@ -21,9 +21,25 @@ class CreditRequestStartCommand implements EditorCommand
         
         $form->markGood('id');
         $subject = $form->getValue('id');
-        $userExists = null;
+        $userExists = $confirm = null;
         
         if (!SecurityManager::isAuth() && !SecurityManager::isAuthEnabled()) { $form->markCustom('phone', self::ERROR_AUTH_ENABLED); }
+        
+        /** Отправляем код подтверждения, если чувак не додумался нажать на кнопку отправить код **/
+        if ($process && !$form->getError('phone') && $form->getValue('phone')) {    
+            try {
+                $confirm = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_CREDIT_REQUEST), Expression::eq('phone', $form->getValue('phone'))));
+            } catch (ObjectNotFoundException $e) {
+                $confirm = 
+                    Confirm::dao()->add(
+                        Confirm::create()->
+                            setType(ConfirmType::create(ConfirmType::TYPE_CREDIT_REQUEST))->
+                            setPhone($form->getValue('phone'))->
+                            setCode(random_int(1, 9999))
+                    );
+                SmsUtils::send("7{$form->getValue('phone')}", sprintf("Код подтверждения для оформления заявки на кредит: %04d", $confirm->getCode()));
+            }            
+        }
         
         if ($process && !$form->getErrors()) {
 
@@ -37,7 +53,6 @@ class CreditRequestStartCommand implements EditorCommand
                 } catch(ObjectNotFoundException $e) { /* nothin here */ }
                 
                 try {
-                    $confirm = Confirm::dao()->getByLogic(Expression::andBlock(Expression::eq('type_id', ConfirmType::TYPE_CREDIT_REQUEST), Expression::eq('phone', $form->getValue('phone'))));
                     if (
                         Timestamp::compare($confirm->getExpiredTime(), Timestamp::makeNow()) == -1 ||
                         $confirm->getTry() >= 3
@@ -71,7 +86,8 @@ class CreditRequestStartCommand implements EditorCommand
                     SecurityManager::setUser($userExists, true, $request);
                 } elseif ($userExists instanceof User && !SecurityManager::isAuth()) {
                     SecurityManager::setUser($userExists, true, $request);
-                }                
+                }            
+                $confirm->dao()->dropById($confirm->getId());
                 
                 $mav->setView(EditorController::COMMAND_SUCCEEDED);
             }
