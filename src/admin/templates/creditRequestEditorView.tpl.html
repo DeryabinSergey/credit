@@ -58,7 +58,7 @@
             <? if ($form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
             
                 <div class="form-group row align-items-center">
-                    <label for="passport" class="col-12 col-sm-2 col-form-label col-form-label-lg">Прикрепленные изображения</label>
+                    <label for="photo-upload" class="col-12 col-sm-2 col-form-label col-form-label-lg">Прикрепленные изображения</label>
                     <div class="col-12 col-sm-10 form-inline justify-content-between">
                         <div class="custom-file">
                             <input class="custom-file-input" type="file" name="file" id="photo-upload" multiple>

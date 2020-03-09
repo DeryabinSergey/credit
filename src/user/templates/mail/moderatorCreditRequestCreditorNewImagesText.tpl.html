@@ -1,0 +1,12 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+
+В заявки на кредит добавлены новые изображения.
+
+<? foreach($listRequest as $itemId => $item) { ?>
+    -- Запрос от <?=$item['object']->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item['object']->getCreatedTime()->getMonth())?> к компании <?=$item['object']->getCreditor()->getName()?> от <?=$item['object']->getRequest()->getType()->getShortName()?> на сумму <?=number_format($item['object']->getRequest()->getSumm(), 0, '.', ' ').'руб.'?> с категорией залога <?=$item['object']->getRequest()->getCategory()->getName()?>, добавлено <?=count($item['list'])?> <?=RussianTextUtils::selectCaseForNumber(count($item['list']), array('фото', 'фотографии', 'фотографий'))?>: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $item['object']->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'request-creditor-new-images'), PATH_WEB_CREDITOR)?>
+
+    
+<? } ?>
+
+<?php $partViewer->view('parts/footerText'); ?>

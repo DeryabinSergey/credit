@@ -121,6 +121,8 @@ class baseAjaxPhotoUpload extends baseAjaxPhotoEditor
             $model->
                 set('file', $image->getUrl(true).'?'.time())->
                 set('fileFull', $image->getUrl().'?'.time())->
+                set('width', $image->getWidth())->
+                set('height', $image->getHeight())->
                 set('name', $this->raw['name'])->
                 set('id', $image->getId());
         } catch(Exception $e) {
@@ -134,6 +136,20 @@ class baseAjaxPhotoUpload extends baseAjaxPhotoEditor
 
     protected function checkPermissions()
     {
-        return parent::checkPermissions() && (!$this->imageOwner instanceof Identifiable || $this->imageOwner->checkPermissions(AclAction::EDIT_ACTION));
+        return 
+            parent::checkPermissions() && 
+            (
+                !$this->imageOwner instanceof Identifiable || 
+                (
+                    $this->imageOwner->checkPermissions(AclAction::EDIT_ACTION) ||
+                    (
+                        $this->imageOwner instanceof CreditRequest &&
+                        $this->imageOwner->getId() &&
+                        $this->imageOwner->getUser()->getId() == SecurityManager::getUser()->getId() &&
+                        !$this->imageOwner->isDeleted() &&
+                        in_array($this->imageOwner->getStatus()->getId(), array(CreditRequestStatus::TYPE_INCOME, CreditRequestStatus::TYPE_CONCIDERED))
+                    )
+                )
+            );
     }
 }

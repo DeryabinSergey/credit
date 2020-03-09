@@ -1,0 +1,9 @@
+<?php $partViewer->view('parts/header'); ?>
+<p style="font-size: 120%; margin-bottom: 1em;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
+
+<p style="font-size: 120%; margin-bottom: 1em;">Новая заявка на кредит от <?=$request->getType()->getShortName()?> на сумму <?=number_format($request->getSumm(), 0, '.', '&nbsp;').'&#8381;'?> с категорией залога <?=$request->getCategory()->getName()?>.</p>
+
+<p style="font-size: 120%; margin-bottom: 1em;"><a href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestCreditorStatus::TYPE_INCOME), 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-credit-request'), PATH_WEB_CREDITOR)?>" target="_blank" title="перейти к списку заявок">Посмотреть все поступившие заявки ожидающие обработки</a></p>
+
+<p style="font-size: 120%; margin-top: 0.5em;">Удачной работы и хорошего дня!</p>
+<?php $partViewer->view('parts/footer'); ?>

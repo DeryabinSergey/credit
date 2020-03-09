@@ -80,17 +80,27 @@ $(function () {
             if (data.result.errors) {
                 showError(data.result.errors);
             } else if (data.result.file && data.result.id) {
-                $("#related-images").append(
-                    '<div class="card text-white" style="background: url('+data.result.file+');" id="image-id-'+data.result.id+'">'+
-                        '<div class="card-header"><ul class="list-inline mb-0 d-flex justify-content-between">' +
-                            '<li class="list-inline-item" id="rotate-cw-'+data.result.id+'"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>'+
-                            '<li class="list-inline-item" id="rotate-acw-'+data.result.id+'"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>'+
-                            '<li class="list-inline-item" id="delete-'+data.result.id+'"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>'+
-                        '</ul></div></div>'
-                );
-                $("#image-id-"+data.result.id).show("blind", 800);
-                showImageUploaded("Файл "+(data.result.name ? "«"+data.result.name+"» " : "")+"успешно загружен", data.result.file);
-                $("#image-id-"+data.result.id+" .card-header li i").click(imageAction);
+                if ($("#related-images").length == 1) {
+                    $("#related-images").append(
+                        '<div class="card text-white" style="background: url('+data.result.file+');" id="image-id-'+data.result.id+'">'+
+                            '<div class="card-header"><ul class="list-inline mb-0 d-flex justify-content-between">' +
+                                '<li class="list-inline-item" id="rotate-cw-'+data.result.id+'"><i class="fas fa-redo rotate-cw" title="Повернуть по часовой стрелке"></i></li>'+
+                                '<li class="list-inline-item" id="rotate-acw-'+data.result.id+'"><i class="fas fa-undo rotate-acw" title="Повернуть против часовой стрелки"></i></li>'+
+                                '<li class="list-inline-item" id="delete-'+data.result.id+'"><i class="fas fa-trash-alt delete" title="Удалить"></i></li>'+
+                            '</ul></div></div>'
+                    );
+                    $("#image-id-"+data.result.id).show("blind", 800);
+                    showImageUploaded("Файл "+(data.result.name ? "«"+data.result.name+"» " : "")+"успешно загружен", data.result.file);
+                    $("#image-id-"+data.result.id+" .card-header li i").click(imageAction);
+                } else if ($("form .my-gallery").length == 1) {
+                    $("form .my-gallery").append(
+                        '<a href="'+data.result.fileFull+'" itemprop="contentUrl" data-size="'+data.result.width+'x'+data.result.height+'" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">'+
+                            '<img src="'+data.result.file+'" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />'+
+                        '</a>'
+                    );
+                    showImageUploaded("Файл "+(data.result.name ? "«"+data.result.name+"» " : "")+"успешно загружен", data.result.file);
+                    initPhotoSwipeFromDOM('.my-gallery');
+                }
             }
         },
         fail: function(e, data) { showError("Не удалось отправить файл «"+data.files[0].name+"», попробуйте, пожалуйста, еще раз чуть позже"); }

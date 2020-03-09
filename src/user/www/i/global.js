@@ -75,7 +75,7 @@ $(function () {
         toastId++;
     }
     
-    var initPhotoSwipeFromDOM = function(gallerySelector) {
+    initPhotoSwipeFromDOM = function(gallerySelector) {
 
         // parse slide data (url, title, size ...) from DOM elements 
         // (children of gallerySelector)
@@ -206,6 +206,7 @@ $(function () {
         };
 
         var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
+            
             var pswpElement = document.querySelectorAll('.pswp')[0],
                 gallery,
                 options,

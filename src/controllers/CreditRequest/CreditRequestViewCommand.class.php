@@ -28,13 +28,12 @@ class CreditRequestViewCommand implements SecurityCommand, EditorCommand
                 $subject = $form->getValue('id')->dao()->save($form->getValue('id'));
                 if ($subject->getStatus()->getId() == CreditRequestStatus::TYPE_REJECT) {
                     SmsUtils::send("7{$subject->getUser()->getPhone()}", "Заявка от ".$subject->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($subject->getCreatedTime()->getMonth())." на ".number_format($subject->getSumm(), 0, '.', ' ')."руб. не принята к рассмотрению и отклонена");
-                } else {
+                } elseif ($subject->getStatus()->getId() == CreditRequestStatus::TYPE_CONCIDERED) {
                     $creditorIds = 
                         ArrayUtils::convertToPlainList(
                             Criteria::create(CreditorCategory::dao())->
                                 setDistinct()->
                                 addProjection(Projection::property('creditor'))->
-                                //add(Expression::eq('category', 3))->
                                 getCustomList(), 'creditor_id'
                         );
                     if ($creditorIds) {
@@ -49,13 +48,14 @@ class CreditRequestViewCommand implements SecurityCommand, EditorCommand
                         foreach($creditorList as $creditor) {
                             if ($creditor->getUser()->getEmail() && !isset($users[$creditor->getUser()->getId()])) {
                                 $users[$creditor->getUser()->getId()] = true;
-                                
-                                Mail::create()->
-                                    setTo($creditor->getUser()->getEmail())->
-                                    setFrom(DEFAULT_FROM)->
-                                    setSubject('Новая заявка на кредит')->
-                                    //setText("Поступила новая заявка на кредит.\r\n\r\nПосмотреть все заявки ожидающие обработки: ".CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1), PATH_WEB_ADMIN))->
-                                    setText("Поступила новая заявка на кредит, с залогом в категории {$subject->getCategory()->getName()}.\r\n\r\nВсе Ваши запросы на кредит: ".CommonUtils::makeUrl('creditRequestList', array(), PATH_WEB_CREDITOR))->
+                                /**
+                                 * Здесь конечно было бы неплохо потом сделать сначала формирование запросов по пользователям, а потом в одном письме пользователю
+                                 * отправлять уведомление со ссылками на его конкретные заявки для каждой кредитной организации
+                                 */
+                                MimeMailSender::create('Новая заявка на кредит', 'creditRequestCreditorNewHtml', 'creditRequestCreditorNewText')->
+                                    setTo($creditor->getUser()->getEmail(), $creditor->getUser()->getName())->
+                                    set('request', $subject)->
+                                    set('user', $creditor->getUser())->
                                     send();
                             }
                             
@@ -67,6 +67,7 @@ class CreditRequestViewCommand implements SecurityCommand, EditorCommand
                                     setExpired(Timestamp::create(sprintf("+%d hour", Constants::CREDIT_REQUEST_CREDITOR_INCOME_LIFETIME)));
                             $creditorRequest->dao()->add($creditorRequest);
                         }
+                        SmsUtils::send("7{$subject->getUser()->getPhone()}", "Заявка от ".$subject->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($subject->getCreatedTime()->getMonth())." на ".number_format($subject->getSumm(), 0, '.', ' ')."руб. передана кредитным организациям.");
                     }
                 }
                 $mav->setView(BaseEditor::COMMAND_SUCCEEDED);

@@ -13,7 +13,7 @@ class main extends baseFront implements SecurityController, UserController
                 $model->set('creditRequestNum', Criteria::create(CreditRequest::dao())->addProjection(Projection::count('id', 'num'))->add(Expression::isFalse('deleted'))->getCustom('num'));
             }
             if (SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) {
-                $model->set('creditRequestNew', Criteria::create(CreditRequest::dao())->addProjection(Projection::count('id', 'num'))->add(Expression::isFalse('deleted'))->add(Expression::eq('status', CreditRequestStatus::TYPE_INCOME))->getCustom('num'));
+                $model->set('creditRequestNew', Criteria::create(CreditRequest::dao())->add(Expression::isFalse('deleted'))->add(Expression::eq('status', CreditRequestStatus::TYPE_INCOME))->getList());
                 
                 $list = array();
                 $listIds = 

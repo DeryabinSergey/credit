@@ -1,0 +1,22 @@
+<?php $partViewer->view('parts/header'); ?>
+<p style="font-size: 120%; margin-bottom: 1em;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
+
+<p style="font-size: 120%; margin-bottom: 1em;">В заявки на кредит добавлены новые изображения</p>
+
+<? foreach($listRequest as $itemId => $item) { ?>
+    <p style="font-size: 120%; margin-bottom: 1em;">
+        В <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $item['object']->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'request-creditor-new-images'), PATH_WEB_CREDITOR)?>" target="_blank" title="перейти к заявке">запросе от <?=$item['object']->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item['object']->getCreatedTime()->getMonth())?></a> к компании <?=$item['object']->getCreditor()->getName()?> от <?=$item['object']->getRequest()->getType()->getShortName()?> на сумму <?=number_format($item['object']->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?> с категорией залога <?=$item['object']->getRequest()->getCategory()->getName()?>:
+    </p>
+
+    <p>
+        <? foreach($item['list'] as $image) { ?>
+            <img src='cid:<?=$image->getFile()?>' alt='' style='width: 120px; height: 120px; margin-right: 1em; margin-bottom: 1em; display: inline-block;' />
+        <? } ?>
+        
+    </p>
+    
+    <hr style='margin-top: 3em; margin-bottom: 3em;' />
+<? } ?>
+
+<p style="font-size: 120%; margin-top: 0.5em;">Удачной работы и хорошего дня!</p>
+<?php $partViewer->view('parts/footer'); ?>
