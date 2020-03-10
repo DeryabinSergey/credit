@@ -150,9 +150,7 @@ class CronNotifier extends BaseCron
                 $mailer->send();
                 
             }
-        }
-        //print_r($creditorImagesList);
-        
+        }        
                 
         return $this;
     }
@@ -166,7 +164,6 @@ class CronNotifier extends BaseCron
                 getList();
         
         foreach($list as $creditRequest) {
-            $now = Timestamp::makeNow();
             
             $onlyDeclinded = true;
             $newOffers = 0;
@@ -179,7 +176,8 @@ class CronNotifier extends BaseCron
                 $onlyDeclinded = $onlyDeclinded && $creditorRequest->getStatus()->getId() == CreditRequestCreditorStatus::TYPE_REJECT;
                 if (!$onlyDeclinded) { break; }
             }
-                    
+            
+            $now = Timestamp::makeNow();
             foreach(
                 $creditRequest->getCreditorOffers(array(), array(CreditRequestCreditorOfferStatus::TYPE_CANCELED, CreditRequestCreditorOfferStatus::TYPE_REJECT))
                 as $offer
@@ -202,7 +200,9 @@ class CronNotifier extends BaseCron
                 SmsUtils::send("7{$creditRequest->getUser()->getPhone()}", "По заявке от ".$creditRequest->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($creditRequest->getCreatedTime()->getMonth())." на ".number_format($creditRequest->getSumm(), 0, '.', ' ')."руб. пришел отказ от всех партнеров");
             } elseif (!$hasAcceptedOffers && $newOffers) {
                 $creditRequest->dao()->save($creditRequest->setNotifiedTime($now));
-                SmsUtils::send("7{$creditRequest->getUser()->getPhone()}", "По заявке от ".$creditRequest->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($creditRequest->getCreatedTime()->getMonth())." на ".number_format($creditRequest->getSumm(), 0, '.', ' ')." руб. поступило {$newOffers} ".RussianTextUtils::selectCaseForNumber($newOffers, array('кредитное предложение', 'кредитных предложения', 'кредитных предложений')).": ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $creditRequest->getId()), PATH_WEB_BASE));
+                $link = CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $creditRequest->getId(), 'utm_source' => 'sms', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-credit-offer'), PATH_WEB_BASE)."#offers";
+                $link = trim(file_get_contents("https://clck.ru/--?url=".urlencode($link)));
+                SmsUtils::send("7{$creditRequest->getUser()->getPhone()}", "По заявке от ".$creditRequest->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($creditRequest->getCreatedTime()->getMonth())." на ".number_format($creditRequest->getSumm(), 0, '.', ' ')." руб. поступило {$newOffers} ".RussianTextUtils::selectCaseForNumber($newOffers, array('кредитное предложение', 'кредитных предложения', 'кредитных предложений')).": {$link}");
             }
         }
         
