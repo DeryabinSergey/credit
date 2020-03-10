@@ -1,0 +1,14 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+
+По Вашей заявке на кредит от <?=$offer->getRequest()->getRequest()->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getRequest()->getRequest()->getCreatedTime()->getMonth())?> на сумму <?=number_format($offer->getRequest()->getRequest()->getSumm(), 0, '.', ' ').'руб.'?> назначен визит в кредитную организацию. Вы выбрали предложение на сумму <?=number_format($offer->getSumm(), 0, '.', ' ').'руб.'?>: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $offer->getRequest()->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-user-meeting'), PATH_WEB_BASE)?>
+
+
+<?=$offer->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $offer->getTime()->getHour(), $offer->getTime()->getMinute())?> по адресу <?=$offer->getAddress()?>
+
+
+Сопроводительная информация:
+<?=$offer->getText()?>
+
+
+<?php $partViewer->view('parts/footerText'); ?>

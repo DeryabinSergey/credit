@@ -1,0 +1,14 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+
+По заявке на кредит от <?=$offer->getRequest()->getRequest()->getType()->getShortName()?> на сумму <?=number_format($offer->getRequest()->getRequest()->getSumm(), 0, '.', ' ').'руб.'?> с категорией залога <?=$offer->getRequest()->getRequest()->getCategory()->getName()?> назначена встреча с заемщиком. Заемщик принял предложение на сумму <?=number_format($offer->getSumm(), 0, '.', ' ').'руб.'?>: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $offer->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-creditor-meeting'), PATH_WEB_CREDITOR)?>
+
+
+<?=$offer->getDate()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getDate()->getMonth())?> в <?=sprintf('%02d:%02d', $offer->getTime()->getHour(), $offer->getTime()->getMinute())?> по адресу <?=$offer->getAddress()?>
+
+
+Сопроводительная информация, отправленная заемщику:
+<?=$offer->getText()?>
+
+
+<?php $partViewer->view('parts/footerText'); ?>

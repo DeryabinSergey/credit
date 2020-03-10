@@ -25,26 +25,27 @@ class CreditRequestCreditorOfferMeetingCommand extends SaveCommand implements Se
             if ($form->getValue('accept') && $mav->getView() == EditorController::COMMAND_SUCCEEDED) {
                 /**
                  * Отправка уведомления кредитной организации
-                 */
+                 */                
                 if ($subject->getRequest()->getCreditor()->getUser()->getEmail()) {
-                    Mail::create()->
-                        setTo($subject->getRequest()->getCreditor()->getUser()->getEmail())->
-                        setFrom(DEFAULT_FROM)->
-                        setSubject('Назначена встреча с заемщиком')->
-                        setText("По заявке на кредит назначена встреча с заемщиком. Посмотреть заявку: ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $subject->getRequest()->getId()), PATH_WEB_CREDITOR)."\r\n\r\nАдрес: {$form->getValue('address')}\r\n\r\nДата и время: {$form->getValue('date')->toFormatString('d.m.Y')} ".sprintf('%02d:%02d', $form->getValue('time')->getHour(), $form->getValue('time')->getMinute())."\r\n\r\nСопроводительная информация отправленная заемщику: {$form->getValue('text')}")->
+                    MimeMailSender::create('Назначена встреча с заемщиком', 'creditRequestCreditorMeetingCreditorHtml', 'creditRequestCreditorMeetingCreditorText')->
+                        setTo($subject->getRequest()->getCreditor()->getUser()->getEmail(), $subject->getRequest()->getCreditor()->getUser()->getName())->
+                        set('offer', $subject)->
+                        set('user', $subject->getRequest()->getCreditor()->getUser())->
                         send();
                 }
                 /**
                  * Отправка уведомления заемщику
                  */
                 if ($subject->getRequest()->getRequest()->getUser()->getEmail()) {
-                    Mail::create()->
-                        setTo($subject->getRequest()->getRequest()->getUser()->getEmail())->
-                        setFrom(DEFAULT_FROM)->
-                        setSubject('Назначен визит в кредитную организацию')->
-                        setText("По заявке на кредит назначена встреча. Посмотреть заявку: ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $subject->getRequest()->getRequest()->getId()), PATH_WEB_BASE)."\r\n\r\nАдрес: {$form->getValue('address')}\r\n\r\nДата и время: {$form->getValue('date')->toFormatString('d.m.Y')} ".sprintf('%02d:%02d', $form->getValue('time')->getHour(), $form->getValue('time')->getMinute())."\r\n\r\nСопроводительная информация: {$form->getValue('text')}")->
+                    MimeMailSender::create('Назначен визит в кредитную организацию', 'creditRequestCreditorMeetingUserHtml', 'creditRequestCreditorMeetingUserText')->
+                        setTo($subject->getRequest()->getRequest()->getUser()->getEmail(), $subject->getRequest()->getRequest()->getUser()->getName())->
+                        set('offer', $subject)->
+                        set('user', $subject->getRequest()->getRequest()->getUser())->
                         send();
                 }
+                $link = CommonUtils::makeUrl('creditRequestEditor', array('id' => $subject->getRequest()->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-user-meeting'), PATH_WEB_BASE);
+                $link = trim(file_get_contents("https://clck.ru/--?url=".urlencode($link)));
+                SmsUtils::send("7{$subject->getRequest()->getRequest()->getUser()->getPhone()}", "По заявке от ".$subject->getRequest()->getRequest()->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($subject->getRequest()->getRequest()->getCreatedTime()->getMonth())." на ".number_format($subject->getRequest()->getRequest()->getSumm(), 0, '.', ' ')."руб. назначена встреча, подробнее: {$link}");
             }
         }
 
