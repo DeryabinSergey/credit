@@ -46,7 +46,7 @@
                         <?  
                                 } elseif ($offers) { 
                         ?>
-                                    <h6 class="card-subtitle my-3 font-weight-bold"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" class="card-link text-success"><i class="fas fa-hand-holding-usd"></i> <?=count($offers)?> <?=RussianTextUtils::selectCaseForNumber(count($offers), array('кредитное предложение', 'кредитных предложения', 'кредитных предложений'))?></a></h6>
+                                    <h6 class="card-subtitle my-3 font-weight-bold"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>#offers" class="card-link text-success"><i class="fas fa-hand-holding-usd"></i> <?=count($offers)?> <?=RussianTextUtils::selectCaseForNumber(count($offers), array('кредитное предложение', 'кредитных предложения', 'кредитных предложений'))?></a></h6>
                         <? 
                                 } 
                             }
