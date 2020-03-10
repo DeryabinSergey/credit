@@ -5,8 +5,8 @@
     
         <div class="row flex-row my-4" id="requestList">
             <div class="col-12 col-sm-9 col-md-10">
-                <h1 class="d-inline mr-5 mb-2">Мои заявки</h1>
-                <h5 class="d-inline mb-2">
+                <h1 class="d-inline-block mr-5 mb-2">Мои заявки</h1>
+                <h5 class="d-inline-block mb-3 mb-sm-2">
                     <a href="<?=CommonUtils::makeUrl('controlPanel', $form->getValue('all') ? array() : array('all' => 1))?>"><?=$form->getValue('all') ? 'показать текущие' : 'показать все'?></a>
                 </h5>
             </div>
