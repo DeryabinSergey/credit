@@ -143,11 +143,16 @@ class baseAjaxPhotoUpload extends baseAjaxPhotoEditor
                 (
                     $this->imageOwner->checkPermissions(AclAction::EDIT_ACTION) ||
                     (
-                        $this->imageOwner instanceof CreditRequest &&
-                        $this->imageOwner->getId() &&
-                        $this->imageOwner->getUser()->getId() == SecurityManager::getUser()->getId() &&
+                        $this->imageOwner instanceof CreditRequest && $this->imageOwner->getId() &&
                         !$this->imageOwner->isDeleted() &&
-                        in_array($this->imageOwner->getStatus()->getId(), array(CreditRequestStatus::TYPE_INCOME, CreditRequestStatus::TYPE_CONCIDERED))
+                        (
+                            (
+                                $this->imageOwner->getUser()->getId() == SecurityManager::getUser()->getId() &&
+                                in_array($this->imageOwner->getStatus()->getId(), array(CreditRequestStatus::TYPE_INCOME, CreditRequestStatus::TYPE_CONCIDERED))
+                            ) || (
+                                $this->imageOwner->getStatus()->getId() == CreditRequestStatus::TYPE_CONCIDERED && SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::CREDIT_REQUEST_ID)
+                            )
+                        )
                     )
                 )
             );

@@ -2,6 +2,14 @@
     $partViewer->view('parts/header');
     
     $offers = $form->getValue('id')->getCreditorOffers();
+    
+    /** Загружать изображения можно только в рабочем статусе заявки при наличии соответствующих прав **/
+    $canUpload =
+        !$form->getValue('id')->isDeleted() &&
+        (
+            $form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID) ||
+            $form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_CONCIDERED && SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::CREDIT_REQUEST_ID)
+        );
 ?>
 
 <!-- Begin page content -->
@@ -51,27 +59,25 @@
             <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($form->getValue('id')->getStatus()->getName())?></label>
         </div>
         
-        <? if ($form->getValue('id')->getImages()->getCount()) { ?>
+        <? if ($canUpload || $form->getValue('id')->getImages()->getCount()) { ?>
         
-            <hr class="my-5" />
-            
-            <? if ($form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
-            
-                <div class="form-group row align-items-center">
-                    <label for="photo-upload" class="col-12 col-sm-2 col-form-label col-form-label-lg">Прикрепленные изображения</label>
+            <hr class="mt-5" />
+            <h4 class="mb-5">Прикрепленные изображения</h4>
+        
+            <? if ($canUpload) { ?>
+                <div class="form-group row align-items-center mb-5">
+                    <label for="photo-upload" class="col-12 col-sm-2 col-form-label col-form-label-lg">Загрузить</label>
                     <div class="col-12 col-sm-10 form-inline justify-content-between">
                         <div class="custom-file">
                             <input class="custom-file-input" type="file" name="file" id="photo-upload" multiple>
                             <label class="custom-file-label form-control-lg" for="photo-upload">Choose file</label>
-                            <small class="form-text text-muted">Можно загрузить любые изображения, Вашего объекта залога или документов</small>
+                            <small class="form-text text-muted">Можно загрузить любые изображения, объекта залога или документов</small>
                         </div>
                     </div>
-                </div>            
+                </div>
             
                 <div class="images-cont sortable d-flex mt-5 mb-4 justify-content-between flex-wrap" id="related-images">
-                    <? 
-                        foreach($form->getValue('id')->getImages()->getList() as $image) { 
-                    ?>
+                    <? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
 
                         <div class="card text-white" style="background: url(<?=$image->getUrl(true)?>?ts=<?=time()?>);" id="image-id-<?=$image->getId()?>">
                             <div class="card-header">
@@ -83,11 +89,10 @@
                                 </ul>                        
                             </div>
                         </div>            
-                    <? 
-                        }
-                    ?>
+                    <? } ?>
                 </div>            
-            <? } else { ?>
+            <? } elseif ($form->getValue('id')->getImages()->getCount()) { ?>
+            
                 <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
                     <? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
                         <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
@@ -95,12 +100,14 @@
                         </a>
                     <? } ?>
                 </div>
+            
             <? } ?>
+            
         <? } ?>
         
-        <? if ($form->getValue('id')->getStatus()->getId() != CreditRequestStatus::TYPE_INCOME) { ?>
+        <? if ($form->getValue('id')->getStatus()->getId() != CreditRequestStatus::TYPE_INCOME && $offers) { ?>
+        
             <hr class="my-5" id="offers" />
-
             <h4 class="mb-5">Предложения займа</h4>
 
             <? if ($offers) { ?>

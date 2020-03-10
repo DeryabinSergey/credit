@@ -49,6 +49,9 @@
         </div>
         
         <? if ($form->getValue('id')->getRequest()->getImages()->getCount()) { ?>
+            <hr class="mt-5" />
+            <h4 class="mb-5">Прикрепленные изображения</h4>
+            
             <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
                 <? foreach($form->getValue('id')->getRequest()->getImages()->getList() as $image) { ?>
                     <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">

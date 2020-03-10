@@ -39,6 +39,14 @@ class baseAjaxPhotoRotate extends baseAjaxPhotoItemEditor
 
     protected function checkPermissions()
     {
-        return parent::checkPermissions() && $this->image->checkPermissions(AclAction::EDIT_ACTION);
+        return 
+            parent::checkPermissions() && 
+            (
+                $this->image->checkPermissions(AclAction::EDIT_ACTION) ||
+                (
+                    $this->image->getOwner() instanceof CreditRequest &&
+                    $this->image->getOwner()->getStatus()->getId() == CreditRequestStatus::TYPE_CONCIDERED && SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::CREDIT_REQUEST_ID)
+                )
+            );
     }
 }
