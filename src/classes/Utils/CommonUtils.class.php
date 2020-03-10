@@ -80,6 +80,7 @@ class CommonUtils
     {
         if (mb_stripos($curl, "success=") !== false || mb_stripos($curl, "utm_") !== false) {
             $curl = preg_replace("/(?(?=\\\?success=\d)success=\d&?|&success=\d)/isu", "", $curl);
+            $curl = preg_replace("/(?(?=\\\?added=\d)added=\d&?|&added=\d)/isu", "", $curl);
             $curl = preg_replace("/(?(?=\\\?utm_[a-z]+=[a-z0-9 \-]+)utm_[a-z]+=[a-z0-9 \-]+&?|&utm_[a-z]+=[a-z0-9 \-]+)/isu", "", $curl);
             if (mb_substr($curl, mb_strlen($curl) - 1) == '?') {
                 $curl = mb_substr($curl, 0, mb_strlen($curl) - 1);
