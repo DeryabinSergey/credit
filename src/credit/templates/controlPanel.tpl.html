@@ -89,12 +89,45 @@
             </div>
         <? } ?>
         
+        <? if ($inWorkEmptyLits) { ?>
+            <div class="row flex-row mb-2">
+                <div class="col-12"><h3>Запросы без предложений</h3></div>
+
+                <div class="table-responsive col-12">
+                    <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle">Дата</th>
+                            <th scope="col" class="align-middle">Кредитор</th>
+                            <th scope="col" class="align-middle text-center">Информация и займе</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <? foreach($inWorkEmptyLits as $item) { ?>
+                    <tr>
+                        <td class="align-middle text-nowrap">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getCreditor()->getName())?></a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getRequest()->getType()->getShortName())?> / <?=htmlspecialchars($item->getRequest()->getCategory()->getName())?> / <?=number_format($item->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                        </td>
+                    </tr>
+                    <? } ?>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        <? } ?>
+        
         <div class="row flex-row mb-4">
             <div class="col">
                 <h5 class="text-center">
                     <a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список&nbsp;всех&nbsp;запросов</a>
-                    <? if ($inWorkCount) { ?>
-                        (<a href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestCreditorStatus::TYPE_CONCIDERED)))?>">запросов в работе: <?=$inWorkCount?></a>)
+                    <? if (count($inWorkList)) { ?>
+                        (<a href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestCreditorStatus::TYPE_CONCIDERED)))?>">запросов в работе: <?=count($inWorkList)?></a>)
                     <? } ?>
                 </h5>
             </div>

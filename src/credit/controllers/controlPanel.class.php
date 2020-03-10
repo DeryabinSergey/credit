@@ -18,7 +18,11 @@ class controlPanel extends baseFront implements UserController
             
             if ($hasCompany) {
             
-                $meetingList = array();
+                $meetingList = $inWorkEmptyList = array();
+                /**
+                 * Здесь буду отмечать компании, которым пришел запрос - показывать ли в списке компанию кредитора если их больше одной
+                 */
+                $inWorkEmptyListCreditor = array();
 
                 $incomeList = 
                     Criteria::create(CreditRequestCreditor::dao())->
@@ -27,12 +31,20 @@ class controlPanel extends baseFront implements UserController
                         addOrder(OrderBy::create('id')->desc())->
                         getList();
                 
-                $inWorkCount = 
+                $inWorkList = 
                     Criteria::create(CreditRequestCreditor::dao())->
-                        addProjection(Projection::count('id', 'sum'))->
                         add(Expression::in('creditor', SecurityManager::getUser()->getCreditors(true)->getList()))->
                         add(Expression::eq('status', CreditRequestCreditorStatus::TYPE_CONCIDERED))->
-                        getCustom('sum');
+                        getList();
+                
+                foreach($inWorkList as $creditorRequest) {
+                    if ($creditorRequest->getOffers()->getCount() == 0) {
+                        if (!isset($inWorkEmptyListCreditor[$creditorRequest->getCreditorId()])) {
+                            $inWorkEmptyListCreditor[$creditorRequest->getCreditorId()] = true;
+                        }
+                        $inWorkEmptyList[] = $creditorRequest;
+                    }
+                }
                 
                 $meetingIds = 
                     ArrayUtils::convertToPlainList(
@@ -54,7 +66,9 @@ class controlPanel extends baseFront implements UserController
             
                 $model->
                     set('incomeList', $incomeList)->
-                    set('inWorkCount', $inWorkCount)->
+                    set('inWorkList', $inWorkList)->
+                    set('inWorkEmptyLits', $inWorkEmptyList)->
+                    set('inWornEmptyListShowCreditors', count($inWorkEmptyListCreditor) > 1)->
                     set('meetingList', $meetingList);
                 
             }
