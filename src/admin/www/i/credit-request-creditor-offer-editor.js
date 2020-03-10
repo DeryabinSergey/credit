@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    
+    let cacheAddress = {};
+    
     $('#date').mask(
         'A0.B0.CD00',
         {
@@ -20,4 +23,22 @@ $(document).ready(function() {
             }
         }
     );
+    
+    $("#address").autocomplete({
+        minLength: 3,
+        source: function( request, response ) {
+            let term = request.term;
+            if ( term in cacheAddress ) {
+                response( cacheAddress[ term ] );
+                return;
+            }
+ 
+            $.getJSON("/ajax/address.json", request, function( data, status, xhr ) {
+                if (data.list) {
+                    cacheAddress[term] = data.list;
+                    response(data.list);
+                }
+            });
+        }
+    });
 });

@@ -11,7 +11,7 @@
     
     <h1 class="mb-5">Просмотр запроса</h1>
     
-    <form action="" method="POST" class="">
+    <form action="" method="POST" class="" autocomplete="off">
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" id="security-code" />
         
         <div class="form-group row align-items-center">
@@ -129,7 +129,7 @@
         <div class="form-group row align-items-center">
             <label for="address" class="col-12 col-sm-2 col-form-label col-form-label-lg">Адрес</label>
             <div class="col-12 col-sm-10 justify-content-between">
-                <input id="address" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('address') ? 'in' : '').'valid' : ''?>" name="address" value="<?=$form->getDisplayValue('address')?>" type="text">
+                <input id="address" autocomplete="off" class="form-control form-control-lg<?=$process ? ' is-'.($form->hasError('address') ? 'in' : '').'valid' : ''?>" name="address" value="<?=$form->getDisplayValue('address')?>" type="text">
             </div>
         </div>
         
