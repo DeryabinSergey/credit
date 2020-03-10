@@ -1,0 +1,7 @@
+<?php $partViewer->view('parts/header'); ?>
+<p style="font-size: 120%; margin-bottom: 1em;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
+
+<p style="font-size: 120%; margin-bottom: 1em;">Заемщик принял кредитное предложение. Необходимо <a href="<?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_MEETING, 'id' => $offer->getId(), 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-accept'), PATH_WEB_ADMIN)?>">связаться как можно скорее и назначить встречу</a>.
+    
+<p style="font-size: 120%; margin-top: 0.5em;">Удачной работы и хорошего дня!</p>
+<?php $partViewer->view('parts/footer'); ?>

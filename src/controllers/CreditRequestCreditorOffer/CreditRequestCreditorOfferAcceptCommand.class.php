@@ -38,11 +38,10 @@ class CreditRequestCreditorOfferAcceptCommand extends MakeCommand implements Sec
 
                 foreach($users as $user) {
                     if ($user->getEmail()) {
-                        Mail::create()->
-                            setTo($user->getEmail())->
-                            setFrom(DEFAULT_FROM)->
-                            setSubject('Заемщик принял кредитное предложение')->
-                            setText("Заемщик принял кредитное предложение. Необходимо связаться как можно скорее и назначить встречу.\r\n\r\nПосмотреть все заявки ожидающие назначения встречи: ".CommonUtils::makeUrl('main', array(), PATH_WEB_ADMIN))->
+                        MimeMailSender::create('Заемщик принял кредитное предложение - назначить встречу', 'creditRequestCreditorOfferAcceptHtml', 'creditRequestCreditorOfferAcceptText')->
+                            setTo($user->getEmail(), $user->getName())->
+                            set('offer', $subject)->
+                            set('user', $user)->
                             send();
                     }
                 }

@@ -1,0 +1,6 @@
+Рады приветствовать Вас, <?=$user->getName()?>!
+
+Заемщик принял кредитное предложение. Необходимо связаться как можно скорее и назначить встречу: <?=CommonUtils::makeUrl('creditRequestCreditorOfferEditor', array('action' => creditRequestCreditorOfferEditor::ACTION_MEETING, 'id' => $offer->getId(), 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-accept'), PATH_WEB_ADMIN)?>
+    
+
+<?php $partViewer->view('parts/footerText'); ?>
