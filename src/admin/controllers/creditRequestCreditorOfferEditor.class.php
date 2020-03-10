@@ -24,4 +24,9 @@ class creditRequestCreditorOfferEditor extends baseCreditRequestCreditorOfferEdi
         return $mav;
     }
     
+    protected function getDefaultReturnUrl()
+    {
+        return CommonUtils::makeUrl('main');
+    }
+    
 }
