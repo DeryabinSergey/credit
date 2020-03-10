@@ -11,8 +11,6 @@
 
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
         <h3>Запросы на кредит</h3>
-        <p><a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список запросов</a></p>
-        <p>Всего на сайте <?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?> на кредитование.</p>
         
         <? if (SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID)) { ?>
 
@@ -79,8 +77,17 @@
                         </table>
                     </div>
                 </div>
-            <? } ?>
+            <? } ?>           
         <? } ?>
+            
+        <div class="row flex-row mb-4">
+            <div class="col">
+                <h5 class="text-center">
+                    <a href="<?=CommonUtils::makeUrl('creditRequestList')?>">список&nbsp;всех&nbsp;запросов</a>
+                    <? if ($creditRequestNum) { ?>(<?=$creditRequestNum?> <?=RussianTextUtils::selectCaseForNumber($creditRequestNum, array('запрос', 'запроса', 'запросов'))?>)<? } ?>
+                </h5>
+            </div>
+        </div> 
         
         <hr class="my-5" />
     <? } ?>    
