@@ -74,11 +74,10 @@ class CreditRequestCreditorOfferCreditorAcceptCommand extends SaveCommand implem
 
                 foreach($users as $user) {
                     if ($user->getEmail()) {
-                        Mail::create()->
-                            setTo($user->getEmail())->
-                            setFrom(DEFAULT_FROM)->
-                            setSubject('Оформлен займ')->
-                            setText("По кредитной заявке состоялась сделка!\r\n\r\nПосмотреть Заявку: ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $subject->getRequest()->getRequest()->getId()), PATH_WEB_ADMIN))->
+                        MimeMailSender::create('Оформлен займ по заявке', 'creditRequestCreditorOfferAcceptedHtml', 'creditRequestCreditorOfferAcceptedText')->
+                            setTo($user->getEmail(), $user->getName())->
+                            set('offer', $subject)->
+                            set('user', $user)->
                             send();
                     }
                 }
