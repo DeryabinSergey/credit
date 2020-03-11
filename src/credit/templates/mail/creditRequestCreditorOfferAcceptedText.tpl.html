@@ -1,7 +1,7 @@
 Рады приветствовать Вас, <?=$user->getName()?>!
 
 
-По заявке <?=$offer->getRequest()->getRequest()->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getRequest()->getRequest()->getCreatedTime()->getMonth())?> от <?=$offer->getRequest()->getRequest()->getType()->getShortName()?> на сумму <?=number_format($offer->getRequest()->getRequest()->getSumm(), 0, '.', ' ').'руб.'?> с категорией залога <?=$offer->getRequest()->getRequest()->getCategory()->getName()?> оформлен займ: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $offer->getRequest()->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-user-success'), PATH_WEB_ADMIN)?>
+По заявке <?=$offer->getRequest()->getRequest()->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($offer->getRequest()->getRequest()->getCreatedTime()->getMonth())?> от <?=$offer->getRequest()->getRequest()->getType()->getShortName()?> на сумму <?=number_format($offer->getRequest()->getRequest()->getSumm(), 0, '.', ' ').'руб.'?> с категорией залога <?=$offer->getRequest()->getRequest()->getCategory()->getName()?> оформлен займ: <?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $offer->getRequest()->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-success'), PATH_WEB_ADMIN)?>
 
 
 Кредитная организация: <?=$offer->getRequest()->getCreditor()->getType()->getShortName()?> <?=$offer->getRequest()->getCreditor()->getName()?>

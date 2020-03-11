@@ -98,7 +98,7 @@
                     <thead>
                         <tr>
                             <th scope="col" class="align-middle">Дата</th>
-                            <th scope="col" class="align-middle">Кредитор</th>
+                            <? if ($inWornEmptyListShowCreditors) { ?><th scope="col" class="align-middle">Кредитор</th><? } ?>
                             <th scope="col" class="align-middle text-center">Информация и займе</th>
                         </tr>
                     </thead>
@@ -108,9 +108,7 @@
                         <td class="align-middle text-nowrap">
                             <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=ViewTextUtils::humanizeDate($item->getCreatedTime())?></a>
                         </td>
-                        <td class="align-middle">
-                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getCreditor()->getName())?></a>
-                        </td>
+                        <? if ($inWornEmptyListShowCreditors) { ?><td class="align-middle"><a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getCreditor()->getName())?></a></td><? } ?>
                         <td class="align-middle">
                             <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>" title="просмот запроса"><?=htmlspecialchars($item->getRequest()->getType()->getShortName())?> / <?=htmlspecialchars($item->getRequest()->getCategory()->getName())?> / <?=number_format($item->getRequest()->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
                         </td>
