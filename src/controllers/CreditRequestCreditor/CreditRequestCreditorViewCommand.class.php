@@ -49,14 +49,16 @@ class CreditRequestCreditorViewCommand implements SecurityCommand, EditorCommand
                             /**
                              * Отправка уведомления заемщику
                              */
-                            if ($meetingOffer->getRequest()->getCreditor()->getUser()->getEmail()) {
-                                Mail::create()->
-                                    setTo($meetingOffer->getRequest()->getRequest()->getUser()->getEmail())->
-                                    setFrom(DEFAULT_FROM)->
-                                    setSubject('Отменен визит в кредитную организацию')->
-                                    setText("По кредитной заявке отменена встреча на {$meetingOffer->getDate()->toFormatString('d.m')} ".sprintf('%02d:%02d', $meetingOffer->getTime()->getHour(), $meetingOffer->getTime()->getMinute()).". Посмотреть заявку: ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $meetingOffer->getRequest()->getRequest()->getId()), PATH_WEB_BASE))->
+                            if ($meetingOffer->getRequest()->getRequest()->getUser()->getEmail()) {
+                                MimeMailSender::create('Отменен визит в кредитную организацию', 'creditRequestCreditorMeetingCancelUserHtml', 'creditRequestCreditorMeetingCancelUserText')->
+                                    setTo($meetingOffer->getRequest()->getRequest()->getUser()->getEmail(), $meetingOffer->getRequest()->getRequest()->getUser()->getName())->
+                                    set('offer', $meetingOffer)->
+                                    set('user', $meetingOffer->getRequest()->getRequest()->getUser())->
                                     send();
                             }
+                            $link = CommonUtils::makeUrl('creditRequestEditor', array('id' => $meetingOffer->getRequest()->getRequest()->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'credit-offer-cancel'), PATH_WEB_BASE);
+                            $link = trim(file_get_contents("https://clck.ru/--?url=".urlencode($link)));
+                            SmsUtils::send("7{$meetingOffer->getRequest()->getRequest()->getUser()->getPhone()}", "По заявке от ".$meetingOffer->getRequest()->getRequest()->getCreatedTime()->getDay()." ".RussianTextUtils::getMonthInGenitiveCase($meetingOffer->getRequest()->getRequest()->getCreatedTime()->getMonth())." на ".number_format($meetingOffer->getRequest()->getRequest()->getSumm(), 0, '.', ' ')."руб. отменена встреча, подробнее: {$link}");
                             /**
                              * Отправка уведомления модератору -  пользователям с правами на публикацию заявлений на кредит
                              */
@@ -78,12 +80,15 @@ class CreditRequestCreditorViewCommand implements SecurityCommand, EditorCommand
 
                                 foreach($users as $user) {
                                     if ($user->getEmail()) {
-                                        Mail::create()->
-                                            setTo($user->getEmail())->
-                                            setFrom(DEFAULT_FROM)->
-                                            setSubject('Отказ в заявке с назначенной встречей')->
-                                            setText("Кредитная организация отклонила запрос с назначенной встречей на {$meetingOffer->getDate()->toFormatString('d.m')} ".sprintf('%02d:%02d', $meetingOffer->getTime()->getHour(), $meetingOffer->getTime()->getMinute()).".\r\n\r\nПосмотреть Заявку: ".CommonUtils::makeUrl('creditRequestEditor', array('action' => CommandContainer::ACTION_VIEW, 'id' => $meetingOffer->getRequest()->getRequest()->getId()), PATH_WEB_ADMIN))->
+                            
+                                        MimeMailSender::create('Отказ в заявке с назначенной встречей', 'creditRequestCreditorMeetingCancelModeratorHtml', 'creditRequestCreditorMeetingCancelModeratorText')->
+                                            setTo($user->getEmail(), $user->getName())->
+                                            set('offer', $meetingOffer)->
+                                            set('cancelUser', $subject->getRequest()->getUser()->getId() == SecurityManager::getUser()->getId())->
+                                            set('cancelCreditor', $subject->getCreditor()->getUser()->getId() == SecurityManager::getUser()->getId())->
+                                            set('user', $user)->
                                             send();
+                                        
                                     }
                                 }
                             }

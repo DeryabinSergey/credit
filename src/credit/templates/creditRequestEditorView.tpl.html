@@ -193,12 +193,12 @@
 
                 <div class="<?=$form->getValue('id')->getInvestSumm()?'':'mb-5 '?>d-flex justify-content-between">
                     <h4>Предложения инвестирования</h4>
-                    <a href="#investRequestCont" id="investRequestButton" class="btn btn-link"><?=$form->getValue('id')->getInvestSumm()?'изменить':'добавить'?></a>
+                    <a href="#investRequestCont" id="investRequestButton" class="btn btn-link"><?=$form->getValue('id')->getInvestSumm()?'изменить':'запросить'?></a>
                 </div>
                 <? if ($form->getValue('id')->getInvestSumm()) { ?>
                     <p class="mb-5">Ваш запрос на инвестиции по данной заявке <span class="font-weight-bold"><?=number_format($form->getValue('id')->getInvestSumm(), 0, '.', '&nbsp;').'&#8381;'?> на <?=$form->getValue('id')->getInvestPeriod()?> <?=RussianTextUtils::selectCaseForNumber($form->getValue('id')->getInvestPeriod(), array('месяц', 'месяца', 'месяцев'))?> с максимальной ставкой <?=$form->getValue('id')->getInvestPercents()?>% в месяц</span>.</p>
                 <? } ?>
-<? /*                    
+                
                 <? if ($form->getValue('id')->getOffers()->getList()) { ?>
                     <div class="row my-5">
                     <? foreach($form->getValue('id')->getOffers()->getList() as $item) { ?>
@@ -250,8 +250,6 @@
                 <? } elseif ($form->getValue('id')->getInvestSumm()) { ?>
                     <h5 class="my-5 text-center text-muted font-italic">еще не поступало предложений от инвесторов&hellip;</h5>
                 <? } ?>  
-                
-*/ ?>                
                 
             <? } ?>
         <? } ?>
