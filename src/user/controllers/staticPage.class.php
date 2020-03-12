@@ -7,7 +7,8 @@ class staticPage extends baseFront
             array(
                 'about' => 'Информация о портале',
                 'privacy-policy' => 'Политика обработки персональных данных',
-                'contacts' => 'Связаться с нами'
+                'contacts' => 'Связаться с нами',
+                'credit-pod-zalog-avto' => 'Кредит под залог авто'
             );
     
     protected $page = null;

@@ -10,6 +10,7 @@ class HTMLMetaManager extends Singleton
     protected $link = array();
     
     protected $title = "";
+    protected $description = "";
 
     /**
      * Позволяет добавить теги вида 
@@ -94,5 +95,17 @@ class HTMLMetaManager extends Singleton
     public function getTitle()
     {
     	return $this->title;
+    }
+    
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        
+        return $this;
+    }
+    
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

@@ -1,0 +1,72 @@
+<? 
+    Singleton::getInstance('HTMLMetaManager')->
+        setTitle('Кредит под залог авто')->
+        setDescription('Помогаем получить кредит под залог автомобиля или мотоцикла на выгодных условиях. Высокий процент одобрения, комфортные условия.');
+    $partViewer->view('parts/header'); 
+?>
+
+<main role="main" class="container flex-shrink-0">
+    
+<div class="jumbotron">
+    <div class="container">
+        <h1>Кредит под залог авто</h1>
+        <h4>Поможем быстро получить кредит под залог с минимальным пакетом документов</h4>
+        <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
+        <p class="text-center mb-0 d-lg-none"><a class="btn btn-info btn-lg mt-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a></p>
+    </div>
+</div>    
+    
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Быстро</h2>
+            <p>Как правило одобрение и получение денег происходит в течении дня</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Удобно</h2>
+            <p>Минимальный пакет документов и лояльные требования к заемщику</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Выгодно</h2>
+            <p>Вы сами выбираете предложение, которое больше подходит</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Доступно</h2>
+            <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
+            <hr class="d-sm-none" />
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Лояльно</h2>
+            <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <h2>Комфортно</h2>
+            <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
+        </div>
+    </div>  
+    <div class="row">
+        <div class="col-12 text-center">
+            <a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
+            <hr class="mb-4" />
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container">
+    <h2>Как это работает</h2>
+    <p>Вы размещаете заявку на кредит, указав информацию о себе, необходимую сумму и срок, а так же указываете какой залог предоставляете.</p>
+    <p>Ваша заявка попадает к нашим проверенным партнерам, таким образом Ваша одна заявка имеет высокие шансы на одобрение.</p>
+    <p>Партнеры проверив Ваши данные, возможно дополнительно уточнив недостающие данные принимают предварительное решение.</p>
+    <p>В случае предварительного решения и подходящего предложения Вы направляетесь в офис кредитной организации и если все указанные данные соответствуют - получаете деньги.</p>
+    
+    <p class="my-6 text-center"><a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a></p>
+</div>
+    
+</main>
+
+<? $partViewer->view('parts/pageFooter'); ?>
+
+<? $partViewer->view('parts/footer'); ?>
