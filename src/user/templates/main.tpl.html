@@ -1,63 +1,137 @@
 <? $partViewer->view('parts/header'); ?>
 
-<main role="main" class="container flex-shrink-0">
+<main role="main" class="flex-shrink-0" id="main-page">
     
-<div class="jumbotron">
-    <div class="container">
-        <h1>Заемщикам</h1>
-        <h4>Поможем быстро получить займ под залог с минимальным пакетом документов</h4>
-        <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
-        <p class="text-center mb-0 d-lg-none"><a class="btn btn-info btn-lg mt-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a></p>
-    </div>
-</div>    
+    <div class="jumbotron slide">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                    <h1>Заемщи&shy;кам</h1>
+                    <h4>Поможем быстро получить займ под залог с минимальным пакетом документов</h4>
+                    <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
+                    <a class="btn btn-slide btn-outline-warning d-block" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
+                </div>
+            </div>
+        </div>
+    </div>    
     
-<div class="container">
-    <div class="row">
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Быстро</h2>
-            <p>Как правило одобрение и получение денег происходит в течении дня</p>
-            <hr class="d-sm-none" />
-        </div>
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Удобно</h2>
-            <p>Минимальный пакет документов и лояльные требования к заемщику</p>
-            <hr class="d-sm-none" />
-        </div>
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Выгодно</h2>
-            <p>Вы сами выбираете предложение, которое больше подходит</p>
-            <hr class="d-sm-none" />
-        </div>
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Доступно</h2>
-            <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
-            <hr class="d-sm-none" />
-        </div>
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Лояльно</h2>
-            <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
-        </div>
-        <div class="col-12 col-sm-6 col-lg-4">
-            <h2>Комфортно</h2>
-            <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
-        </div>
-    </div>  
-    <div class="row">
-        <div class="col-12 text-center">
-            <a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
-            <hr class="mb-4" />
+    <div id="priem" class="container">
+        <div class="row priem-bg">
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem1.png" alt="быстро" /></div>
+                    <h2>Быстро</h2>
+                    <p>Как правило одобрение и получение денег происходит в течении дня</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem2.png" alt="Удобно" /></div>
+                    <h2>Удобно</h2>
+                    <p>Минимальный пакет документов и лояльные требования к заемщику</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div> 
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem3.png" alt="выгодно" /></div>
+                    <h2>Выгодно</h2>
+                    <p>Вы сами выбираете предложение, которое больше подходит</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem4.png" alt="доступно" /></div>
+                    <h2>Доступно</h2>
+                    <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+        
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem5.png" alt="лояльно"></div>
+                    <h2>Лояльно</h2>
+                    <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem"><img src="/i/images/priem6.png" alt="комфортно"></div>
+                    <h2>Комфортно</h2>
+                    <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
+                </div>
+            </div>
+        </div>  
+        
+        <div class="row">
+            <div class="col-12 text-center">
+                <a class="btn btn-priem btn-yellow btn-lg" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
+            </div>
         </div>
     </div>
-</div>
 
 <div id="about" class="container">
-    <h2>Как это работает</h2>
-    <p>Вы размещаете заявку на кредит, указав информацию о себе, необходимую сумму и срок, а так же указываете какой залог предоставляете.</p>
-    <p>Ваша заявка попадает к нашим проверенным партнерам, таким образом Ваша одна заявка имеет высокие шансы на одобрение.</p>
-    <p>Партнеры проверив Ваши данные, возможно дополнительно уточнив недостающие данные принимают предварительное решение.</p>
-    <p>В случае предварительного решения и подходящего предложения Вы направляетесь в офис кредитной организации и если все указанные данные соответствуют - получаете деньги.</p>
     
-    <p class="my-6 text-center"><a class="btn btn-info btn-lg my-4" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a></p>
+    <div class="question">Как это работает</div>
+
+    <div class="d-flex flex-column about-wrap row">
+        
+        <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center d-flex ab-1">
+            <div class="about-number"><span>1</span></div>
+            <div class="about-img"><img src="/i/images/about1.png"></div>
+            <div class="about-content">
+                Вы <b>размещаете заявку на кредит</b>, указав 
+                информацию о себе, необходимую сумму 
+                и срок, а так же указываете какой залог 
+                предоставляете.
+            </div>
+        </div>
+
+        <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-2">
+            <div class="about-number"><span>2</span></div>
+            <div class="about-img"><img src="/i/images/about2.png"></div>
+            <div class="about-content">
+                Ваша заявка попадает к нашим 
+                проверенным партнерам, таким образом 
+                Ваша одна заявка имеет 
+                <b>высокие шансы на одобрение. </b>
+            </div>
+        </div>
+
+        <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-3">
+            <div class="about-number"><span>3</span></div>
+            <div class="about-img"><img src="/i/images/about3.png"></div>
+            <div class="about-content">
+                Партнеры проверив Ваши данные, 
+                возможно дополнительно уточнив 
+                недостающие данные принимают 
+                предварительное решение.
+            </div>
+        </div>
+
+        <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-4">
+            <div class="about-number"><span>4</span></div>
+            <div class="about-img"><img src="/i/images/about4.png"></div>
+            <div class="about-content">
+                В случае предварительного решения и 
+                подходящего предложения Вы направляетесь 
+                в офис кредитной организации и если все 
+                указанные данные соответствуют - 
+                <b>получаете деньги. </b>
+            </div>
+        </div>
+
+        <a class="btn btn-about  btn-yellow btn-lg " href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
+
+    </div>    
+    
 </div>
     
 </main>

@@ -4,13 +4,13 @@
     <main role="main" class="container flex-shrink-0">  
     
         <div class="row flex-row my-4" id="requestList">
-            <div class="col-12 col-sm-9 col-md-10">
+            <div class="col-12 col-sm-8 col-md-9">
                 <h1 class="d-inline-block mr-5 mb-2">Мои заявки</h1>
                 <h5 class="d-inline-block mb-3 mb-sm-2">
                     <a href="<?=CommonUtils::makeUrl('controlPanel', $form->getValue('all') ? array() : array('all' => 1))?>"><?=$form->getValue('all') ? 'показать текущие' : 'показать все'?></a>
                 </h5>
             </div>
-            <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
+            <div class="col-12 col-sm-4 col-md-3 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
                 <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" class="btn btn-primary">подать заявку</a>
             </div>
         </div>    
