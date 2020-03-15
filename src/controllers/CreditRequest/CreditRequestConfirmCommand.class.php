@@ -34,6 +34,10 @@ class CreditRequestConfirmCommand implements EditorCommand
 
             if ($process && !$form->getErrors()) {
                 
+                if ($form->getValue('category')->isPledge() && !$form->getValue('text')) {
+                    $form->markMissing('text');
+                }
+                
                 if ($form->getValue('type')->getId() == SubjectType::TYPE_YUR) {
                     $form->get('birthDate')->dropValue();
                     $form->get('passport')->dropValue();
@@ -169,7 +173,7 @@ class CreditRequestConfirmCommand implements EditorCommand
         $form->add(Primitive::string('summ')->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", ""))->required());
         $form->add(Primitive::string('passport')->setAllowedPattern("/^\d{10}/is")->addImportFilter(Filter::pcre()->setExpression("/([^\d]+)/isu", "")));
         $form->get('name')->addImportFilter(Filter::textImport())->addDisplayFilter(Filter::htmlSpecialChars());
-        $form->get('text')->addImportFilter(Filter::textImport())->addImportFilter(Filter::pcre()->setExpression("/(\\r?\\n){2,}/isu", "\r\n"))->addDisplayFilter(Filter::htmlSpecialChars())->required();
+        $form->get('text')->addImportFilter(Filter::textImport())->addImportFilter(Filter::pcre()->setExpression("/(\\r?\\n){2,}/isu", "\r\n"))->addDisplayFilter(Filter::htmlSpecialChars());
         
         return $this;
     }

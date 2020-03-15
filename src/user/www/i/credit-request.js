@@ -61,6 +61,19 @@ $(document).ready(function() {
         select: function( event, ui ) { $("#name").val(ui.item.name); }        
     });   
     
+    $("#category").on("change", function() {
+        if ($("#category option:selected").data('pledgeRequired')) {
+            if ($("#text-row").is(":hidden")) {
+                $("#text-row").show("slide");
+            }
+        } else {
+            if (!$("#text-row").is(":hidden")) {
+                $("#text-row").hide("blind");
+                $("#text").val("");
+            }            
+        }
+    });
+    
     $("#type").on("change", function() { 
         
         if ($(this).val() == 3) {

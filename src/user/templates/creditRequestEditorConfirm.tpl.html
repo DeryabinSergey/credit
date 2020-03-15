@@ -62,9 +62,9 @@
             <label for="category" class="col-12 col-sm-2 col-form-label col-form-label-lg">Вид залога</label>
             <div class="col-12 col-sm-10">
                 <select name="category" id="category" class="form-control form-control-lg">
-                    <option <?=$form->exportValue('category')?'':' selected="selected"'?>></option>
+                    <option <?=$form->exportValue('category')?'':' selected="selected"'?> data-pledge-required="0"></option>
                     <? foreach($categoryList as $category) { ?>
-                        <option value="<?=$category->getId()?>"<?=$form->exportValue('category') && $form->exportValue('category') == $category->getId()?' selected="selected"':''?>><?=htmlspecialchars($category->getName())?></option>
+                        <option value="<?=$category->getId()?>"<?=$form->exportValue('category') && $form->exportValue('category') == $category->getId()?' selected="selected"':''?> data-pledge-required="<?=intval($category->getPledge())?>"><?=htmlspecialchars($category->getName())?></option>
                     <? } ?>
                 </select>
                 <small class="form-text text-muted">К какой категории относится Ваш залог</small>
@@ -72,12 +72,15 @@
         </div>
         
         <div class="form-group row align-items-center">
-            <label for="summ" class="col-12 col-sm-2 col-form-label col-form-label-lg">Необходимая сумма</label>
-            <div class="col-12 col-sm-10 form-inline justify-content-between">
-                <div class="input-group">
-                    <input id="summ" class="form-control form-control-lg" name="summ" value="<?=$form->getDisplayValue('summ')?>" type="text">
-                    <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
+            <label for="summ" class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <div class="form-inline">
+                    <div class="input-group">
+                        <input id="summ" class="form-control form-control-lg" name="summ" value="<?=$form->getDisplayValue('summ')?>" type="text">
+                        <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
+                    </div>
                 </div>
+                <small class="form-text text-muted">Какая сумма Вам необходима</small>
             </div>
         </div>
         
@@ -113,7 +116,7 @@
             </div>
         </div>
         
-        <div class="form-group row align-items-start">
+        <div id="text-row" class="form-group row align-items-start" style="<?=!$process || !$form->getValue('category') instanceof Category || !$form->getValue('category')->isPledge() ? 'display: none;' : ''?>">
             <label for="text" class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
             <div class="col-12 col-sm-10 justify-content-between">
                 <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getDisplayValue('text')?></textarea>
