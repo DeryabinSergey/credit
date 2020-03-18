@@ -44,6 +44,7 @@ define('PATH_CONTROLLERS', PATH_SOURCE.'controllers'.DIRECTORY_SEPARATOR);
 define('PATH_CONTROLLER_COMMANDS', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR);
 define('PATH_TEMPLATES', PATH_SOURCE.'templates'.DIRECTORY_SEPARATOR);
 define('PATH_MAIL_TEMPLATES', PATH_TEMPLATES.'mail'.DIRECTORY_SEPARATOR);
+define('PATH_TELEGRAM_TEMPLATES', PATH_TEMPLATES.'telegram'.DIRECTORY_SEPARATOR);
 
 define('UPLOAD_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'user'.DIRECTORY_SEPARATOR.'www'.DIRECTORY_SEPARATOR.'u'.DIRECTORY_SEPARATOR);
 define('UPLOAD_URL', PATH_WEB_BASE . 'u' . DIRECTORY_SEPARATOR);
@@ -60,6 +61,9 @@ define('FONT_PATH', PATH_BASE.'src'.DIRECTORY_SEPARATOR.'misc'.DIRECTORY_SEPARAT
         
 define('GOOGLE_RECAPTCHA_OPEN', '6LduXMoUAAAAAFoYraxpvGeUdI_g-Uc5unE9Bq0k');
 define('GOOGLE_RECAPTCHA_CLOSED', '6LduXMoUAAAAADH7RjF8_2yJHbT5JTd8wgOOle8m');
+
+define('TELEGRAM_API', '965721135:AAGEjb0nX7WOt-jyQ3NWmrcM14Cw8Sh_9TU');
+define('TELEGRAM_BOT', 'FinResursBot');
 
 define('DEFAULT_EMAIL', 'noreply@finresurs.online');
 define('DEFAULT_MAILER', 'Финансовый Ресурс');
@@ -108,8 +112,10 @@ define('BUGLOVERS', 'deryabinsergey@gmail.com');
 
 // Расширение для файлов стилей
 define('EXT_CSS', '.css');
+// Расширение для шаблонов Telegram markdown разметки
+define('EXT_MARKDOWN', '.tpl');
 
-Cache::setPeer(PeclMemcached::create());
+Cache::setPeer(PeclMemcache::create());
 Cache::setDefaultWorker('CacheDaoWorker');
 //Cache::setDaoMap(array('CityDAO' => 'NullDaoWorker', 'CountryDAO' => 'NullDaoWorker'));
 

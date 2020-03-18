@@ -122,13 +122,26 @@ class CreditRequestConfirmCommand implements EditorCommand
                                 add(Expression::in('group', $groupsIds))->
                                 getList();
                         
+                        $telegram = TelegramSender::create('creditRequestNew')->set('request', $subject);
+                        
                         foreach($users as $user) {
+                            
                             if ($user->getEmail()) {
                                 MimeMailSender::create('Новая заявка на кредит', 'creditRequestNewHtml', 'creditRequestNewText')->
                                     setTo($user->getEmail(), $user->getName())->
                                     set('request', $subject)->
                                     set('user', $user)->
                                     send();
+                            }
+                            
+                            if ($user->getTelegramId() && $user->isTelegramBotEnabled()) {
+                                try {
+                                    $telegram->send($user->getTelegramId());
+                                } catch(BaseException $e) {
+                                    if (mb_stripos($e->getMessage(), "403 Forbidden")) {
+                                        $user->dao()->save($user->setTelegramBotEnabled(false));
+                                    }
+                                }
                             }
                         }
                     }

@@ -25,6 +25,8 @@
                         $confirm->setExpiredTime(Timestamp::makeNow()->modify("+20 minute"));
                     } elseif ($confirm->getType()->getId() == ConfirmType::TYPE_CREDIT_REQUEST) {
                         $confirm->setExpiredTime(Timestamp::create("+20 minute"));
+                    } elseif ($confirm->getType()->getId() == ConfirmType::TYPE_TELEGRAM_LINK) {
+                        $confirm->setExpiredTime(Timestamp::create("+20 minute"));
                     }
                 }
 

@@ -28,6 +28,8 @@
                 <property name="sid" type="String" size="64" required="false" />
                 <property name="securityType" type="SecurityType" relation="OneToOne" required="true" fetch="lazy" />
                 <property name="group" type="AclGroup" relation="OneToOne" required="false" fetch="lazy" />
+                <property name="telegramId" type="BigInteger" required="false" />
+                <property name="telegramBotEnabled" type="Boolean" required="true" default="false" />
                 <property name="clones" type="User" relation="ManyToMany" />
                 <property name="creditors" type="Creditor" relation="OneToMany" />
             </properties>
