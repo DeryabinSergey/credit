@@ -2,18 +2,7 @@
 
 @font-face { font-family: 'Bender'; src: url('Bender-Light.eot'); src: local('Bender Light'), local('Bender-Light'), url('Bender-Light.eot?#iefix') format('embedded-opentype'), url('Bender-Light.woff2') format('woff2'), url('Bender-Light.woff') format('woff'), url('Bender-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; }
 @font-face { font-family: 'Bender'; src: url('Bender-LightItalic.eot'); src: local('Bender Light Italic'), local('Bender-LightItalic'), url('Bender-LightItalic.eot?#iefix') format('embedded-opentype'), url('Bender-LightItalic.woff2') format('woff2'), url('Bender-LightItalic.woff') format('woff'), url('Bender-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; }
-
-@font-face {
-    font-family: 'Bender';
-    src: url('Bender-Bold.eot');
-    src: local('Bender Bold'), local('Bender-Bold'),
-        url('Bender-Bold.eot?#iefix') format('embedded-opentype'),
-        url('Bender-Bold.woff2') format('woff2'),
-        url('Bender-Bold.woff') format('woff'),
-        url('Bender-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
+@font-face { font-family: 'Bender'; src: url('Bender-Bold.eot'); src: local('Bender Bold'), local('Bender-Bold'), url('Bender-Bold.eot?#iefix') format('embedded-opentype'), url('Bender-Bold.woff2') format('woff2'), url('Bender-Bold.woff') format('woff'), url('Bender-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
 
 @font-face {
     font-family: 'Bender';
@@ -215,6 +204,23 @@ html {
 
             }            
             
+            .credit-request-form {
+                
+                border-radius: 25px; background-color: #fff; box-shadow: 0px 0px 32px 0px rgba(151, 145, 177, 0.35); padding-bottom: 2rem; padding-top: 2rem;        
+
+                @include media-breakpoint-down(md) {
+                    
+                    margin-top: -1.1rem;
+                    border-radius: 0; 
+                    
+                
+                }
+
+                @include media-breakpoint-down(xs) {
+                    
+                
+                }                 
+            }
         }
         
         main#main-page { padding-top: 60px; }
