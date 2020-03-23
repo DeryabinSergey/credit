@@ -1,4 +1,7 @@
-<? $partViewer->view('parts/header'); ?>
+<? 
+    Singleton::getInstance('HTMLMetaManager')->setDescription('Оформите заявку на кредит наличными под залог и получите предложения от различных банков и микрофинансовых организаций.');
+    $partViewer->view('parts/header');
+?>
 
 <main role="main" class="flex-shrink-0" id="main-page">
     

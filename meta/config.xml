@@ -14,6 +14,7 @@
                 <identifier />
                 <property name="notify" type="Boolean" required="true" default="false" />
                 <property name="expired" type="Timestamp" required="false" />
+                <property name="lastId" type="BigInteger" required="false" />
             </properties>
             <pattern name="StraightMapping" />
         </class>

@@ -11,7 +11,7 @@
     <meta name="title" content="<?=Singleton::getInstance('HTMLMetaManager')->getTitle()?>" />
     <? if (Singleton::getInstance('HTMLMetaManager')->getDescription()) { ?>
         <meta name="description" content="<?=Singleton::getInstance('HTMLMetaManager')->getDescription()?>" />
-        <description><?=Singleton::getInstance('HTMLMetaManager')->getDescription()?></description>
+        <? /* <description><?=Singleton::getInstance('HTMLMetaManager')->getDescription()?></description> */ ?>
     <? } ?>
     <title><?=Singleton::getInstance('HTMLMetaManager')->getTitle()?></title>
 
