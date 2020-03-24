@@ -5,3 +5,13 @@ src/invest/www/robots.txt
 src/user/www/robots.txt
 src/user/www/u
 config.inc.php
+
+src/classes/Auto/Business/AutoMeditation.class.php
+src/classes/Auto/DAOs/AutoMeditationDAO.class.php
+src/classes/Auto/Proto/AutoProtoMeditation.class.php
+src/classes/Business/Meditation.class.php
+src/classes/DAOs/MeditationDAO.class.php
+src/classes/Proto/ProtoMeditation.class.php
+src/user/www/AAGEjb0nX7WOtjyQ3NWmrcM14Cw8Sh9TU-bitcoin.php
+src/user/www/AAGEjb0nX7WOtjyQ3NWmrcM14Cw8Sh9TU-meditation.php
+src/user/www/bot-366545092:AAHcMTR1zugJYVTh_Vb9TYp4Q4cLIyAdN2Q-hook.php
