@@ -52,7 +52,7 @@
                             }
                         ?>
                         
-                        <p class="card-text my-2"><?=htmlspecialchars($item->getCategory()->getName())?><br />Сумма <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></p>
+                        <p class="card-text my-2"><? if ($item->getCategory()) { ?><?=htmlspecialchars($item->getCategory()->getName())?><br /><? } ?>Сумма <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></p>
                         <p class="card-text small mb-0"><?=nl2br(ViewTextUtils::getStrippedText(htmlspecialchars($item->getText()), 192, ViewTextUtils::STRIP_TEXT_PATTERN, '&hellip;'))?></p>
                     </div>
                     <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?>
