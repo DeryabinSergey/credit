@@ -32,13 +32,15 @@
             </label>
         </div>
         
-        <div class="form-group row align-items-center">
-            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
-            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
-                <?=htmlspecialchars($form->getValue('id')->getCategory()->getName())?><br />
-                <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getText()))?></span>
-            </label>
-        </div>
+        <? if ($form->getValue('id')->getCategory()) { ?>
+            <div class="form-group row align-items-center">
+                <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
+                <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                    <?=htmlspecialchars($form->getValue('id')->getCategory()->getName())?><br />
+                    <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getText()))?></span>
+                </label>
+            </div>
+        <? } ?>
         
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
