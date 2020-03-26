@@ -65,19 +65,28 @@
 
 </div>
 
-    <? if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false) { ?>
-<!-- Global site tag (gtag.js) - Google Ads: 1035212079 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1035212079"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<? if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false) { ?>
+    <!-- Global site tag (gtag.js) - Google Ads: 1035212079 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1035212079"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-1035212079');
+    </script>    
+    
+    <script src="//code-ya.jivosite.com/widget/ESXHK4Rrdl" async></script>
+    <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym"); ym(58973422, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); </script> <noscript><div><img src="https://mc.yandex.ru/watch/58973422" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+<? } ?>
 
-  gtag('config', 'AW-1035212079');
-</script>    
-        <script src="//code-ya.jivosite.com/widget/ESXHK4Rrdl" async></script>
-        <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym"); ym(58973422, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); </script> <noscript><div><img src="https://mc.yandex.ru/watch/58973422" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
-    <? } ?>
+<? if (Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()) { ?>
+<script type="text/javascript">
+$(function () {
+    <?=Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()?>
+    
+});
+</script>
+<? } ?>
 
 </body>
 </html>
