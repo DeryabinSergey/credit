@@ -73,7 +73,7 @@
                     </td>
                     <td class="align-middle">
                         <?=$item->isDeleted()?'<del>':''?>
-                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>"><?=htmlspecialchars($item->getName())?> / <?=htmlspecialchars($item->getCategory()->getName())?> / <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
+                            <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_VIEW, 'id' => $item->getId(), 'return' => $curl))?>"><?=htmlspecialchars($item->getName())?><? if ($item->getCategory()) { ?> / <?=htmlspecialchars($item->getCategory()->getName())?><? } ?> / <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></a>
                             <? if ($item->getCreditorOffers()) { ?>
                                 <br /><i class="fas fa-hand-holding-usd"></i> <?=count($item->getCreditorOffers())?> <?=RussianTextUtils::selectCaseForNumber(count($item->getCreditorOffers()), array('предложение', 'предложения', 'предложений'))?>
                             <? } ?>                            
