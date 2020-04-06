@@ -37,10 +37,12 @@ class ajaxCreditRequestCode extends baseAjax
             if (Timestamp::compare($codeExists->getCreatedTime(), Timestamp::create("-1 minute")) == -1) {
                 $codeExists->dao()->save($codeExists->setCode(random_int(1, 9999))->setCreatedTime(Timestamp::makeNow())->setTry(0));
                 SmsUtils::send("7{$form->getValue('phone')}", sprintf("Код подтверждения для оформления заявки на кредит: %04d", $codeExists->getCode()));
-                $model->set('success', true);
+                //$model->set('success', true);
             } else {
-                $form->markCustom('errorFlag', self::ERROR_MIN_TIME);
+                //$form->markCustom('errorFlag', self::ERROR_MIN_TIME);
             }
+            /** Если время не прошло - сообщение что код все равно отправлен, иначе тупят **/
+            $model->set('success', true);
         } else {
             $codeExists = 
                 Confirm::dao()->add(
