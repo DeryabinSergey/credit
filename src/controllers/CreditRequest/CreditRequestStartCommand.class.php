@@ -103,7 +103,7 @@ class CreditRequestStartCommand implements EditorCommand
                     $form->markCustom('birthDate', self::ERROR_YONG);
                 }
                 
-                if (!$form->getErrors()) {
+                if (!$form->getErrors() && (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false)) {
                     $req = json_encode(array($form->getValue('passport')));
                     $head = "Content-Type: application/json\r\nAccept: application/json\r\nAuthorization: Token ".Constants::DADATA_TOKEN."\r\nX-Secret: ".Constants::DADATA_SECRET . PHP_EOL;
                     try {
