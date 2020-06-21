@@ -6,6 +6,17 @@
         addWrongLabel('credentials', 'мы не смогли найти учетную запись с введенными параметрами')->
         addWrongLabel('response', 'защита от автоматических регистраций не пройдена')->
         addMissingLabel('credentials', 'введите email или телефон указанный при регистрации');
+
+$key = GOOGLE_RECAPTCHA_OPEN;
+Singleton::getInstance('HTMLMetaManager')->appendFooterJavascript(<<<JS
+    grecaptcha.ready(function() {
+	if (document.getElementById('google-response')) {
+	    grecaptcha.execute('{$key}', {action: 'recovery'}).then(function(token) {
+		document.getElementById('google-response').value = token;
+	    });
+	}
+    });
+JS);
 ?>
 
 <!-- Begin page content -->
@@ -74,14 +85,6 @@
     </div>
     
 </main>
-    
-<script>
-grecaptcha.ready(function() {
-    grecaptcha.execute('<?=GOOGLE_RECAPTCHA_OPEN?>', {action: 'recovery'}).then(function(token) {
-        document.getElementById('google-response').value = token;
-    });
-});
-</script>
 
 <? $partViewer->view('parts/pageFooter'); ?>
 

@@ -115,15 +115,20 @@ define('EXT_CSS', '.css');
 // Расширение для шаблонов Telegram markdown разметки
 define('EXT_MARKDOWN', '.tpl');
 
-Cache::setPeer(PeclMemcache::create());
+Cache::setPeer(WatermarkedPeer::create(PeclMemcache::create(), 'front'));
 Cache::setDefaultWorker('CacheDaoWorker');
 //Cache::setDaoMap(array('CityDAO' => 'NullDaoWorker', 'CountryDAO' => 'NullDaoWorker'));
 
 //PeclMemcached::create()->clean();
 
-session_name('credit');
+session_name('fcredit');
 session_set_cookie_params(0, '/', COOKIE_DOMAIN);
 
 ini_set('sendmail_from', 'info@finresurs.online');
 
 Session::start();
+
+if (file_exists(PATH_BASE.'config-asset.inc.php')) {
+    include_once PATH_BASE.'config-asset.inc.php';
+}
+defined('ASSETS_HASH') || define('ASSETS_HASH', 'v='.Timestamp::create('2020-01-01')->toStamp());

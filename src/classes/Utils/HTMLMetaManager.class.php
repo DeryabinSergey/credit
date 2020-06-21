@@ -11,6 +11,8 @@ class HTMLMetaManager extends Singleton
     
     protected $title = "";
     protected $description = "";
+    
+    protected $footerJavaScript = "";
 
     /**
      * Позволяет добавить теги вида 
@@ -44,14 +46,9 @@ class HTMLMetaManager extends Singleton
         return $this->link;
     }
 
-    public function appenJavaScript($url)
-    {
-        return $this->appendJavaScript($url);
-    }
-
     public function appendJavaScript($url)
     {
-        $this->javaScript[] = $url;
+        $this->javaScript[] = $url . (mb_stripos($url, "?") === false ? "?" : "&") . ASSETS_HASH;
 
         return $this;
     }
@@ -107,5 +104,15 @@ class HTMLMetaManager extends Singleton
     public function getDescription()
     {
         return $this->description;
+    }
+    
+    public function appendFooterJavaScript($code)
+    {
+        $this->footerJavaScript = ($this->footerJavaScript ? "\r\n\r\n" : "") . $code;
+    }
+    
+    public function getFooterJavaScript()
+    {
+        return $this->footerJavaScript;
     }
 }

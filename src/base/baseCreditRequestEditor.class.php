@@ -48,7 +48,7 @@ class baseCreditRequestEditor extends CommandContainer
         if ($this->isDisplayView($mav) && $mav->getView() == self::COMMAND_SUCCEEDED) {
             if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_START) {
                 $mav->
-                    setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_CONFIRM, 'return' => $this->getEncodedCurrentUrl($request)))))->
+                    setView(RedirectView::create(CommonUtils::makeUrl('controlPanel', array('added' => 1))."#requestList"))->
                     getModel()->drop('id');
             }
             if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_CONFIRM) {
@@ -60,14 +60,14 @@ class baseCreditRequestEditor extends CommandContainer
             if ($mav->getView() instanceof RedirectView) {
                 $this->dropSecuritySessionVar($request);
             }
-        } else {
+        } /* else {
             if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_START && SecurityManager::isAuth()) {
                 $mav->
                     setView(RedirectView::create(CommonUtils::makeUrl(get_class($this), array('action' => self::ACTION_CONFIRM, 'return' => $this->getEncodedCurrentUrl($request)))))->
                     getModel()->drop('id');
             }
             
-        }
+        } */
         
         if ($this->isDisplayView($mav) && $mav->getView() != self::COMMAND_SUCCEEDED) {
             
@@ -80,20 +80,7 @@ class baseCreditRequestEditor extends CommandContainer
             Singleton::getInstance('HTMLMetaManager')->                      
                 appendJavaScript('/i/jquery.mask.min.js')->                    
                 appendJavaScript('/i/credit-request.js')->
-                
                 setTitle('Заявка на кредит');
-            
-            if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_START))) {
-                Singleton::getInstance('HTMLMetaManager')->
-                    appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
-            }
-            
-
-            if ($this->getForm()->{$this->getActionMethod()}('action') == self::ACTION_CONFIRM) {
-            
-                Singleton::getInstance('HTMLMetaManager');
-                
-            }
             
 
             if (in_array($this->getForm()->{$this->getActionMethod()}('action'), array(self::ACTION_CONFIRM, self::ACTION_VIEW))) {

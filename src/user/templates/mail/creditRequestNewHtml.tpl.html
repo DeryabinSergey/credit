@@ -1,7 +1,7 @@
 <?php $partViewer->view('parts/header'); ?>
 <p style="font-size: 120%; margin-bottom: 1em;">Рады приветствовать Вас, <?=$user->getName()?>!</p>
 
-<p style="font-size: 120%; margin-bottom: 1em;">Новая <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $request->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-request'), PATH_WEB_ADMIN)?>" target="_blank" title="перейти к заявке">заявка на кредит</a> от <?=$request->getType()->getShortName()?> на сумму <?=number_format($request->getSumm(), 0, '.', '&nbsp;').'&#8381;'?> с категорией залога <?=$request->getCategory()->getName()?>.</p>
+<p style="font-size: 120%; margin-bottom: 1em;">Новая <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $request->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-request'), PATH_WEB_ADMIN)?>" target="_blank" title="перейти к заявке">заявка на кредит</a> на сумму <?=number_format($request->getSumm(), 0, '.', '&nbsp;').'&#8381;'?>.</p>
 
 <p style="font-size: 120%; margin-bottom: 1em;"><a href="<?=CommonUtils::makeUrl('creditRequestList', array('status' => array(CreditRequestStatus::TYPE_INCOME), 'delete' => -1, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'new-request'), PATH_WEB_ADMIN)?>" target="_blank" title="перейти к списку заявок">Посмотреть все поступившие заявки ожидающие обработки</a></p>
 

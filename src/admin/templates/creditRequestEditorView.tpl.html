@@ -10,6 +10,12 @@
             $form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_INCOME && SecurityManager::isAllowedAction(AclAction::PUBLISH_ACTION, AclContext::CREDIT_REQUEST_ID) ||
             $form->getValue('id')->getStatus()->getId() == CreditRequestStatus::TYPE_CONCIDERED && SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::CREDIT_REQUEST_ID)
         );
+
+    if ($form->exists('category')) { 
+        $form->
+            addWrongLabel('category', 'вид залога указан неверно')->
+            addMissingLabel('category', 'вид залога не указан');
+    }
 ?>
 
 <!-- Begin page content -->
@@ -18,6 +24,12 @@
     <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
     
     <h1 class="mb-5">Просмотр запроса</h1>
+    
+    <? if ($process && $form->getTextualErrors()) { ?>
+        <div id="alert-block" class="alert alert-danger" role="alert">
+            <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+        </div>
+    <? } ?>
     
     <form action="" method="POST" class="">
         <input type="hidden" name="id" value="<?=$form->getValue('id')->getId()?>" id="object-id" />
@@ -41,13 +53,27 @@
             </label>
         </div>
         
-        <div class="form-group row align-items-center">
-            <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
-            <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
-                <?=htmlspecialchars($form->getValue('id')->getCategory()->getName())?><br />
-                <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getText()))?></span>
-            </label>
-        </div>
+        <? if ($form->exists('category')) { ?>
+            <div class="form-group row align-items-center">
+                <label for="category" class="col-12 col-sm-2 col-form-label col-form-label-lg">Вид залога</label>
+                <div class="col-12 col-sm-10">
+                    <select name="category" id="category" class="form-control form-control-lg">
+                        <option <?=$form->exportValue('category')?'':' selected="selected"'?>></option>
+                        <? foreach($categoryList as $category) { ?>
+                            <option value="<?=$category->getId()?>"<?=$form->exportValue('category') && $form->exportValue('category') == $category->getId()?' selected="selected"':''?> data-description="<?=htmlspecialchars('<p class="card-text">'.preg_replace("/([\r\n]+)/isu", "</p><p class=\"card-text\">", $category->getText()).'</p>')?>"><?=htmlspecialchars($category->getName())?></option>
+                        <? } ?>
+                    </select>
+                </div>
+            </div>
+        <? } elseif ($form->getValue('id')->getCategory()) { ?>
+            <div class="form-group row align-items-center">
+                <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Залог</label>
+                <label class="col-12 col-sm-10 col-form-label col-form-label-lg font-weight-bold">
+                    <?=htmlspecialchars($form->getValue('id')->getCategory()->getName())?><br />
+                    <span class="small"><?=nl2br(htmlspecialchars($form->getValue('id')->getText()))?></span>
+                </label>
+            </div>
+        <? } ?>
         
         <div class="form-group row align-items-center">
             <label class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
@@ -169,10 +195,12 @@
                     <h4 class="card-title">Проверить заемщика</h4>
                     <? if (!$form->getValue('id')->getType()->isYur()) { ?><p class="card-text">Проверить паспорт заемщика на действительность на сайте <a href="http://xn--b1afk4ade4e.xn--b1ab2a0a.xn--b1aew.xn--p1ai/info-service.htm?sid=2000" target="_blank">МВД</a> (обновляется ежедневно)</p><? } ?>
                     <? if (!$form->getValue('id')->getType()->isFiz()) { ?><p class="card-text">Проверить что ИП или ООО действующее и не в статусе ликвидации в выписке <a href="https://egrul.nalog.ru/index.html" target="_blank">налоговой</a></p><? } ?>
-                    <? if ($form->getValue('id')->getCategory()->getText()) { ?>
-                        <h4 class="card-title">Уточнить о залоге</h4>
-                        <p class="card-text"><?=preg_replace("/([\r\n]+)/isu", "</p><p class=\"card-text\">", $form->getValue('id')->getCategory()->getText())?></p>
-                    <? } ?>
+                    <h4 class="card-title">Уточнить о залоге</h4>
+                    <div id="description-container">
+                        <? if ($form->getValue('id')->getCategory() instanceof Category && $form->getValue('id')->getCategory()->getText()) { ?>
+                            <p class="card-text"><?=preg_replace("/([\r\n]+)/isu", "</p><p class=\"card-text\">", $form->getValue('id')->getCategory()->getText())?></p>
+                        <? } ?>
+                    </div>
                 </div>
             </div>
         

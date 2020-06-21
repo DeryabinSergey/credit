@@ -35,7 +35,7 @@
                 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
 
                 <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
-                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <!-- element will get class pswp__preloader- -active when preloader is running -->
                 <div class="pswp__preloader">
                     <div class="pswp__preloader__icn">
                       <div class="pswp__preloader__cut">
@@ -64,20 +64,63 @@
     </div>
 
 </div>
+    <!-- Bootstrap core CSS -->
+    <link href="/i/main.min.css?<?=ASSETS_HASH?>" rel="stylesheet">
 
-    <? if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false) { ?>
-<!-- Global site tag (gtag.js) - Google Ads: 1035212079 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1035212079"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js?<?=ASSETS_HASH?>" crossorigin="anonymous"></script>
+    <script src="/i/bootstrap.bundle.min.js?<?=ASSETS_HASH?>"></script>
+    
+    <script src="/i/jquery-ui.min.js?<?=ASSETS_HASH?>"></script>
+    <link rel="stylesheet" href="/i/jquery-ui.min.css?<?=ASSETS_HASH?>" type="text/css" />
 
-  gtag('config', 'AW-1035212079');
-</script>    
-        <script src="//code-ya.jivosite.com/widget/ESXHK4Rrdl" async></script>
-        <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym"); ym(58973422, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); </script> <noscript><div><img src="https://mc.yandex.ru/watch/58973422" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+    <script src="/i/file-upload/jquery.iframe-transport.js?<?=ASSETS_HASH?>"></script>
+    <script src="/i/file-upload/jquery.fileupload.js?<?=ASSETS_HASH?>"></script>
+    
+    <script src="/i/photoswipe.min.js?<?=ASSETS_HASH?>"></script>
+    <script src="/i/photoswipe-ui-default.min.js?<?=ASSETS_HASH?>"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.12/css/bootstrap-select.min.css" integrity="sha256-l3FykDBm9+58ZcJJtzcFvWjBZNJO40HmvebhpHXEhC0=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.12/js/bootstrap-select.min.js" integrity="sha256-+o/X+QCcfTkES5MroTdNL5zrLNGb3i4dYdWPWuq6whY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.12/js/i18n/defaults-ru_RU.min.js" integrity="sha256-IylVxjD4l0kmppHSTNv4H5aZdeG05YQNN8Mz/Z2jJFM=" crossorigin="anonymous"></script>
+    
+    <script src="/i/global.js?<?=ASSETS_HASH?>"></script>
+    
+    <? foreach(Singleton::getInstance('HTMLMetaManager')->getStyleList() as $styleUrl) { ?>
+        <link rel="stylesheet" href="<?=$styleUrl?>?<?=ASSETS_HASH?>" type="text/css" />
     <? } ?>
+    
+    <? foreach(Singleton::getInstance('HTMLMetaManager')->getJavaScriptList() as $scriptUrl) { ?>
+        <? if (mb_stripos($scriptUrl, 'jquery-ajaxtransport-xdomainrequest') !== false) { ?>
+            <!--[if lt IE 10]>
+                <script src="<?=$scriptUrl?>"></script>
+            <![endif]-->
+        <? } else { ?>
+            <script src="<?=$scriptUrl?>"></script>
+        <? } ?>
+    <? } ?> 
+    <script src="/i/modernizr-webp.js?<?=ASSETS_HASH?>"></script>
+<? if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false) { ?>
+    <!-- Global site tag (gtag.js) - Google Ads: 1035212079 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1035212079"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-1035212079');
+    </script>    
+    
+    <script src="//code-ya.jivosite.com/widget/ESXHK4Rrdl" async></script>
+    <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym"); ym(58973422, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); </script> <noscript><div><img src="https://mc.yandex.ru/watch/58973422" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+<? } ?>
+
+<? if (Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()) { ?>
+<script>
+$(function () {
+    <?=Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()?>
+    
+});
+</script>
+<? } ?>
 
 </body>
 </html>

@@ -1,16 +1,44 @@
 <? 
     Singleton::getInstance('HTMLMetaManager')->setDescription('Оформление заявки на кредит. Первые предложения уже в течении часа!');
+    if ($form->exists('response')) {
+        Singleton::getInstance('HTMLMetaManager')->appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
+    }
     $partViewer->view('parts/header');
 
+    if ($form->exists('phone')) { 
+        $form->
+            addWrongLabel('phone', 'номер телефона указан неверно')->
+            addWrongLabel('code', 'код подтверждения телефона указан неверно')->
+            addMissingLabel('phone', 'номер телефона не указан')->
+            addMissingLabel('code', 'код подтверждения телефона не указан')->
+            addCustomLabel('phone', CreditRequestStartCommand::ERROR_BAN, 'учетная запись заблокирована')->
+            addWrongLabel('response', 'защита от автоматических регистраций не пройдена')->
+            addWrongLabel('accept', 'для подачи заявления необходимо согласиться с нашей <a href="'.PATH_WEB_BASE.'static/privacy-policy.html" target="_blank" class="alert-link">политикой обработки персональных данных</a>')->
+            addCustomLabel('code', CreditRequestStartCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия')->
+            addCustomLabel('code', CreditRequestStartCommand::ERROR_AUTH_ENABLED, 'для полноценного использования сайта необходимо включить поддержку <code>Cookie</code> в настройках Вашего браузера');
+    }
+    
     $form->
-        addWrongLabel('phone', 'номер телефона указан неверно')->
-        addWrongLabel('code', 'код подтверждения телефона указан неверно')->
-        addMissingLabel('phone', 'номер телефона не указан')->
-        addMissingLabel('code', 'код подтверждения телефона не указан')->
-        addWrongLabel('response', 'защита от автоматических регистраций не пройдена')->
-        addWrongLabel('accept', 'для подачи заявления необходимо согласиться с нашей <a href="'.PATH_WEB_BASE.'static/privacy-policy.html" target="_blank" class="alert-link">политикой обработки персональных данных</a>')->
-        addCustomLabel('code', CreditRequestStartCommand::ERROR_EXPIRED, 'код подтверждения не найден, возможно истек его срок действия')->
-        addCustomLabel('code', CreditRequestStartCommand::ERROR_AUTH_ENABLED, 'для полноценного использования сайта необходимо включить поддержку <code>Cookie</code> в настройках Вашего браузера');
+        addWrongLabel('summ', 'необходимая сумма указана неверно')->
+        addMissingLabel('summ', 'необходимая сумма не указана')->
+        addMissingLabel('name', 'ФИО не указаны')->
+        addWrongLabel('birthDate', 'дата рождения указана неверно')->
+        addMissingLabel('birthDate', 'дата рождения не указана')->
+        addCustomLabel('birthDate', CreditRequestStartCommand::ERROR_YONG, 'мы не рассматриваем заявки от лиц моложе 18 лет')->
+        addWrongLabel('passport', 'данные паспорта указаны неверно')->
+        addMissingLabel('passport', 'данные паспорта не указаны')->
+        addCustomLabel('passport', CreditRequestStartCommand::ERROR_INVALID, 'данные паспорта не корректны или паспорт недействительный');
+
+$key = GOOGLE_RECAPTCHA_OPEN;
+Singleton::getInstance('HTMLMetaManager')->appendFooterJavascript(<<<JS
+    grecaptcha.ready(function() {
+	if (document.getElementById('google-response')) {
+	    grecaptcha.execute('{$key}', {action: 'requestStart'}).then(function(token) {
+		document.getElementById('google-response').value = token;
+	    });
+	}
+    });
+JS);
 ?>
 
 <!-- Begin page content -->
@@ -28,32 +56,83 @@
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
         <input type="hidden" name="response" value="" id="google-response" />
         
-        <div class="form-group row">
-            <label for="phone" class="col-12 col-sm-2 col-form-label col-form-label-lg">Телефон</label>
-            <div class="col-12 col-sm-10 form-row align-items-center">
-                <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text">+7</span></div>
-                    <input id="phone" class="form-control form-control-lg " name="phone" value="<?=$form->getSafeValue('phone')?>" type="phone">
-                    <div class="input-group-append">
-                        <button type="button" id="code-button" class="btn btn-info btn-sm">отправить код</button>
+        <? if ($form->exists('phone')) { ?>
+            <div class="form-group row">
+                <label for="phone" class="col-12 col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+                <div class="col-12 col-sm-10 form-row align-items-center">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">+7</span></div>
+                        <input id="phone" class="form-control form-control-lg " name="phone" value="<?=$form->getSafeValue('phone')?>" type="phone">
+                        <div class="input-group-append">
+                            <button type="button" id="code-button" class="btn btn-info btn-sm">отправить код</button>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
+                <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
+                <div class="col-12 col-sm-auto">
+                    <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="<?=$process && !$form->getError('code') ? $form->getDisplayValue('code') : ''?>" type="number">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+                <div class="col-12 col-sm-10 offset-sm-2">
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="accept" name="accept"<?=$process && $form->getValue('accept')?' checked="checked"':''?> />
+                        <label class="form-check-label" for="accept">принимаю </label> <a href="/static/privacy-policy.html" target="_blank">политику обработки персональных данных</a>
+                    </div>
+                </div>
+            </div>
+        <? } elseif ($userExists instanceof User) { ?>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label col-form-label-lg">Телефон</label>
+                <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=preg_replace("/^(\d{3})(\d{3})(\d{2})(\d{2})$/isu", "+7&nbsp;(\\1)&nbsp;\\2-\\3-\\4", $userExists->getPhone())?></label>
+            </div>
+            <? if ($userExists->getEmail()) { ?>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label col-form-label-lg">Email</label>
+                    <label class="col-sm-10 col-form-label col-form-label-lg font-weight-bold"><?=htmlspecialchars($userExists->getEmail())?></label>
+                </div>
+            <? } ?>        
+        <? } ?>
+        
+        <div class="form-group row align-items-center">
+            <label for="summ" class="col-12 col-sm-2 col-form-label col-form-label-lg">Сумма</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <div class="form-inline">
+                    <div class="input-group">
+                        <input id="summ" class="form-control form-control-lg" name="summ" value="<?=$form->getDisplayValue('summ')?>" type="text">
+                        <div class="input-group-append"><span class="input-group-text" id="minSummPrepend">&#8381;</span></div>
+                    </div>
+                </div>
+                <small class="form-text text-muted">Какая сумма Вам необходима</small>
+            </div>
+        </div>
+        
+        <div id="name-row" class="form-group row align-items-center">
+            <label id="name-title" for="name" class="col-sm-2 col-form-label col-form-label-lg">ФИО</label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control form-control-lg" name="name" value="<?=$form->getDisplayValue('name')?>" type="text">
+                <small class="form-text text-muted" id="name-description">Укажите ФИО полностью как в паспорте</small>
+            </div>
+        </div>
+        
+        <div id="birthDate-row" class="form-group row align-items-center">
+            <label for="birthDate" class="col-12 col-sm-2 col-form-label col-form-label-lg">Дата рождения</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <div class="input-group">
+                    <input id="birthDate" class="form-control form-control-lg" name="birthDate" value="<?=$form->getDisplayValue('birthDate') instanceof Timestamp ? $form->getDisplayValue('birthDate')->toFormatString('d.m.Y') : ''?>" type="text">
+                    <div class="input-group-append"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div>
                 </div>
             </div>
         </div>
         
-        <div id="code-block" class="form-group row"<?=$process?'':' style="display: none;"'?>>
-            <label for="code" class="col-12 col-sm-2 col-form-label col-form-label-lg">Код SMS</label>
-            <div class="col-12 col-sm-auto">
-                <input id="code" class="form-control form-control-lg" size="4" maxlen="4" name="code" value="<?=$process && !$form->getError('code') ? $form->getDisplayValue('code') : ''?>" type="number">
-            </div>
-        </div>
-
-        <div class="form-group row ">
-            <div class="col-12 col-sm-10 offset-sm-2">
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="accept" name="accept"<?=$process && $form->getValue('accept')?' checked="checked"':''?> />
-                    <label class="form-check-label" for="accept">принимаю </label> <a href="/static/privacy-policy.html" target="_blank">политику обработки персональных данных</a>
-                </div>
+        <div id="passport-row" class="form-group row align-items-center">
+            <label for="passport" class="col-12 col-sm-2 col-form-label col-form-label-lg">Серия и номер паспорта</label>
+            <div class="col-12 col-sm-10 form-inline justify-content-between">
+                <input id="passport" class="form-control form-control-lg" name="passport" value="<?=$form->getDisplayValue('passport')?>" type="text">
             </div>
         </div>
         
@@ -68,19 +147,13 @@
     </div>
     
     <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2 text-muted mt-3">
-        <p>На данном шаге мы просим Вас <strong>указать и подтвердить номер телефона</strong>, что бы мы могли информировать Вас о поступивших предложениях.</p>
-        <p>На следующем шаге мы уточним у Вас <strong>требуемую сумму и информацию о залоге</strong>.</p>
+        <p>
+            На данном шаге мы просим Вас <strong>указать и подтвердить номер телефона</strong>, что бы мы могли информировать Вас о поступивших предложениях.
+            <strong>Необходимую сумму сумму и Ваши данные</strong> для первоначальной проверки.
+        </p>
         <p>На этом все, заявка перейдет к нашим партнерами, а Вы <strong>получите предложения займа</strong>, из которых сможете выбрать подходящее.</p>
     </div>
     
 </main>
-    
-<script>
-grecaptcha.ready(function() {
-    grecaptcha.execute('<?=GOOGLE_RECAPTCHA_OPEN?>', {action: 'registration'}).then(function(token) {
-        document.getElementById('google-response').value = token;
-    });
-});
-</script>
 
 <? $partViewer->view('parts/footer'); ?>

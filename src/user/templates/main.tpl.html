@@ -3,14 +3,14 @@
     $partViewer->view('parts/header');
 ?>
 
-<main role="main" class="flex-shrink-0" id="main-page">
+<main class="flex-shrink-0" id="main-page">
     
     <div class="jumbotron slide">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                    <h1>Заемщи&shy;кам</h1>
-                    <h4>Поможем быстро получить займ под залог с минимальным пакетом документов</h4>
+                    <h1>Кредит под залог авто</h1>
+                    <h4>Поможем быстро получить займ под залог авто с минимальным пакетом документов</h4>
                     <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
                     <a class="btn btn-slide btn-outline-warning d-block" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
                 </div>
@@ -23,7 +23,13 @@
             
             <div class="col-12 col-sm-6 col-lg-4">
                 <div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem1.png" alt="быстро" /></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem1.webp'>
+			    <source type='image/png' srcset='/i/images/priem1.png'>
+			    <img src='/i/images/priem1.png' alt='быстро'>
+			</picture>
+		    </div>
                     <h2>Быстро</h2>
                     <p>Как правило одобрение и получение денег происходит в течении дня</p>
                     <hr class="d-sm-none" />
@@ -32,7 +38,13 @@
             
             <div class="col-12 col-sm-6 col-lg-4">
 		<div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem2.png" alt="Удобно" /></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem2.webp'>
+			    <source type='image/png' srcset='/i/images/priem2.png'>
+			    <img src='/i/images/priem2.png' alt='удобно'>
+			</picture>
+		    </div>
                     <h2>Удобно</h2>
                     <p>Минимальный пакет документов и лояльные требования к заемщику</p>
                     <hr class="d-sm-none" />
@@ -41,7 +53,13 @@
             
             <div class="col-12 col-sm-6 col-lg-4">
 		<div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem3.png" alt="выгодно" /></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem3.webp'>
+			    <source type='image/png' srcset='/i/images/priem3.png'>
+			    <img src='/i/images/priem3.png' alt='выгодно'>
+			</picture>
+		    </div>
                     <h2>Выгодно</h2>
                     <p>Вы сами выбираете предложение, которое больше подходит</p>
                     <hr class="d-sm-none" />
@@ -50,7 +68,13 @@
             
             <div class="col-12 col-sm-6 col-lg-4">
 		<div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem4.png" alt="доступно" /></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem4.webp'>
+			    <source type='image/png' srcset='/i/images/priem4.png'>
+			    <img src='/i/images/priem4.png' alt='доступно'>
+			</picture>
+		    </div>
                     <h2>Доступно</h2>
                     <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
                     <hr class="d-sm-none" />
@@ -59,14 +83,26 @@
         
             <div class="col-12 col-sm-6 col-lg-4">
 		<div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem5.png" alt="лояльно"></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem5.webp'>
+			    <source type='image/png' srcset='/i/images/priem5.png'>
+			    <img src='/i/images/priem5.png' alt='лояльно'>
+			</picture>
+		    </div>
                     <h2>Лояльно</h2>
                     <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-lg-4">
 		<div class="priem-item">
-                    <div class="img-priem"><img src="/i/images/priem6.png" alt="комфортно"></div>
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem6.webp'>
+			    <source type='image/png' srcset='/i/images/priem6.png'>
+			    <img src='/i/images/priem6.png' alt='комфортно'>
+			</picture>
+		    </div>
                     <h2>Комфортно</h2>
                     <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
                 </div>
@@ -88,7 +124,13 @@
         
         <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center d-flex ab-1">
             <div class="about-number"><span>1</span></div>
-            <div class="about-img"><img src="/i/images/about1.png"></div>
+            <div class="about-img">
+		<picture>
+		    <source type='image/webp' srcset='/i/images/about1.webp'>
+		    <source type='image/png' srcset='/i/images/about1.png'>
+		    <img src='/i/images/about1.png' alt='размещение заявки на кредит'>
+		</picture>
+	    </div>
             <div class="about-content">
                 Вы <b>размещаете заявку на кредит</b>, указав 
                 информацию о себе, необходимую сумму 
@@ -99,7 +141,13 @@
 
         <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-2">
             <div class="about-number"><span>2</span></div>
-            <div class="about-img"><img src="/i/images/about2.png"></div>
+            <div class="about-img">
+		<picture>
+		    <source type='image/webp' srcset='/i/images/about2.webp'>
+		    <source type='image/png' srcset='/i/images/about2.png'>
+		    <img src='/i/images/about2.png' alt='заявка на кредит попадает к нашим партнерам'>
+		</picture>
+	    </div>
             <div class="about-content">
                 Ваша заявка попадает к нашим 
                 проверенным партнерам, таким образом 
@@ -110,7 +158,13 @@
 
         <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-3">
             <div class="about-number"><span>3</span></div>
-            <div class="about-img"><img src="/i/images/about3.png"></div>
+            <div class="about-img">
+		<picture>
+		    <source type='image/webp' srcset='/i/images/about3.webp'>
+		    <source type='image/png' srcset='/i/images/about3.png'>
+		    <img src='/i/images/about3.png' alt='партнеры проверяют информацию, указанную в заявке'>
+		</picture>
+	    </div>
             <div class="about-content">
                 Партнеры проверив Ваши данные, 
                 возможно дополнительно уточнив 
@@ -121,7 +175,13 @@
 
         <div class="about-item flex-column flex-sm-row col-12 justify-content-start align-items-center  d-flex ab-4">
             <div class="about-number"><span>4</span></div>
-            <div class="about-img"><img src="/i/images/about4.png"></div>
+            <div class="about-img">
+		<picture>
+		    <source type='image/webp' srcset='/i/images/about4.webp'>
+		    <source type='image/png' srcset='/i/images/about4.png'>
+		    <img src='/i/images/about4.png' alt='предварительное решение и назначение встречи'>
+		</picture>
+	    </div>
             <div class="about-content">
                 В случае предварительного решения и 
                 подходящего предложения Вы направляетесь 

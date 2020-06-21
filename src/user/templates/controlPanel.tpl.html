@@ -1,4 +1,10 @@
-<? $partViewer->view('parts/header'); ?>
+<? 
+    if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false && isset($isAdded) && $isAdded) {
+        Singleton::getInstance('HTMLMetaManager')->appendFooterJavaScript("gtag('event', 'conversion', {'send_to': 'AW-1035212079/nnbxCMWu0soBEK-q0O0D'});");
+    }
+    
+    $partViewer->view('parts/header'); 
+?>
 
     <? if ($hasCredit) { ?>
     <main role="main" class="container flex-shrink-0">  
@@ -52,7 +58,7 @@
                             }
                         ?>
                         
-                        <p class="card-text my-2"><?=htmlspecialchars($item->getCategory()->getName())?><br />Сумма <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></p>
+                        <p class="card-text my-2"><? if ($item->getCategory()) { ?><?=htmlspecialchars($item->getCategory()->getName())?><br /><? } ?>Сумма <?=number_format($item->getSumm(), 0, '.', '&nbsp;').'&#8381;'?></p>
                         <p class="card-text small mb-0"><?=nl2br(ViewTextUtils::getStrippedText(htmlspecialchars($item->getText()), 192, ViewTextUtils::STRIP_TEXT_PATTERN, '&hellip;'))?></p>
                     </div>
                     <? if ($item->checkPermissions(AclAction::DELETE_ACTION)) { ?>
