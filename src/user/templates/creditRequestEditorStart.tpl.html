@@ -28,6 +28,17 @@
         addWrongLabel('passport', 'данные паспорта указаны неверно')->
         addMissingLabel('passport', 'данные паспорта не указаны')->
         addCustomLabel('passport', CreditRequestStartCommand::ERROR_INVALID, 'данные паспорта не корректны или паспорт недействительный');
+
+$key = GOOGLE_RECAPTCHA_OPEN;
+Singleton::getInstance('HTMLMetaManager')->appendFooterJavascript(<<<JS
+    grecaptcha.ready(function() {
+	if (document.getElementById('google-response')) {
+	    grecaptcha.execute('{$key}', {action: 'requestStart'}).then(function(token) {
+		document.getElementById('google-response').value = token;
+	    });
+	}
+    });
+JS);
 ?>
 
 <!-- Begin page content -->
@@ -144,13 +155,5 @@
     </div>
     
 </main>
-    
-<script>
-grecaptcha.ready(function() {
-    grecaptcha.execute('<?=GOOGLE_RECAPTCHA_OPEN?>', {action: 'registration'}).then(function(token) {
-        document.getElementById('google-response').value = token;
-    });
-});
-</script>
 
 <? $partViewer->view('parts/footer'); ?>
