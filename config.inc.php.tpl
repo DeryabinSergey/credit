@@ -127,3 +127,8 @@ session_set_cookie_params(0, '/', COOKIE_DOMAIN);
 ini_set('sendmail_from', 'info@finresurs.online');
 
 Session::start();
+
+if (file_exists(PATH_BASE.'config-asset.inc.php')) {
+    include_once PATH_BASE.'config-asset.inc.php';
+}
+defined('ASSETS_HASH') || define('ASSETS_HASH', 'v='.Timestamp::create('2020-01-01')->toStamp());
