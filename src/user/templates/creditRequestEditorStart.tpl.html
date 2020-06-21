@@ -1,7 +1,19 @@
 <? 
     Singleton::getInstance('HTMLMetaManager')->setDescription('Оформление заявки на кредит. Первые предложения уже в течении часа!');
     if ($form->exists('response')) {
-        Singleton::getInstance('HTMLMetaManager')->appendJavaScript('https://www.google.com/recaptcha/api.js?render='.GOOGLE_RECAPTCHA_OPEN);
+	$key = GOOGLE_RECAPTCHA_OPEN;
+	
+        Singleton::getInstance('HTMLMetaManager')->appendJavaScript('https://www.google.com/recaptcha/api.js?render='.$key);
+
+Singleton::getInstance('HTMLMetaManager')->appendFooterJavascript(<<<JS
+    grecaptcha.ready(function() {
+	if (document.getElementById('google-response')) {
+	    grecaptcha.execute('{$key}', {action: 'requestStart'}).then(function(token) {
+		document.getElementById('google-response').value = token;
+	    });
+	}
+    });
+JS);
     }
     $partViewer->view('parts/header');
 
@@ -28,17 +40,6 @@
         addWrongLabel('passport', 'данные паспорта указаны неверно')->
         addMissingLabel('passport', 'данные паспорта не указаны')->
         addCustomLabel('passport', CreditRequestStartCommand::ERROR_INVALID, 'данные паспорта не корректны или паспорт недействительный');
-
-$key = GOOGLE_RECAPTCHA_OPEN;
-Singleton::getInstance('HTMLMetaManager')->appendFooterJavascript(<<<JS
-    grecaptcha.ready(function() {
-	if (document.getElementById('google-response')) {
-	    grecaptcha.execute('{$key}', {action: 'requestStart'}).then(function(token) {
-		document.getElementById('google-response').value = token;
-	    });
-	}
-    });
-JS);
 ?>
 
 <!-- Begin page content -->
