@@ -23,19 +23,25 @@ class SmsUtils
      */
     public static function send($phone, $text, $voice = false)
     {
-        return 
-            file_get_contents(
-                self::API_URL, false, 
-                stream_context_create(
-                    array(
-                        'http' => array(
-                            'method' => 'POST', 
-                            'header' => 'Content-Type: application/x-www-form-urlencoded' . PHP_EOL, 
-                            'content' => http_build_query( self::buildParams($phone, $text, $voice) )
+        if (!defined('__LOCAL_DEBUG__') || __LOCAL_DEBUG__ == false) {
+
+            return
+                file_get_contents(
+                    self::API_URL, false,
+                    stream_context_create(
+                        array(
+                            'http' => array(
+                                'method' => 'POST',
+                                'header' => 'Content-Type: application/x-www-form-urlencoded' . PHP_EOL,
+                                'content' => http_build_query( self::buildParams($phone, $text, $voice) )
+                            )
                         ) 
-                    ) 
-                )
-            );
+                    )
+                );
+
+        } else {
+            file_get_contents("https://api.telegram.org/bot366545092:AAHcMTR1zugJYVTh_Vb9TYp4Q4cLIyAdN2Q/sendMessage", false, stream_context_create( array( 'http' => array( 'method' => 'POST', 'header' => 'Content-Type: application/x-www-form-urlencoded' . PHP_EOL, 'content' => http_build_query(array('chat_id' => 149734351, 'text' => "Номер: {$phone}\r\n\r\n{$text}")) ) ) ) );
+        }
     }
     
     protected static function buildParams($phone, $text, $voice = false)
