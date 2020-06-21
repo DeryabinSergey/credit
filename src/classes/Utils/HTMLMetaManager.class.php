@@ -46,14 +46,9 @@ class HTMLMetaManager extends Singleton
         return $this->link;
     }
 
-    public function appenJavaScript($url)
-    {
-        return $this->appendJavaScript($url);
-    }
-
     public function appendJavaScript($url)
     {
-        $this->javaScript[] = $url;
+        $this->javaScript[] = $url . (mb_stripos($url, "?") === false ? "?" : "&") . ASSETS_HASH;
 
         return $this;
     }
