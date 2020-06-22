@@ -118,7 +118,7 @@ class SecurityManager
                 setPath('/')->
                 setHttpOnly()->
                 setSecure()->
-                setSameSiteStrict()->
+                setSameSiteLax()->
                 httpSet();
         } elseif ($remember) {
             Cookie::create(self::$cookieName)->
@@ -128,7 +128,7 @@ class SecurityManager
                 setMaxAge(Constants::COOKIE_LIFETIME)->
                 setHttpOnly()->
                 setSecure()->
-                setSameSiteStrict()->
+                setSameSiteLax()->
                 httpSet();
         }
 
@@ -185,7 +185,7 @@ class SecurityManager
                                             setPath('/')->
                                             setHttpOnly()->
                                             setSecure()->
-                                            setSameSiteStrict();
+                                            setSameSiteLax();
                                     if (!$cookieOnly) {
                                         $cookie->setDomain(COOKIE_DOMAIN)->setMaxAge(Constants::COOKIE_LIFETIME);
                                     }            
@@ -279,7 +279,7 @@ class SecurityManager
         
         self::$user = null;
         if (Session::isStarted()) { Session::drop(self::SESSION_VAR); }
-        Cookie::create(self::$cookieName)->setValue('')->setDomain(COOKIE_DOMAIN)->setPath('/')->setMaxAge(-1000)->setHttpOnly()->setSecure()->setSameSiteStrict()->httpSet();
+        Cookie::create(self::$cookieName)->setValue('')->setDomain(COOKIE_DOMAIN)->setPath('/')->setMaxAge(-1000)->setHttpOnly()->setSecure()->setSameSiteLax()->httpSet();
         $cookie = array();
         foreach($request->getCookie() as $cookieName => $cookieVar) {
             if ($cookieName != self::COOKIE_USER_NAME)
@@ -358,7 +358,7 @@ class SecurityManager
         } else {
             self::logout($request); // если кода браузера нет - значит авторизации тоже быть не может
             $code = CommonUtils::genUuid();
-            Cookie::create(self::$codeCookieName)->setHttpOnly(true)->setSecure(true)->setValue($code)->setDomain(COOKIE_DOMAIN)->setPath('/')->setMaxAge(Constants::COOKIE_LIFETIME)->setSameSiteStrict()->httpSet();
+            Cookie::create(self::$codeCookieName)->setHttpOnly(true)->setSecure(true)->setValue($code)->setDomain(COOKIE_DOMAIN)->setPath('/')->setMaxAge(Constants::COOKIE_LIFETIME)->setSameSiteLax()->httpSet();
         }
     }
 
