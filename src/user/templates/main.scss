@@ -9,24 +9,36 @@
 @font-face { font-family: 'Bender'; src: url('Bender.eot'); src: local('Bender'), url('Bender.eot?#iefix') format('embedded-opentype'), url('Bender.woff2') format('woff2'), url('Bender.woff') format('woff'), url('Bender.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap }
 @font-face { font-family: 'Bender'; src: url('Bender-Black.eot'); src: local('Bender Black'), local('Bender-Black'), url('Bender-Black.eot?#iefix') format('embedded-opentype'), url('Bender-Black.woff2') format('woff2'), url('Bender-Black.woff') format('woff'), url('Bender-Black.ttf') format('truetype'); font-weight: 900; font-style: normal; font-display: swap }
 
-html.no-webb {
-    .slide { 
+    
+html, html.webp {
+    .slide-car {
 	background: url(images/main_slide_auto.jpg) no-repeat top center; 
 	background-size: cover;
     }
-}
-html.webp {
-    .slide { 
-	background: url(images/main_slide_auto.webp) no-repeat top center; 
+
+    .slide-main {
+	background: url(images/main_slide.jpg) no-repeat top center; 
 	background-size: cover;
     }
 }
-	    
-html { 
+    
+html.no-webb {
+    .slide-car {
+	background: url(images/main_slide_auto.jpg) no-repeat top center; 
+	background-size: cover;
+    }
+
+    .slide-main {
+	background: url(images/main_slide.jpg) no-repeat top center; 
+	background-size: cover;
+    }
+}
+
+html {
     
     .ui-widget { font-family: 'Bender'; font-weight: normal; font-style: normal; color:#090909; }
-    
-    body { 
+
+    body {
         
         font-family: 'Bender';
         font-weight: normal;
@@ -62,11 +74,12 @@ html {
                 font-size: 1.25rem; 
                 margin-bottom: 0!important; 
                 border-radius: 0; 
+		box-shadow: 0px 0px 32px 0px rgba(151,145,177,.35);
                 
-                p { text-shadow: 0px 0px 10px #fff; }
-                h1 { position:relative; color: #ffc000; font-size: 3.75rem; padding-bottom: 1.6875rem; }
+                h2, h3, h4 { text-shadow: 0px 0px 10px #fff; }
+                h1 { position:relative; font-size: 3.75rem; padding-bottom: 1.6875rem; }
                 h1:before { content:'';width: 95px;height: 1px;position: absolute;bottom: 0;left: 0;background: #ffc000; }
-                h4 { font-size: 1.875rem; margin-top: 2.6875rem; margin-bottom: 2.6875rem; text-shadow: 0px 0px 10px #fff; }
+                h4 { font-size: 1.5rem; margin-top: 2.6875rem; margin-bottom: 2.6875rem; }
 
                 .btn-slide {font-size:1.375rem;border-radius: 30px;min-width: 255px;padding: .72rem .72rem;margin-top: 2rem; background-color: #ffc107; color: white; font-weight: 900; border: 5px solid #ffffff82; }
                 .btn-slide:hover{ color: #090909; }
@@ -87,7 +100,7 @@ html {
 
                 .priem-item {
                     
-                    font-weight: 600; min-height: 287px; justify-content: center; display: flex; flex-direction: column; text-align: center; padding: 0rem 3.1rem;
+                    font-weight: 600; min-height: 287px; justify-content: center; display: flex; flex-direction: column; text-align: center; padding: 0rem 3.1rem; margin: 1.5rem 0;
                     
                     .img-priem { margin-bottom: 1.5rem; }
                     p { margin-bottom:0rem; }
@@ -192,7 +205,3 @@ html {
     }
     
 }
-
-
-
-            

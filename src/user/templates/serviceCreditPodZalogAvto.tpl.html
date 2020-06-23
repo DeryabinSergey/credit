@@ -1,0 +1,128 @@
+<?php
+    Singleton::getInstance('HTMLMetaManager')->setDescription('Помогаем получить кредит под залог автомобиля. Оформите заявку на кредит наличными под залог автомобиля и получите предложения от наших партнеров - банков и микрофинансовых организаций в течении часа.');
+    Singleton::getInstance('HTMLMetaManager')->setTitle('Кредит под залог автомобиля - Финансовый Ресурс');
+    $partViewer->view('parts/header');
+?>
+
+<main class="flex-shrink-0" id="main-page">
+    
+    <div class="jumbotron slide slide-car">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-5">
+                    <h1>Кредит под залог авто</h1>
+                    <h4>Поможем быстро получить кредит под залог авто с минимальным пакетом документов</h4>
+                    <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
+                    <a class="btn btn-slide btn-outline-warning d-block" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'category' => 1, 'return' => $curl))?>" role="button" title="подать заявку на кредит под залог автомобиля">подать заявку</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="priem" class="container">
+        <div class="row priem-bg">
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem1.webp'>
+			    <source type='image/png' srcset='/i/images/priem1.png'>
+			    <img src='/i/images/priem1.png' alt='быстро'>
+			</picture>
+		    </div>
+                    <h2>Быстро</h2>
+                    <p>Как правило одобрение и получение денег происходит в течении дня</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem2.webp'>
+			    <source type='image/png' srcset='/i/images/priem2.png'>
+			    <img src='/i/images/priem2.png' alt='удобно'>
+			</picture>
+		    </div>
+                    <h2>Удобно</h2>
+                    <p>Минимальный пакет документов и лояльные требования к заемщику</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div> 
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem3.webp'>
+			    <source type='image/png' srcset='/i/images/priem3.png'>
+			    <img src='/i/images/priem3.png' alt='выгодно'>
+			</picture>
+		    </div>
+                    <h2>Выгодно</h2>
+                    <p>Вы сами выбираете предложение, которое больше подходит</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem4.webp'>
+			    <source type='image/png' srcset='/i/images/priem4.png'>
+			    <img src='/i/images/priem4.png' alt='доступно'>
+			</picture>
+		    </div>
+                    <h2>Доступно</h2>
+                    <p>Подходит для людей с плохой или отсутствующией кредитной историей</p>
+                    <hr class="d-sm-none" />
+                </div>
+            </div>
+        
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem5.webp'>
+			    <source type='image/png' srcset='/i/images/priem5.png'>
+			    <img src='/i/images/priem5.png' alt='лояльно'>
+			</picture>
+		    </div>
+                    <h2>Лояльно</h2>
+                    <p>Не требуется подтверждение работы и дохода, подходит для ИП и самозанятых</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+		<div class="priem-item">
+                    <div class="img-priem">
+			<picture>
+			    <source type='image/webp' srcset='/i/images/priem6.webp'>
+			    <source type='image/png' srcset='/i/images/priem6.png'>
+			    <img src='/i/images/priem6.png' alt='комфортно'>
+			</picture>
+		    </div>
+                    <h2>Комфортно</h2>
+                    <p>Разные условия залога и процентные ставки - Вы сами выбираете подходящие условия</p>
+                </div>
+            </div>
+        </div>  
+        
+        <div class="row">
+            <div class="col-12 text-center">
+                <a class="btn btn-priem btn-yellow btn-lg" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'category' => 1, 'return' => $curl))?>" role="button" title="подать заявку на кредит под залог автомобиля">подать заявку</a>
+            </div>
+        </div>
+    </div>
+
+<div id="about" class="container">
+    
+</div>
+    
+</main>
+
+<? $partViewer->view('parts/pageFooter'); ?>
+
+<? $partViewer->view('parts/footer'); ?>

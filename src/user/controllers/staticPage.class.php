@@ -1,17 +1,10 @@
 <?php
 
 class staticPage extends baseFront
-{
-    protected 
-        $pages = 
-            array(
-                'about' => 'Информация о портале',
-                'privacy-policy' => 'Политика обработки персональных данных',
-                'contacts' => 'Связаться с нами',
-                'credit-pod-zalog-avto' => 'Кредит под залог авто'
-            );
-    
+{    
     protected $page = null;
+    
+    protected $part = 'static';
     
     public function __construct()
     {
@@ -23,29 +16,24 @@ class staticPage extends baseFront
     public function initVars()
     {
         parent::initVars();
+	
+	$page = $this->form->getValue('content');
         
-        if (!$this->form->getValue('content') || !isset($this->pages[$this->form->getValue('content')])) {
-            $this->errorView(HttpStatus::CODE_404);
-        } else {
-            $this->page = $this->form->getValue('content');
+        if ($page) {
+	    
+	    $template = explode("-", $page);
+            array_walk($template, function(&$item, $list) { $item = ucfirst($item); });
+	    
+	    if (file_exists(PATH_TEMPLATES . $this->part . implode("", $template) . EXT_TPL)) {
+		$this->page = $page;
+		$this->view = $this->part . implode("", $template);
+	    }
         }
+	
+	if (!$this->page) {
+	    $this->errorView(HttpStatus::CODE_404);
+	}
         
         return $this;
-    }
-    
-    public function getModel(\HttpRequest $request)
-    {
-        $model = parent::getModel($request);
-        
-        if ($this->isDisplayView()) {
-            
-            Singleton::getInstance('HTMLMetaManager')->setTitle($this->pages[$this->page]);
-            $template = explode("-", $this->page);
-            array_walk($template, function(&$item, $list) { $item = ucfirst($item); });
-            $this->view = "static".implode("", $template);
-            
-        }
-        
-        return $model;
     }
 }

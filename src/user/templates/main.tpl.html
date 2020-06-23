@@ -1,17 +1,18 @@
 <? 
-    Singleton::getInstance('HTMLMetaManager')->setDescription('Оформите заявку на кредит наличными под залог и получите предложения от различных банков и микрофинансовых организаций.');
+    Singleton::getInstance('HTMLMetaManager')->setDescription('Помогаем получить кредит под залог. Высокий процент одобрения и надежные партнеры - крупные банки, микрофинансовые организации и частные кредиторы.');
+    Singleton::getInstance('HTMLMetaManager')->setTitle('Кредитный брокер - Финансовый Ресурс');
     $partViewer->view('parts/header');
 ?>
 
 <main class="flex-shrink-0" id="main-page">
     
-    <div class="jumbotron slide">
+    <div class="jumbotron slide slide-main">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                    <h1>Кредит под залог авто</h1>
-                    <h4>Поможем быстро получить займ под залог авто с минимальным пакетом документов</h4>
-                    <p>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</p>
+                <div class="col-xs-12 col-sm-8 col-md-6 col-lg-5">
+                    <h1>Кредит&shy;ный брокер</h1>
+                    <h2 style='margin-bottom: 1.6875rem'>Поможем быстро получить займ под залог с минимальным пакетом документов</h2>
+                    <h4>Вашу заявку получат сразу несколько кредитных организаций, а Вы в самый короткий срок выберете самое выгодное предложение</h4>
                     <a class="btn btn-slide btn-outline-warning d-block" href="<?=CommonUtils::makeUrl('creditRequestEditor', array('action' => creditRequestEditor::ACTION_START, 'return' => $curl))?>" role="button">подать заявку</a>
                 </div>
             </div>
