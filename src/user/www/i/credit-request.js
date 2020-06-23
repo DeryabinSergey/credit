@@ -136,11 +136,20 @@ $(document).ready(function() {
                     $("#code-block").show("swing", function() { $("#code").focus(); });
                 } else {
                     showError(result.errors ? result.errors : 'Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
+		    $("#phone").removeClass('is-valid').addClass('is-invalid');
                 }
             },"json"
         ).fail(function() {
             $("#alert-block").hide("swing");
             showError('Не удалось отправить SMS, попробуйте еще раз чуть позже&hellip;');
+	    $("#phone").removeClass('is-valid').addClass('is-invalid');
         });
     });
+    
+    $("form input").each(function(i, el) {
+	if ($(this).attr('type') != 'hidden' && $(this).attr('type') != 'file') {
+	    $(this).on("focus", function() { $(this).removeClass('is-valid').removeClass('is-invalid'); });
+	    $(this).on("blur", function() { $(this).addClass('is-' + ($(this).val() ? '' : 'in')+'valid'); });
+	}
+    });	
 });

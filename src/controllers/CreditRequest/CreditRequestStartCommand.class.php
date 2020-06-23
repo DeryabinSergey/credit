@@ -204,7 +204,7 @@ class CreditRequestStartCommand implements EditorCommand
 
     public function setForm(Form $form)
     {
-        $neededPrimitives = array('id', 'securityCode', 'name', 'birthDate', 'action', 'go', 'return', 'cancel');
+        $neededPrimitives = array('id', 'securityCode', 'name', 'birthDate', 'category', 'action', 'go', 'return', 'cancel');
         foreach($form->getPrimitiveNames() as $primitive) {
             if (!in_array($primitive, $neededPrimitives)) {
                 $form->drop($primitive);
