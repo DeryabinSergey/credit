@@ -5,7 +5,7 @@
 
 <? foreach($listRequest as $itemId => $item) { ?>
     <p style="font-size: 120%; margin-bottom: 1em;">
-        <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $item['object']->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'request-new-images'), PATH_WEB_ADMIN)?>" target="_blank" title="перейти к заявке">Заявка <?=$item['object']->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item['object']->getCreatedTime()->getMonth())?></a> от <?=$item['object']->getType()->getShortName()?> на сумму <?=number_format($item['object']->getSumm(), 0, '.', '&nbsp;').'&#8381;'?> с категорией залога <?=$item['object']->getCategory()->getName()?>:
+        <a href="<?=CommonUtils::makeUrl('creditRequestEditor', array('id' => $item['object']->getId(), 'action' => CommandContainer::ACTION_VIEW, 'utm_source' => 'email', 'utm_medium' => 'moderation', 'utm_campaign' => 'request-new-images'), PATH_WEB_ADMIN)?>" target="_blank" title="перейти к заявке">Заявка <?=$item['object']->getCreatedTime()->getDay()?> <?=RussianTextUtils::getMonthInGenitiveCase($item['object']->getCreatedTime()->getMonth())?></a> от <?=$item['object']->getType()->getShortName()?> на сумму <?=number_format($item['object']->getSumm(), 0, '.', '&nbsp;').'&#8381;'?>:
     </p>
 
     <p>
