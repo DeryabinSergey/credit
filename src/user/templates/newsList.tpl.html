@@ -1,0 +1,36 @@
+<? 
+    Singleton::getInstance('HTMLMetaManager')->
+	setTitle('Список новостей - Финансовый Ресурс');
+
+    $partViewer->view('parts/header'); 
+?>
+
+<main class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Новости</li>
+        </ol>
+    </nav>
+    
+    <div class="container news-block mt-2 mb-2">
+	
+	<? foreach($result->getList() as $i => $newsItem) { ?>
+	    <div class="row"><div class="col">
+		<h4><a href="<?=CommonUtils::makeUrl('newsItem', array('sid' => $newsItem->getSid()))?>"><?=htmlspecialchars($newsItem->getTitle())?></a></h4>
+		<p><?=htmlspecialchars($newsItem->getDescription())?></p>
+		<hr class="my-4" />
+	    </div></div>
+	<? } ?>
+    </div>
+
+    <?php if ($result->getCount() > $onPage) { 
+                viewPagerHelper::create($result->getCount())->setModule($area)->setPage($form->getValueOrDefault('page'))->setPerPage($onPage)->setParams($filter)->setPartViewer($partViewer)->dump();
+    } ?>
+    
+</main>
+
+<? $partViewer->view('parts/pageFooter'); ?>
+
+<? $partViewer->view('parts/footer'); ?>

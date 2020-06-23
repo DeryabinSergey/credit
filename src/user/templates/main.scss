@@ -190,6 +190,11 @@ html {
                 
                 }                 
             }
+	    
+	    .news-block {
+		h3 { position:relative; font-weight: 700; padding-bottom: 1.6875rem; }
+                h3:before { content:'';width: 95px;height: 1px;position: absolute;bottom: 0;left: 0;background: #ffc000; }
+	    }
         }
         
         main#main-page { padding-top: 60px; }

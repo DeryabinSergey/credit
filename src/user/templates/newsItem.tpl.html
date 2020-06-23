@@ -1,0 +1,53 @@
+<? 
+    Singleton::getInstance('HTMLMetaManager')->
+	setTitle($newsItem->getTitle())->
+	setDescription(htmlspecialchars($newsItem->getDescription()));
+    $partViewer->view('parts/header');     
+?>
+
+<main class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Главная</a></li>
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('newsList')?>">Новости</a></li>
+        </ol>
+    </nav>
+    
+    <div class="container mt-2 mb-5">
+        
+	<h1 class="my-4"><?=htmlspecialchars($newsItem->getTitle())?></h1>
+
+        <?=$newsItem->getText()?>
+        
+    </div>
+    
+    <? 
+	if ($newsList) {
+	    $newsCount = count($newsList);
+    ?>
+	<div class="container news-block mb-5">
+	    <h3>Читайте также</h3>	
+	    <div class="row">
+		<? foreach($newsList as $i => $newsItem) { ?>
+		    <div class="col-12<?=$newsCount > 1?' col-lg-'.($newsCount==3?'4':'6'): ''?>">
+			<h4><a href="<?=CommonUtils::makeUrl('newsItem', array('sid' => $newsItem->getSid()))?>"><?=htmlspecialchars($newsItem->getTitle())?></a></h4>
+			<p><?=htmlspecialchars($newsItem->getDescription())?></p>
+			<hr class="d-lg-none my-4" />
+		    </div>
+		<? } ?>
+	    </div>
+	    <hr class="d-none d-lg-block my-4" />
+	    <div class="row">
+		<div class="col text-right">
+		    <a href="<?=CommonUtils::makeUrl('newsList')?>">все новости</a>
+		</div>
+	    </div>	
+	</div>
+    <? } ?>
+    
+</main>
+
+<? $partViewer->view('parts/pageFooter'); ?>
+
+<? $partViewer->view('parts/footer'); ?>

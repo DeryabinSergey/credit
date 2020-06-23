@@ -18,7 +18,7 @@ class CommonUtils
             'creditRequestList'                 => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/', PATH_WEB_BASE => 'cabinet/my/', PATH_WEB_ADMIN => 'credit-request/', PATH_WEB_INVESTOR => 'cabinet/invest-request/'),
             'creditRequestCreditorOfferList'    => array(PATH_WEB_CREDITOR => 'cabinet/credit-request/offer/', PATH_WEB_BASE => 'cabinet/my/offer/', PATH_WEB_ADMIN => 'credit-request/offer/'),
             'controlPanel'                      => 'cabinet/',
-            
+	    
             'main'                              => ''
         );
     
@@ -62,6 +62,10 @@ class CommonUtils
             }
         } else {
             switch($moduleName) {
+		
+		case 'newsItem':
+		    $link = $domain . "news/{$arrayParams['sid']}.html";
+		    break;
 
                 default:
                     $link = $domain . "index.php?area={$moduleName}" .self::getQueryStringByParametrs($arrayParams, '&', array(), '&', $encType);

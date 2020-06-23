@@ -22,6 +22,15 @@
         <loc>https://finresurs.online/static/contacts.html</loc>
         <priority>0.80</priority>
     </url>
+    
+
+    
+    <url>
+        <loc>https://finresurs.online/news/</loc>
+        <priority>0.60</priority>
+    </url>    
+    
+    
     <url>
         <loc>https://finresurs.online/static/privacy-policy.html</loc>
         <priority>0.40</priority>

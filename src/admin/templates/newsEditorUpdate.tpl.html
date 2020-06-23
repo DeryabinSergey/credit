@@ -27,14 +27,14 @@
         <div class="form-group row align-items-center">
             <label for="title" class="col-12 col-sm-2 col-form-label col-form-label-lg">Заголовок</label>
             <div class="col-12 col-sm-10">
-                <input id="title" class="form-control form-control-lg" name="title" value="<?=$form->getDisplayValue('title')?>" type="text">
+                <input id="title" class="form-control form-control-lg" name="title" value="<?=$form->getDisplayValue('title')?>" type="text"<?=($form->get('title')->getMax()?' maxlength="'.$form->get('title')->getMax().'"':'')?>>
             </div>
         </div>
 	
         <div class="form-group row align-items-center">
             <label for="description" class="col-12 col-sm-2 col-form-label col-form-label-lg">Описание</label>
             <div class="col-12 col-sm-10">
-                <input id="description" class="form-control form-control-lg" name="description" value="<?=$form->getDisplayValue('description')?>" type="text">
+                <input id="description" class="form-control form-control-lg" name="description" value="<?=$form->getDisplayValue('description')?>" type="text"<?=($form->get('title')->getMax()?' maxlength="'.$form->get('description')->getMax().'"':'')?>>
             </div>
         </div>
         

@@ -22,7 +22,11 @@
 		}
 		
 		if (!$news->getSid()) {
-		    $news->setSid(preg_replace("/\s/isu", "-", mb_strtolower(ViewTextUtils::transliterate($news->getTitle()))));
+		    $news->setSid(
+			preg_replace("/[^\w\-]/isu", "",
+			    preg_replace("/\s/isu", "-", mb_strtolower(ViewTextUtils::transliterate($news->getTitle())))
+			)
+		    );
 		}
 
                 return parent::add($news);
