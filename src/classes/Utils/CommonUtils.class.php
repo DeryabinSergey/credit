@@ -11,6 +11,7 @@ class CommonUtils
             'aclRightList'                      => 'acl-right/',
             'aclGroupList'                      => 'acl-group/',
             'categoryList'                      => 'category/',
+            'newsList'				=> 'news/',
             'userList'                          => 'users/',
             'creditorList'                      => array(PATH_WEB_CREDITOR => 'cabinet/my/', PATH_WEB_ADMIN => 'creditor/'),
             'investorOfferList'                 => array(PATH_WEB_INVESTOR => 'cabinet/my/', PATH_WEB_ADMIN => 'invest-offer/'),

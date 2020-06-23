@@ -1,0 +1,60 @@
+<? 
+    $partViewer->view('parts/header');
+
+    if ($process) {
+        $form->
+            addMissingLabel('title', 'заголовок не указано')->
+            addMissingLabel('description', 'название не указано')->
+            addMissingLabel('text', 'название не указано')->
+            addCustomLabel('id', NewsAddCommand::ERROR_DUPLICATE, 'такое название уже есть');
+    }
+?>
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+    
+    <div class="col-12 col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+    
+    <h1 class="mb-5">Редактор новостей</h1>
+
+    <? if ($form->getTextualErrors()) { ?>
+        <div id="alert-block" class="alert alert-danger" role="alert">
+            <p class="mb-0" id="alert-block-content"><?=implode("<br />", $form->getTextualErrors())?></p>
+        </div>
+    <? } ?>
+    
+    <form action="" method="POST">
+        <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+        <div class="form-group row align-items-center">
+            <label for="title" class="col-12 col-sm-2 col-form-label col-form-label-lg">Заголовок</label>
+            <div class="col-12 col-sm-10">
+                <input id="title" class="form-control form-control-lg" name="title" value="<?=$form->getDisplayValue('title')?>" type="text">
+            </div>
+        </div>
+	
+        <div class="form-group row align-items-center">
+            <label for="description" class="col-12 col-sm-2 col-form-label col-form-label-lg">Описание</label>
+            <div class="col-12 col-sm-10">
+                <input id="description" class="form-control form-control-lg" name="description" value="<?=$form->getDisplayValue('description')?>" type="text">
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-start">
+            <label for="text" class="col-12 col-sm-2 col-form-label col-form-label-lg">Текст</label>
+            <div class="col-12 col-sm-10 justify-content-between">
+                <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getValue('text')?></textarea>
+            </div>
+        </div>
+        
+        <div class="form-group row align-items-center">
+            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+                <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">сохранить</button>
+                <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
+            </div>
+        </div>
+    </form>
+    
+    </div>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

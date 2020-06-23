@@ -108,9 +108,18 @@
         <hr class="my-5" />
     <? } ?>
     
+    <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::NEWS_ID)) { ?>
+        <h3>Новости</h3>
+        <p><a href="<?=CommonUtils::makeUrl('newsList')?>">список новостей</a></p>
+        
+        <hr class="my-5" />
+    <? } ?>
+    
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::CATEGORY_ID)) { ?>
         <h3>Категории объектов</h3>
         <p><a href="<?=CommonUtils::makeUrl('categoryList')?>">список категорий объектов</a></p>
+        
+        <hr class="my-5" />
     <? } ?>
     
     <? if (SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::ACL_ID) || SecurityManager::isAllowedAction(AclAction::VIEW_ACTION, AclContext::USER_ID)) { ?>

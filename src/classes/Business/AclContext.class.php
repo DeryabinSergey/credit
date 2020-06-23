@@ -16,6 +16,7 @@
             const CREDIT_REQUEST_ID                 = 7; // запросы на кредит от пользователей
             const CREDIT_REQUEST_CREDITOR           = 8; //
             const CREDIT_REQUEST_CREDITOR_OFFER     = 9; //
+	    const NEWS_ID			    = 10; // новости
             
             /**
              * @return AclContext

@@ -98,6 +98,7 @@ $autoloader->addPaths(array(
     PATH_CONTROLLER_COMMANDS.'CreditRequestCreditor',
     PATH_CONTROLLER_COMMANDS.'CreditRequestCreditorOffer',
     PATH_CONTROLLER_COMMANDS.'InvestorOffer',
+    PATH_CONTROLLER_COMMANDS.'News',
     PATH_CONTROLLER_COMMANDS.'User',
 
     PATH_CLASSES.'DAOs',
@@ -116,7 +117,7 @@ define('EXT_CSS', '.css');
 define('EXT_MARKDOWN', '.tpl');
 
 Cache::setPeer(WatermarkedPeer::create(PeclMemcache::create(), 'front'));
-Cache::setDefaultWorker('CacheDaoWorker');
+Cache::setDefaultWorker(CommonDaoWorker::class);
 //Cache::setDaoMap(array('CityDAO' => 'NullDaoWorker', 'CountryDAO' => 'NullDaoWorker'));
 
 //PeclMemcached::create()->clean();

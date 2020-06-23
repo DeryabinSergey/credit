@@ -60,6 +60,19 @@
             </properties>
             <pattern name="StraightMapping" fetch="lazy" /> 
         </class>
+	
+	<class name="News" type="final">
+            <properties>
+                <identifier />
+                <property name="sid" type="String" size="64" required="true" />
+                <property name="title" type="String" size="64" required="true" />
+                <property name="createdDate" type="Date" required="true" />
+                <property name="description" type="String" size="255" required="true" />
+                <property name="text" type="String" required="true" />
+                <property name="type" type="NewsType" relation="OneToOne" required="true" />
+            </properties>
+            <pattern name="StraightMapping" fetch="lazy" /> 
+        </class>
         
         <class name="InvestorOffer" type="final">
             <implement interface="Created"/>

@@ -20,12 +20,19 @@
         <pattern name="AbstractClass" />
     </class>
     
+    <class name="NewsType" type="final">
+        <properties>
+            <identifier />
+        </properties>
+        <pattern name="SpookedEnumeration" />
+    </class>
+    
     <class name="ConfirmType" type="final">
         <properties>
             <identifier />
         </properties>
         <pattern name="SpookedEnumeration" />
-    </class>    
+    </class>
     
     <class name="ImageType" type="final">
         <properties><identifier /></properties>

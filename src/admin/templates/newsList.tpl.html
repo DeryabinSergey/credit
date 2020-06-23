@@ -1,0 +1,83 @@
+<? $partViewer->view('parts/header'); ?>
+
+<!-- Begin page content -->
+<main class="container flex-shrink-0">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?=CommonUtils::makeUrl('main')?>">Админ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Новости</li>
+        </ol>
+    </nav>
+    
+    <div class="row flex-row mb-4">
+        <div class="col-12 col-sm-9 col-md-10"><h1 class="">Новости</h1></div>    
+        <div class="col-12 col-sm-3 col-md-2 justify-content-center justify-content-sm-end text-center text-sm-right align-self-center">
+            <? if (SecurityManager::isAllowedAction(AclAction::ADD_ACTION, AclContext::NEWS_ID)) { ?><a href="<?=CommonUtils::makeUrl('newsEditor', array('action' => CommandContainer::ACTION_ADD, 'return' => $curl))?>" class="btn btn-primary">добавить</a><? } ?>
+        </div>
+    </div>
+    
+    <? 
+        if ($result->getCount() > 0) {
+    
+            if ($result->getCount() > $onPage) {
+                viewPagerHelper::create($result->getCount())->setModule($area)->setPage($form->getValueOrDefault('page'))->setPerPage($onPage)->setParams($filter)->setPartViewer($partViewer)->dump();
+            }
+    ?>     
+        <form action="" method="get" id="filter-form">
+            <input type="hidden" name="sort" value="<?=$form->getValueOrDefault('sort')?>" />
+            <input type="hidden" name="d" value="<?=$form->getValueOrDefault('d')?>" />
+            <input type="hidden" name="page" value="<?=$form->getValueOrDefault('page')?>" />
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" class="align-middle text-center"><a href="<?=CommonUtils::makeUrl($area, array_merge($filter, array("sort" => "id", "d" => $form->getValueOrDefault('d') == "asc" ? "desc" : "asc")))?>">Дата <i class="fas fa-sort-numeric-<?=$form->getValueOrDefault('d') == "asc"?'up':'down-alt'?>"></i></a></th>
+                        <th scope="col" class="align-middle text-center">Дата</th>
+                        <th scope="col" class="align-middle text-center">
+                            <select class="selectpicker" name="type[]" multiple data-selected-text-format="count" data-none-selected-text="контекст" data-width="150px">
+                                <? foreach(NewsType::getList(NewsType::create(NewsType::getAnyId())) as $type) { ?>
+                                    <option value="<?=$type->getId()?>"<?=$form->getValue('type') && in_array($type->getId(), $form->exportValue('type'))?' selected':''?>><?=htmlspecialchars($type->getName())?></option>
+                                <? } ?>
+                            </select>
+                        </th>
+			<th scope="col" class="align-middle">Название</th>
+			<th scope="col" class="align-middle">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <? foreach($result->getList() as $item) { ?>
+		    <tr>
+			<td class="align-middle text-center text-nowrap"><?=$item->getId()?></td>
+			<td class="align-middle text-center text-nowrap"><?=$item->getCreatedDate()->toString()?></td>
+			<td class="align-middle text-center text-nowrap"><?=$item->getType()->getName()?></td>
+			<td class="align-middle"><?=htmlspecialchars($item->getTitle())?></td>
+			<td class="align-middle text-center text-nowrap">
+			    <? if (SecurityManager::isAllowedAction(AclAction::EDIT_ACTION, AclContext::NEWS_ID)) { ?><a href="<?=CommonUtils::makeUrl('newsEditor', array('action' => CommandContainer::ACTION_UPDATE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="far fa-edit"></i></a><? } ?>
+			    <? if (SecurityManager::isAllowedAction(AclAction::DELETE_ACTION, AclContext::NEWS_ID)) { ?><a href="<?=CommonUtils::makeUrl('newsEditor', array('action' => CommandContainer::ACTION_DELETE, 'id' => $item->getId(), 'return' => $curl))?>"><i class="far fa-trash-alt"></i></a><? } ?>
+			</td>
+		    </tr>
+                <? } ?>
+                </tbody>
+                </table>
+            </div>
+        </form>
+    <?
+    
+            if ($result->getCount() > $onPage) {
+                viewPagerHelper::create($result->getCount())->setModule($area)->setPage($form->getValueOrDefault('page'))->setPerPage($onPage)->setParams($filter)->setPartViewer($partViewer)->dump();
+            }
+            
+        } else { 
+    ?>
+        <div class="card">
+          <div class="card-body">
+            <p class="my-4 text-center">еще ничего не добавлено&hellip;</p>
+            <? if ($filter) { ?><p class="my-4 text-center"><a href="<?=CommonUtils::makeUrl($area)?>">сбросить фильтр</a></p><? } ?>
+          </div>
+        </div>    
+    <? } ?>
+    
+</main>  
+
+<? $partViewer->view('parts/footer'); ?>

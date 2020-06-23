@@ -65,5 +65,14 @@
 
 </div>
 
+<? if (Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()) { ?>
+<script>
+$(function () {
+    <?=Singleton::getInstance('HTMLMetaManager')->getFooterJavaScript()?>
+    
+});
+</script>
+<? } ?>
+
 </body>
 </html>
