@@ -80,7 +80,7 @@
                 (
                     !$form->getValue('id')->isDeleted() &&
                     in_array($form->getValue('id')->getStatus()->getId(), array(CreditRequestStatus::TYPE_INCOME, CreditRequestStatus::TYPE_CONCIDERED))
-                ) || $form->getValue('id')->getImages()->getCount()
+                )
             ) {
         ?>
             <hr class="mt-5" />
@@ -105,17 +105,13 @@
                 </div>
             <? } ?>
         
-            <? if ($form->getValue('id')->getImages()->getCount()) { ?>
-        
-                <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-                    <? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
-                        <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                            <img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />
-                        </a>
-                    <? } ?>
-                </div>
-            
-            <? } ?>
+	    <div class="form-group my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+		<? foreach($form->getValue('id')->getImages()->getList() as $image) { ?>
+		    <a href="<?=$image->getUrl()?>" itemprop="contentUrl" data-size="<?=$image->getWidth()?>x<?=$image->getHeight()?>" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+			<img src="<?=$image->getUrl(true)?>" itemprop="thumbnail" class="img-thumbnail mb-2 mr-1" alt="" />
+		    </a>
+		<? } ?>
+	    </div>
         <? } ?>
         
         <? 
