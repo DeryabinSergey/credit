@@ -1,5 +1,7 @@
 <? 
-    Singleton::getInstance('HTMLMetaManager')->setDescription('Если у Вас возникли вопросы - мы всегда готовы придти на помощь, наши контакты.');
+    Singleton::getInstance('HTMLMetaManager')->
+	setTitle('Связаться с нами')->
+	setDescription('Если у Вас возникли вопросы - мы всегда готовы придти на помощь, наши контакты.');
     $partViewer->view('parts/header');
 ?>
 
