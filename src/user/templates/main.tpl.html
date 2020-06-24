@@ -1,6 +1,16 @@
 <? 
-    Singleton::getInstance('HTMLMetaManager')->setDescription('Помогаем получить кредит под залог. Высокий процент одобрения и надежные партнеры - крупные банки, микрофинансовые организации и частные кредиторы.');
-    Singleton::getInstance('HTMLMetaManager')->setTitle('Кредитный брокер - Финансовый Ресурс');
+    Singleton::getInstance('HTMLMetaManager')->
+	setDescription('Помогаем получить кредит под залог. Высокий процент одобрения и надежные партнеры - крупные банки, микрофинансовые организации и частные кредиторы.')->
+	setTitle('Кредитный брокер - Финансовый Ресурс')->
+	appendMetaSocial('og:url', PATH_WEB)->
+	appendMetaSocial('og:type', 'website')->
+	appendMetaSocial('og:title', 'Кредитный брокер - Финансовый Ресурс')->
+	appendMetaSocial('og:description', 'Помогаем получить кредит под залог. Высокий процент одобрения и надежные партнеры - крупные банки, микрофинансовые организации и частные кредиторы.')->
+	appendMetaSocial('og:image', PATH_WEB.'i/images/preview-main.jpg')->
+	appendMetaSocial('og:image:type', 'image/jpeg')->
+	appendMetaSocial('og:image:width', 400)->
+	appendMetaSocial('og:image:height', 300);
+	
     $partViewer->view('parts/header');
 ?>
 

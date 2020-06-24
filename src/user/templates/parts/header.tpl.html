@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" class="h-100">
+<html lang="ru" class="h-100" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,6 +14,10 @@
         <? /* <description><?=Singleton::getInstance('HTMLMetaManager')->getDescription()?></description> */ ?>
     <? } ?>
     <title><?=Singleton::getInstance('HTMLMetaManager')->getTitle()?></title>
+    
+    <? foreach(Singleton::getInstance('HTMLMetaManager')->getMetaSocialList() as $social) { ?>
+	<meta property="<?=$social['property']?>" content="<?=$social['content']?>" />
+    <? } ?>
 
 </head>
 <body class="d-flex flex-column h-100">

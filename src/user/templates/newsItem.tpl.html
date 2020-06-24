@@ -2,7 +2,16 @@
     Singleton::getInstance('HTMLMetaManager')->
 	appendJavaScript('//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5ef2eeb505f7a8ca', false)->
 	setDescription(htmlspecialchars($newsItem->getDescription()))->
-	setTitle($newsItem->getTitle());
+	setTitle($newsItem->getTitle())->
+
+	appendMetaSocial('og:url', CommonUtils::makeUrl('newsItem', array('sid' => $newsItem->getSid())))->
+	appendMetaSocial('og:type', 'article')->
+	appendMetaSocial('og:title', $newsItem->getTitle())->
+	appendMetaSocial('og:description', htmlspecialchars($newsItem->getDescription()))->
+	appendMetaSocial('og:image', PATH_WEB.'i/images/preview-main.jpg')->
+	appendMetaSocial('og:image:type', 'image/jpeg')->
+	appendMetaSocial('og:image:width', 400)->
+	appendMetaSocial('og:image:height', 300);
 
     $partViewer->view('parts/header');     
 ?>
@@ -17,11 +26,27 @@
     </nav>
     
     <div class="container mt-2 mb-5">
-        
-	<h1 class="my-4"><?=htmlspecialchars($newsItem->getTitle())?></h1>
+        <div itemscope itemtype="http://schema.org/Article">
+	    <h1 class="my-4"><span itemprop="headline"><?=htmlspecialchars($newsItem->getTitle())?></span></h1>
+	    <meta itemprop="description" content="<?=htmlspecialchars($newsItem->getDescription())?>" />
+	    <meta itemprop="datePublished" content="<?=$newsItem->getCreatedDate()->toString()?>" />
+	    <meta itemprop="dateModified" content="<?=$newsItem->getCreatedDate()->toString()?>" />
+	    <meta itemprop="author" content="Сысоева Диана" />
+	    <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+		<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+		    <meta itemprop="url" content="<?PATH_WEB?>i/images/logo.png" />
+		    <meta itemprop="width" content="36" />
+		    <meta itemprop="height" content="37" />
+		</div>
+		<meta itemprop="name" content="Финансовый Ресурс" />
+	    </div>
 
-        <?=$newsItem->getText()?>
-        
+	    <meta itemprop="image" content="<?PATH_WEB?>i/images/preview-main.jpg" />
+	    <link itemprop="url" href="<?=CommonUtils::makeUrl('newsItem', array('sid' => $newsItem->getSid()))?>" />
+	    <div itemprop="articleBody">
+		<?=$newsItem->getText()?>
+	    </div>
+        </div>
     </div>
     
     

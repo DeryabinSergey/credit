@@ -1,6 +1,16 @@
 <?php
-    Singleton::getInstance('HTMLMetaManager')->setDescription('Помогаем получить кредит под залог автомобиля. Оформите заявку на кредит наличными под залог автомобиля и получите предложения от наших партнеров - банков и микрофинансовых организаций в течении часа.');
-    Singleton::getInstance('HTMLMetaManager')->setTitle('Кредит под залог автомобиля - Финансовый Ресурс');
+    Singleton::getInstance('HTMLMetaManager')->
+	setDescription('Помогаем получить кредит под залог автомобиля. Оформите заявку на кредит наличными под залог автомобиля и получите предложения от наших партнеров - банков и микрофинансовых организаций в течении часа.')->
+	setTitle('Кредит под залог автомобиля - Финансовый Ресурс')->
+	appendMetaSocial('og:url', PATH_WEB.'/service/credit-pod-zalog-avto.html')->
+	appendMetaSocial('og:type', 'website')->
+	appendMetaSocial('og:title', 'Кредит под залог автомобиля - Финансовый Ресурс')->
+	appendMetaSocial('og:description', 'Помогаем получить кредит под залог автомобиля. Оформите заявку на кредит наличными под залог автомобиля и получите предложения от наших партнеров - банков и микрофинансовых организаций в течении часа.')->
+	appendMetaSocial('og:image', PATH_WEB.'i/images/preview-auto.jpg')->
+	appendMetaSocial('og:image:type', 'image/jpeg')->
+	appendMetaSocial('og:image:width', 400)->
+	appendMetaSocial('og:image:height', 300);
+
     $partViewer->view('parts/header');
 ?>
 

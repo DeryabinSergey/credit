@@ -5,6 +5,7 @@ class HTMLMetaManager extends Singleton
     protected $javaScript = array();
     protected $nameSpace = array();
     protected $meta = array();
+    protected $metaSocial = array();
     
     protected $style = array();
     protected $link = array();
@@ -28,6 +29,12 @@ class HTMLMetaManager extends Singleton
         $this->meta[] = array('name' => $name, 'content' => $content, 'var' => $var);
         return $this;
     }
+    
+    public function appendMetaSocial($property, $content)
+    {
+	$this->metaSocial[] = ['property' => $property, 'content' => $content];
+	return $this;
+    }
 
     public function appendLink($rel, $href, $type = null, $title = null)
     {
@@ -39,6 +46,11 @@ class HTMLMetaManager extends Singleton
     public function getMetaList()
     {
         return $this->meta;
+    }
+    
+    public function getMetaSocialList()
+    {
+	return $this->metaSocial;
     }
 
     public function getLinkList()
