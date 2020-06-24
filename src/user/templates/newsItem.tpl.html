@@ -1,7 +1,9 @@
 <? 
     Singleton::getInstance('HTMLMetaManager')->
-	setTitle($newsItem->getTitle())->
-	setDescription(htmlspecialchars($newsItem->getDescription()));
+	appendJavaScript('//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5ef2eeb505f7a8ca', false)->
+	setDescription(htmlspecialchars($newsItem->getDescription()))->
+	setTitle($newsItem->getTitle());
+
     $partViewer->view('parts/header');     
 ?>
 
@@ -22,6 +24,9 @@
         
     </div>
     
+    
+    <div class="addthis_inline_share_toolbox text-center my-5"></div>
+
     <? 
 	if ($newsList) {
 	    $newsCount = count($newsList);
@@ -45,9 +50,8 @@
 	    </div>	
 	</div>
     <? } ?>
-    
-</main>
 
+</main>
 <? $partViewer->view('parts/pageFooter'); ?>
 
 <? $partViewer->view('parts/footer'); ?>
