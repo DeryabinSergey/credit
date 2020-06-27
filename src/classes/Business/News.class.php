@@ -31,6 +31,23 @@
 			return Singleton::getInstance('ProtoNews');
 		}
 		
-		// your brilliant stuff goes here
+		public function getPreviewFile($type = PictureUtils::PREVIEW_IMAGE_TYPE_SMALL)
+                {
+                    if ($this->getPreview() instanceof ImageType) {
+                        return $this->getId() . PictureUtils::getPreviewFilePostfixByType($type) . '.' . $this->getPreview()->getExtension();
+                    } else {
+                        return '';
+                    }
+                }
+
+                public function getPreviewPath($type = PictureUtils::PREVIEW_IMAGE_TYPE_SMALL)
+                {
+                    return PictureUtils::getPreviewPathByObject($this) . $this->getPreviewFile($type);
+                }
+
+                public function getPreviewUrl($type = PictureUtils::PREVIEW_IMAGE_TYPE_SMALL)
+                {
+                    return PictureUtils::getPreviewUrlByObject($this) . $this->getPreviewFile($type);
+                }
 	}
 ?>

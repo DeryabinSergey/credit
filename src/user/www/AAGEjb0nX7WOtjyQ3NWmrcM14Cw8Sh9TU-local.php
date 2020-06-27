@@ -46,7 +46,7 @@ if ($userId) {
 }
 
 //error_log(print_r($botStorage, true));
-error_log(print_r($update, true));
+//error_log(print_r($update, true));
 
 if ($userId && $text) {
     

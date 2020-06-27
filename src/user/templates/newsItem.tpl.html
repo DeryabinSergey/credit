@@ -8,11 +8,29 @@
 	appendMetaSocial('og:type', 'article')->
 	appendMetaSocial('og:title', $newsItem->getTitle())->
 	appendMetaSocial('og:description', htmlspecialchars($newsItem->getDescription()))->
-	appendMetaSocial('og:image', PATH_WEB.'i/images/preview-main.jpg')->
-	appendMetaSocial('og:image:type', 'image/jpeg')->
-	appendMetaSocial('og:image:width', 400)->
-	appendMetaSocial('og:image:height', 300);
-
+	appendMetaSocial(['name', 'twitter:card'], 'summary')->
+	appendMetaSocial(['name', 'twitter:site'], '@finresurs')->
+	appendMetaSocial(['name', 'twitter:title'], $newsItem->getTitle())->
+	appendMetaSocial(['name', 'twitter:description'], htmlspecialchars($newsItem->getDescription()));
+	
+    if ($newsItem->getPreview()) {
+	Singleton::getInstance('HTMLMetaManager')->
+	    appendMetaSocial('vk:image', $newsItem->getPreviewUrl(PictureUtils::PREVIEW_IMAGE_TYPE_MEDIUM))->
+	    appendMetaSocial('og:image', $newsItem->getPreviewUrl(PictureUtils::PREVIEW_IMAGE_TYPE_BIG))->
+	    appendMetaSocial('og:image:type', $newsItem->getPreview()->getMimeType())->
+	    appendMetaSocial('og:image:width', Constants::NEWS_PREVIEW_BIG[0])->
+	    appendMetaSocial('og:image:height', Constants::NEWS_PREVIEW_BIG[1])->
+	    appendMetaSocial(['name', 'twitter:image'], $newsItem->getPreviewUrl(PictureUtils::PREVIEW_IMAGE_TYPE_SMALL));
+    } else {
+	Singleton::getInstance('HTMLMetaManager')->
+	    appendMetaSocial('vk:image', PATH_WEB.'i/images/preview-main.jpg')->
+	    appendMetaSocial('og:image', PATH_WEB.'i/images/preview-main.jpg')->
+	    appendMetaSocial('og:image:type', 'image/jpeg')->
+	    appendMetaSocial('og:image:width', 400)->
+	    appendMetaSocial('og:image:height', 300)->
+	    appendMetaSocial(['name', 'twitter:image'], PATH_WEB.'i/images/preview-main.jpg');
+    }
+    
     $partViewer->view('parts/header');     
 ?>
 

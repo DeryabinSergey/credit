@@ -29,7 +29,8 @@ class newsEditor extends CommandLogger implements UserController
 		Singleton::getInstance('HTMLMetaManager')->
 		    setTitle('Редактор новостей - Администрирование')->
 		    appendJavaScript('/i/tiny/tinymce.min.js')->
-                    appendJavaScript('/i/news-editor.js');
+                    appendJavaScript('/i/news-editor.js')->
+                    appendJavaScript('/i/preview-editor.js');
             }             
         }
 

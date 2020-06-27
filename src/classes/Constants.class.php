@@ -73,4 +73,9 @@ class Constants
      */
     const DADATA_TOKEN      = '8e8269bebbb4d54cb70277e9fd2ea7955bc765b8';
     const DADATA_SECRET     = '086048138d8e2c8e44d5fefe32538eef3031691e';
+    
+    /** **/
+    const NEWS_PREVIEW_SMALL	    = [560,	300];	// Twitter
+    const NEWS_PREVIEW_MEDIUM	    = [1074,	480];	// VK
+    const NEWS_PREVIEW_BIG	    = [1200,	630];	// Facebook
 }

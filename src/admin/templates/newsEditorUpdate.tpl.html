@@ -24,6 +24,7 @@
     
     <form action="" method="POST">
         <input type="hidden" name="securityCode" value="<?=$process?$form->getValue('securityCode'):$securityCode?>" />
+	<input type="hidden" name="id" value="<?=$form->getValue('id')->getId()?>" id="object-id" />
         <div class="form-group row align-items-center">
             <label for="title" class="col-12 col-sm-2 col-form-label col-form-label-lg">Заголовок</label>
             <div class="col-12 col-sm-10">
@@ -38,15 +39,32 @@
             </div>
         </div>
         
+       <div class="form-group row">
+            <label for="preview-upload" class="col-12 col-sm-2 col-form-label-lg">Привью</label>
+	    
+            <div class="col-12 col-sm-10">
+                <label class="file">
+                    <input type="file" name="file" id="preview-upload" class="form-control-lg form-control-file">
+                    <span class="file-custom"></span>
+                </label>
+            </div>
+            <div class="offset-sm-2 col-xs-12 col-sm-10 preview-row" style="<?=$form->getValue('id')->getPreview() instanceof ImageType ? '' : 'display: none;'?>">
+                <div class="card image-cont" id="preview-cont" style="width: 120px; height: 90px;<?=$form->getValue('id')->getPreview() instanceof ImageType ? ' background-image: url('.$form->getValue('id')->getPreviewUrl(PictureUtils::PREVIEW_IMAGE_TYPE_SMALL).'?ts='.time().');' : ''?>">
+                    <div class="card-block">
+                        <i class="fa fa-lg fa-remove" id="preview-delete" title="удалить изображение" aria-hidden="true"></i><span class="sr-only">удалить изображение</span>
+                    </div>
+                </div>
+            </div>
+        </div>	
+	
         <div class="form-group row align-items-start">
-            <label for="text" class="col-12 col-sm-2 col-form-label col-form-label-lg">Текст</label>
-            <div class="col-12 col-sm-10 justify-content-between">
-                <textarea id="text" class="form-control form-control-lg" rows="4" name="text"><?=$form->getValue('text')?></textarea>
+            <div class="col-12 justify-content-between">
+                <textarea id="text" class="form-control form-control-lg" rows="15" name="text"><?=$form->getValue('text')?></textarea>
             </div>
         </div>
         
         <div class="form-group row align-items-center">
-            <div class="col-12 offset-sm-2 col-sm-10 d-flex justify-content-between">
+            <div class="col-12 d-flex justify-content-between">
                 <button type="submit" class="btn btn-lg btn-success mr-2 mb-2">сохранить</button>
                 <button type="submit" name="cancel" class="btn btn-link mb-2">отменить</button>
             </div>

@@ -1,5 +1,5 @@
 <?php
 
-define('ASSETS_HASH', 'v=1592945362');
+define('ASSETS_HASH', 'v=1593176943');
 
 ?>

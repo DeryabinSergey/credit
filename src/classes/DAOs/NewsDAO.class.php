@@ -31,5 +31,63 @@
 
                 return parent::add($news);
             }
+	    
+	    public function dropById($id)
+            {
+                try {
+                    $tr = InnerTransaction::begin($this);
+
+                    $object = $this->getById($id);
+                    $previewFiles = array();
+
+                    if ($object->getPreview()) {
+                        $previewFiles = PictureUtils::getPreviewFiles($object);
+                    }
+
+                    if ($count = parent::dropById($id)) {
+                        foreach($previewFiles as $preview)
+                            if ($preview && file_exists($preview)) unlink($preview);
+                    }
+
+                    $tr->commit();
+                } catch (Exception $e) {
+                    $tr->rollback();
+
+                    throw $e;
+                }
+
+                return $count;
+            }    
+	    
+            public function dropByIds(array $ids)
+            {
+                $previewList = array();
+
+                try {
+                    $tr = InnerTransaction::begin($this);
+
+                    foreach($ids as $id) {
+                        $object = $this->getById($id);
+                        
+                        if ($object->getPreview()) {
+                            $previewList = array_merge($previewList, PictureUtils::getPreviewFiles($object));
+                        }
+                    }
+
+                    if ($count = parent::dropByIds($ids)) {
+                        foreach($previewList as $preview)
+                            if ($preview && file_exists($preview)) unlink($preview);
+                    }
+
+                    $tr->commit();
+                } catch (Exception $e) {
+                    $tr->rollback();
+
+                    throw $e;
+                }
+
+                return $count;
+            }	    
 	}
+	    
 ?>

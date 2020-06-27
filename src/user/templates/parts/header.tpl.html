@@ -16,7 +16,7 @@
     <title><?=Singleton::getInstance('HTMLMetaManager')->getTitle()?></title>
     
     <? foreach(Singleton::getInstance('HTMLMetaManager')->getMetaSocialList() as $social) { ?>
-	<meta property="<?=$social['property']?>" content="<?=$social['content']?>" />
+	<meta <?=is_array($social['property']) ? $social['property'][0] : 'property' ?>="<?=is_array($social['property']) ? $social['property'][1] : $social['property'] ?>" content="<?=$social['content']?>" />
     <? } ?>
 
 </head>

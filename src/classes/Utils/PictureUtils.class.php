@@ -81,10 +81,14 @@ class PictureUtils extends FilesUtils
 
     public static function getPreviewResizeSizes(Identifiable $object, $type)
     {
-        if ($object instanceof Landing) {
+        if ($object instanceof News) {
             if ($type == self::PREVIEW_IMAGE_TYPE_SMALL) {
-                return array(Constants::LANDING_PREVIEW_SMALL_WIDTH, Constants::LANDING_PREVIEW_SMALL_HEIGHT);
-            } else {
+                return Constants::NEWS_PREVIEW_SMALL;
+            } elseif ($type == self::PREVIEW_IMAGE_TYPE_MEDIUM) {
+		return Constants::NEWS_PREVIEW_MEDIUM;
+	    } elseif ($type == self::PREVIEW_IMAGE_TYPE_BIG) {
+		return Constants::NEWS_PREVIEW_BIG;
+	    } else {
                 Assert::isUnreachable("Should define sizes first");
             }
         } else {
@@ -107,8 +111,8 @@ class PictureUtils extends FilesUtils
 
     public static function getPreviewPathByObject($object)
     {
-        if ($object instanceof Landing) {
-           return UPLOAD_PATH . PREVIEW_PATH_LANDING . self::getNestingPathById($object->getId());
+        if ($object instanceof News) {
+           return UPLOAD_PATH . PREVIEW_PATH_NEWS . self::getNestingPathById($object->getId());
         } else {
             Assert::isUnreachable('Define data in PictureUtils first');
         }
@@ -116,8 +120,8 @@ class PictureUtils extends FilesUtils
 
     public static function getPreviewUrlByObject($object)
     {
-        if ($object instanceof Landing) {
-           return UPLOAD_URL . PREVIEW_PATH_LANDING . self::getNestingPathById($object->getId());
+        if ($object instanceof News) {
+           return UPLOAD_URL . PREVIEW_PATH_NEWS . self::getNestingPathById($object->getId());
         } else {
             Assert::isUnreachable('Define data in PictureUtils first');
         }

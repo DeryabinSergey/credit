@@ -1,3 +1,7 @@
+objectData = { imageOwner: 'News', previewType: 1 };
+
+formData = { 'id': $('#object-id').val() };
+
 $(document).ready(function(){
     tinymce.init({
 	selector: '#text',
