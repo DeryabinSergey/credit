@@ -108,7 +108,7 @@ html {
                     
                 }
 
-                .btn-priem { min-width: 256px; margin-top: -1.8125rem; }              
+                .btn-priem { min-width: 256px; margin-top: -1.8125rem; }
 
                 @include media-breakpoint-down(lg) {
                     
@@ -126,6 +126,17 @@ html {
                 
                 
             }
+	    
+	    #about-us {
+	
+                margin-top: 1rem; margin-bottom: 4rem;
+		
+		.bg { border-radius: 25px; background-color: #fff; box-shadow: 0px 32px 32px 0px rgba(151, 145, 177, 0.35); padding-bottom: 2.5rem; padding-top: 2.5rem; }
+		
+		.btn-priem { min-width: 256px; margin-top: -1.8125rem; }
+
+                @include media-breakpoint-down(xs) { .bg { border-radius: 0; } }   
+	    }
             
             #about { 
 
