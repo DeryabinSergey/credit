@@ -8,7 +8,7 @@
 	appendMetaSocial('og:type', 'article')->
 	appendMetaSocial('og:title', $newsItem->getTitle())->
 	appendMetaSocial('og:description', htmlspecialchars($newsItem->getDescription()))->
-	appendMetaSocial(['name', 'twitter:card'], 'summary')->
+	appendMetaSocial(['name', 'twitter:card'], 'summary_large_image')->
 	appendMetaSocial(['name', 'twitter:site'], '@finresurs')->
 	appendMetaSocial(['name', 'twitter:title'], $newsItem->getTitle())->
 	appendMetaSocial(['name', 'twitter:description'], htmlspecialchars($newsItem->getDescription()));
