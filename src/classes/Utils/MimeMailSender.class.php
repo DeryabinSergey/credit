@@ -204,6 +204,7 @@ class MimeMailSender
             setSubject($this->subject)->
             setHeaders($this->getHeaders())->
             setText($this->getBody())->  
+	    setSendmailAdditionalArgs('-f '.$this->fromEmail)->
             send();
         
         return $this;
