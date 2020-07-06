@@ -1,5 +1,6 @@
 <? 
     Singleton::getInstance('HTMLMetaManager')->
+    	setDescription(htmlspecialchars('Важные и актуальные новости из мира кредитования и финансов.'))->
 	setTitle('Список новостей - Финансовый Ресурс');
 
     $partViewer->view('parts/header'); 
