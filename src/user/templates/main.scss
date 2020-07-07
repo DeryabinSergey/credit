@@ -10,19 +10,19 @@
 @font-face { font-family: 'Bender'; src: url('Bender-Black.eot'); src: local('Bender Black'), local('Bender-Black'), url('Bender-Black.eot?#iefix') format('embedded-opentype'), url('Bender-Black.woff2') format('woff2'), url('Bender-Black.woff') format('woff'), url('Bender-Black.ttf') format('truetype'); font-weight: 900; font-style: normal; font-display: swap }
 
     
-html, html.webp {
+html.webp {
     .slide-car {
-	background: url(images/main_slide_auto.jpg) no-repeat top center; 
+	background: url(images/main_slide_auto.webp) no-repeat top center; 
 	background-size: cover;
     }
 
     .slide-main {
-	background: url(images/main_slide.jpg) no-repeat top center; 
+	background: url(images/main_slide.webp) no-repeat top center; 
 	background-size: cover;
     }
 }
     
-html.no-webb {
+html, html.no-webb {
     .slide-car {
 	background: url(images/main_slide_auto.jpg) no-repeat top center; 
 	background-size: cover;
