@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2ab7abe46bbc85ecb3eabec86c2d2a5",
+    "content-hash": "60efb4ca1a522da8a63bed1b4cb69439",
     "packages": [
         {
             "name": "deryabinsergey/onphp-framework",
@@ -144,6 +144,16 @@
             ],
             "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.",
             "time": "2016-09-16T05:47:55+00:00"
+        },
+        {
+            "name": "dimsemenov/photoswipe",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dimsemenov/PhotoSwipe",
+                "reference": "v4.1.3"
+            },
+            "type": "library"
         },
         {
             "name": "fortawesome/font-awesome",

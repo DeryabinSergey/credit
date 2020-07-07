@@ -18,7 +18,8 @@
 	"tinymce/tinymce": ">= 5",
 	"snapappointments/bootstrap-select": "^1.13",
 	"fortawesome/font-awesome": "^5",
-	"twbs/bootstrap": "^4"
+	"twbs/bootstrap": "^4",
+	"dimsemenov/photoswipe": "*"
     },
     "repositories": [
 	{
@@ -32,6 +33,18 @@
 		    "reference": "old-stable"
 		}
 	    }
-	}
+	},
+	{
+            "type": "package",
+            "package": {
+                "name": "dimsemenov/photoswipe",
+                "version": "1.0",
+                "source": {
+                    "url": "https://github.com/dimsemenov/PhotoSwipe",
+                    "type": "git",
+                    "reference": "v4.1.3"
+                }
+            }
+        }
     ]
 }

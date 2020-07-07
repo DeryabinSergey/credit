@@ -5,8 +5,8 @@
 @import "../../vendor/fortawesome/font-awesome/scss/solid.scss";
 @import "../../vendor/fortawesome/font-awesome/scss/regular.scss";
 @import "../../vendor/fortawesome/font-awesome/scss/v4-shims.scss";
-@import "/var/www/PhotoSwipe/src/css/main.scss";
-@import "/var/www/PhotoSwipe/src/css/default-skin/default-skin.scss";
+@import "../../vendor/dimsemenov/photoswipe/src/css/main.scss";
+@import "../../vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.scss";
 
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance:textfield; }

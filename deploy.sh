@@ -38,17 +38,17 @@ cp vendor/fortawesome/font-awesome/webfonts/* src/admin/www/webfonts/
 cp vendor/fortawesome/font-awesome/webfonts/* src/credit/www/webfonts/
 cp vendor/fortawesome/font-awesome/webfonts/* src/invest/www/webfonts/
 
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/user/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/admin/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/credit/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/invest/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.svg /var/www/credit/src/user/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.svg /var/www/credit/src/admin/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.svg /var/www/credit/src/credit/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.svg /var/www/credit/src/invest/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/preloader.gif /var/www/credit/src/user/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/preloader.gif /var/www/credit/src/admin/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/preloader.gif /var/www/credit/src/credit/www/i/
-cp /var/www/PhotoSwipe/src/css/default-skin/preloader.gif /var/www/credit/src/invest/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.png src/user/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.png src/admin/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.png src/credit/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.png src/invest/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.svg src/user/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.svg src/admin/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.svg src/credit/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/default-skin.svg src/invest/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/preloader.gif src/user/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/preloader.gif src/admin/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/preloader.gif src/credit/www/i/
+cp vendor/dimsemenov/photoswipe/src/css/default-skin/preloader.gif src/invest/www/i/
 
 echo -e "<?php\n\ndefine('ASSETS_HASH', 'v="$(date +%s)"');\n\n?>" > config-asset.inc.php
