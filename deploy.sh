@@ -28,15 +28,15 @@ cp -r vendor/tinymce/tinymce/icons /var/www/credit/src/admin/www/i/tiny/
 cp -r vendor/tinymce/tinymce/skins /var/www/credit/src/admin/www/i/tiny/
 cp -r vendor/tinymce/tinymce/plugins /var/www/credit/src/admin/www/i/tiny/
 
-sed '$d' /var/www/bootstrap-4.4.1/dist/js/bootstrap.bundle.min.js > /var/www/credit/src/user/www/i/bootstrap.bundle.min.js
-sed '$d' /var/www/bootstrap-4.4.1/dist/js/bootstrap.bundle.min.js > /var/www/credit/src/admin/www/i/bootstrap.bundle.min.js
-sed '$d' /var/www/bootstrap-4.4.1/dist/js/bootstrap.bundle.min.js > /var/www/credit/src/credit/www/i/bootstrap.bundle.min.js
-sed '$d' /var/www/bootstrap-4.4.1/dist/js/bootstrap.bundle.min.js > /var/www/credit/src/invest/www/i/bootstrap.bundle.min.js
+sed '$d' vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js > src/user/www/i/bootstrap.bundle.min.js
+sed '$d' vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js > src/admin/www/i/bootstrap.bundle.min.js
+sed '$d' vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js > src/credit/www/i/bootstrap.bundle.min.js
+sed '$d' vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js > src/invest/www/i/bootstrap.bundle.min.js
 
-cp /var/www/fontawesome-free-5.12.0-web/webfonts/* /var/www/credit/src/user/www/i/
-cp /var/www/fontawesome-free-5.12.0-web/webfonts/* /var/www/credit/src/admin/www/i/
-cp /var/www/fontawesome-free-5.12.0-web/webfonts/* /var/www/credit/src/credit/www/i/
-cp /var/www/fontawesome-free-5.12.0-web/webfonts/* /var/www/credit/src/invest/www/i/
+cp vendor/fortawesome/font-awesome/webfonts/* src/user/www/webfonts/
+cp vendor/fortawesome/font-awesome/webfonts/* src/admin/www/webfonts/
+cp vendor/fortawesome/font-awesome/webfonts/* src/credit/www/webfonts/
+cp vendor/fortawesome/font-awesome/webfonts/* src/invest/www/webfonts/
 
 cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/user/www/i/
 cp /var/www/PhotoSwipe/src/css/default-skin/default-skin.png /var/www/credit/src/admin/www/i/

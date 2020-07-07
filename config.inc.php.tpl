@@ -70,7 +70,7 @@ define('DEFAULT_MAILER', 'Финансовый Ресурс');
 define('DEFAULT_FROM', DEFAULT_MAILER.' <'.DEFAULT_EMAIL.'>');
 
 // onPHP init
-require '/var/www/onPHP/global.inc.php';
+require dirname(__FILE__).DIRECTORY_SEPARATOR.'vendor/deryabinsergey/onphp-framework/global.inc.php.tpl';
 
 define('DB_NAME', 'finresurs.online');
 
@@ -124,8 +124,6 @@ Cache::setDefaultWorker(CommonDaoWorker::class);
 
 session_name('fcredit');
 session_set_cookie_params(0, '/', COOKIE_DOMAIN);
-
-ini_set('sendmail_from', 'info@finresurs.online');
 
 Session::start();
 

@@ -4,8 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92b99bd571f4e00f123b3c8b8fee1eb4",
-    "packages": [],
+    "content-hash": "c2ab7abe46bbc85ecb3eabec86c2d2a5",
+    "packages": [
+        {
+            "name": "deryabinsergey/onphp-framework",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DeryabinSergey/onphp-framework",
+                "reference": "old-stable"
+            },
+            "type": "library"
+        }
+    ],
     "packages-dev": [
         {
             "name": "components/jquery",
@@ -135,17 +146,80 @@
             "time": "2016-09-16T05:47:55+00:00"
         },
         {
-            "name": "snapappointments/bootstrap-select",
-            "version": "v1.13.17",
+            "name": "fortawesome/font-awesome",
+            "version": "5.13.1.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/snapappointments/bootstrap-select.git",
-                "reference": "5cc3bf9d92cba0aeaf03d635a8a6f7bfc2a2dc7f"
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "c46e0ef8a1b71bef479c2f09acff048138a2578f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/snapappointments/bootstrap-select/zipball/5cc3bf9d92cba0aeaf03d635a8a6f7bfc2a2dc7f",
-                "reference": "5cc3bf9d92cba0aeaf03d635a8a6f7bfc2a2dc7f",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/c46e0ef8a1b71bef479c2f09acff048138a2578f",
+                "reference": "c46e0ef8a1b71bef479c2f09acff048138a2578f",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-4.0",
+                "OFL-1.1",
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Travis Chase",
+                    "homepage": "http://twitter.com/supercodepoet"
+                },
+                {
+                    "name": "Dave Gandy",
+                    "homepage": "http://twitter.com/davegandy"
+                },
+                {
+                    "name": "Rob Madole",
+                    "homepage": "http://twitter.com/robmadole"
+                },
+                {
+                    "name": "Jory Raphael",
+                    "homepage": "http://twitter.com/sensibleworld"
+                },
+                {
+                    "name": "Geremia Taglialatela",
+                    "homepage": "http://twitter.com/gtagliala"
+                },
+                {
+                    "name": "Brian Talbot",
+                    "homepage": "http://twitter.com/talbs"
+                },
+                {
+                    "name": "Mike Wilkerson",
+                    "homepage": "http://twitter.com/mw77"
+                }
+            ],
+            "description": "The iconic font, CSS, and SVG framework",
+            "homepage": "https://fontawesome.com",
+            "keywords": [
+                "FontAwesome",
+                "awesome",
+                "bootstrap",
+                "font",
+                "icon",
+                "svg"
+            ],
+            "time": "2020-06-18T20:17:49+00:00"
+        },
+        {
+            "name": "snapappointments/bootstrap-select",
+            "version": "v1.13.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/snapappointments/bootstrap-select.git",
+                "reference": "6c4c75f61e69ca54d5ab557a2b90ffdccf1c63cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/snapappointments/bootstrap-select/zipball/6c4c75f61e69ca54d5ab557a2b90ffdccf1c63cd",
+                "reference": "6c4c75f61e69ca54d5ab557a2b90ffdccf1c63cd",
                 "shasum": ""
             },
             "suggest": {
@@ -188,7 +262,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-05-07T22:16:49+00:00"
+            "time": "2020-06-26T18:04:14+00:00"
         },
         {
             "name": "tinymce/tinymce",
@@ -196,12 +270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "d61fb3a8f356c3e333e0108ac539c32aeadadfb3"
+                "reference": "aa17e50a1302fdb601a56e99b7b59f7abe5ff2a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/d61fb3a8f356c3e333e0108ac539c32aeadadfb3",
-                "reference": "d61fb3a8f356c3e333e0108ac539c32aeadadfb3",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/aa17e50a1302fdb601a56e99b7b59f7abe5ff2a6",
+                "reference": "aa17e50a1302fdb601a56e99b7b59f7abe5ff2a6",
                 "shasum": ""
             },
             "type": "component",
@@ -236,7 +310,64 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2020-06-10T04:52:49+00:00"
+            "time": "2020-06-30T05:22:55+00:00"
+        },
+        {
+            "name": "twbs/bootstrap",
+            "version": "v4.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap.git",
+                "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/7a6da5e3e7ad7c749dde806546a35d4d4259d965",
+                "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965",
+                "shasum": ""
+            },
+            "replace": {
+                "twitter/bootstrap": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Otto",
+                    "email": "markdotto@gmail.com"
+                },
+                {
+                    "name": "Jacob Thornton",
+                    "email": "jacobthornton@gmail.com"
+                }
+            ],
+            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+            "homepage": "https://getbootstrap.com/",
+            "keywords": [
+                "JS",
+                "css",
+                "framework",
+                "front-end",
+                "mobile-first",
+                "responsive",
+                "sass",
+                "web"
+            ],
+            "funding": [
+                {
+                    "url": "https://opencollective.com/bootstrap",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2020-05-12T17:44:42+00:00"
         }
     ],
     "aliases": [],

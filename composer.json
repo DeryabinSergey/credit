@@ -9,11 +9,29 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+	"deryabinsergey/onphp-framework": "*"
+    },
     "require-dev": {
 	"components/jquery": "^3.5",
 	"components/jqueryui": "^1.12",
 	"tinymce/tinymce": ">= 5",
-	"snapappointments/bootstrap-select": "^1.13"
-    }
+	"snapappointments/bootstrap-select": "^1.13",
+	"fortawesome/font-awesome": "^5",
+	"twbs/bootstrap": "^4"
+    },
+    "repositories": [
+	{
+	    "type": "package",
+	    "package": {
+		"name": "deryabinsergey/onphp-framework",
+		"version": "1.0",
+		"source": {
+		    "url": "https://github.com/DeryabinSergey/onphp-framework",
+		    "type": "git",
+		    "reference": "old-stable"
+		}
+	    }
+	}
+    ]
 }

@@ -1,10 +1,10 @@
-@import "/var/www/bootstrap-4.4.1/scss/bootstrap.scss";
+@import "../../vendor/twbs/bootstrap/scss/bootstrap.scss";
 
-@import "/var/www/fontawesome-free-5.12.0-web/scss/fontawesome.scss";
-@import "/var/www/fontawesome-free-5.12.0-web/scss/brands.scss";
-@import "/var/www/fontawesome-free-5.12.0-web/scss/solid.scss";
-@import "/var/www/fontawesome-free-5.12.0-web/scss/regular.scss";
-@import "/var/www/fontawesome-free-5.12.0-web/scss/v4-shims.scss";
+@import "../../vendor/fortawesome/font-awesome/scss/fontawesome.scss";
+@import "../../vendor/fortawesome/font-awesome/scss/brands.scss";
+@import "../../vendor/fortawesome/font-awesome/scss/solid.scss";
+@import "../../vendor/fortawesome/font-awesome/scss/regular.scss";
+@import "../../vendor/fortawesome/font-awesome/scss/v4-shims.scss";
 @import "/var/www/PhotoSwipe/src/css/main.scss";
 @import "/var/www/PhotoSwipe/src/css/default-skin/default-skin.scss";
 
